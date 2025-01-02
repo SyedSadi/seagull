@@ -9,50 +9,49 @@
 - maahad767
 
 ## Project Description
-# Class Routine Management System
+# Learning Management System (LMS)
 
 ## Overview
-The **Class Routine Management System** is a web-based application designed to streamline and simplify class schedule management for academic institutions. Built with Django, this system ensures secure, efficient, and conflict-free scheduling for faculty members, classrooms, and student batches.
+The **Learning Management System (LMS)** is a web application designed to facilitate learning by offering tools for course content management, navigation, community engagement, and evaluation through quizzes. Built with modern web technologies, this system aims to provide a seamless experience for both students and instructors.
 
 ---
 
 ## Features
+1. **Course Content Management**
+   - Upload and organize videos, PDFs, PPTs, and articles.
+   - Embed YouTube videos directly into courses.
 
-### Admin Features
-- **Secure Login and Registration**: 
-  - Password hashing and secure login protocols.
-- **Schedule Management**: 
-  - Add, update, and delete schedules.
-- **Reusable Schedules**: 
-  - Save and reuse schedules for future academic sessions/semesters.
+2. **Course Navigation**
+   - Organize courses by subject and topic for easy access.
+   - Search and filter options for efficient content discovery.
 
-### User Features
-- **Download Schedules**:
-  - Export class schedules as PDF for printing.
-- **Real-Time Updates**:
-  - View ongoing classes, faculty availability, and classroom status in real time.
-- **Notifications**:
-  - Notify faculty members automatically about their next class.
-- **Individual Routines**:
-  - Automatically generate individual routines for each faculty member and batch.
+3. **Community Newsfeed**
+   - Authenticated users can post and answer questions.
+   - Voting system for highlighting the best answers.
+
+4. **Exam System**
+   - Quizzes with 25 multiple-choice questions (MCQs) and a 25-minute timer.
+   - Results display correct and incorrect answers post-completion.
+
+5. **User Interaction**
+   - Rating and feedback system for courses.
 
 ---
 
-## Functionalities
+## Technologies Used
+- **Frontend:** React.js
+- **Backend:** Django
+- **Database:** PostgreSQL
+- **Version Control:** Git & GitHub
 
-### Unified Scheduling
-- Display a comprehensive schedule for all batches and faculty members in a single view.
+---
 
-### Course and Faculty Management
-- Interfaces to add courses and faculty members.
-- Enable easy course assignment to faculty.
-
-### Conflict-Free Scheduling
-- Highlight available time slots while disabling booked ones.
-- Implement a conflict detection system to:
-  - Prevent double-booking of faculty.
-  - Handle faculty unavailability.
-  - Avoid overlapping classroom bookings during schedule creation.
+## Setup and Installation
+### Prerequisites
+- Python 3.8 or higher
+- Node.js and npm
+- PostgreSQL
+- Git
 
 ## Getting Started
 1. Clone the repository
