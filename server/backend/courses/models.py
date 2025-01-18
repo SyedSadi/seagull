@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import User, Instructor, Student
 
 # Create your models here.
 class Course(models.Model):
