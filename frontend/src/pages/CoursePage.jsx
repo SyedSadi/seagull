@@ -1,9 +1,10 @@
 import React from 'react';
 import CourseDetails from '../components/Courses/CourseDetails';
 import CourseContent from '../components/Courses/CourseContent';
+import { useParams } from 'react-router-dom';
 
-const CoursePage = ({ match }) => {
-  const { id } = match.params;
+const CoursePage = () => {
+  const { id } = useParams;
 
   return (
     <div>

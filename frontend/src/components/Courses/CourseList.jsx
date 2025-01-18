@@ -17,12 +17,14 @@ const CourseList = () => {
     fetchCourses();
   }, []);
 
+  console.log(courses)
+
   return (
     <div>
       <h1>Available Courses</h1>
       <ul>
         {courses.map((course) => (
-          <li key={course.course_id}>
+          <li key={course.id}>
             {course.title} - {course.description}
           </li>
         ))}

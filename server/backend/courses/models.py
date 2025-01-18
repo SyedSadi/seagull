@@ -36,3 +36,17 @@ class CourseContents(models.Model):
 
     def __str__(self):
         return f"{self.title}/{self.content_type}"
+    
+
+
+class Enrollment(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+
+class Rating(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    feedback = models.TextField(null=True, blank=True)

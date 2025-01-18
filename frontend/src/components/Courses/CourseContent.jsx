@@ -22,7 +22,7 @@ const CourseContent = ({ courseId }) => {
       <h2>Course Contents</h2>
       <ul>
         {contents.map((content) => (
-          <li key={content.content_id}>
+          <li key={content.id}>
             <strong>{content.title}</strong> - {content.content_type}
           </li>
         ))}
