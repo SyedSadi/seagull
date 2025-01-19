@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCourses } from '../../services/api';
+import { Link } from 'react-router-dom';
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -17,15 +18,14 @@ const CourseList = () => {
     fetchCourses();
   }, []);
 
-  console.log(courses)
-
   return (
     <div>
       <h1>Available Courses</h1>
       <ul>
         {courses.map((course) => (
           <li key={course.id}>
-            {course.title} - {course.description}
+            <Link to={`/courses/${course.id}`}>{course.title}</Link>
+             - {course.description}
           </li>
         ))}
       </ul>

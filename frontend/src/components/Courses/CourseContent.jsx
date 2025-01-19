@@ -19,7 +19,7 @@ const CourseContent = ({ courseId }) => {
 
   return (
     <div>
-      <h2>Course Contents</h2>
+      <h2 style={{marginTop: '50px'}}>Course Contents</h2>
       <ul>
         {contents.map((content) => (
           <li key={content.id}>

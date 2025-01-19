@@ -1,10 +1,9 @@
 import React from 'react';
-import CourseList from '../components/Courses/CourseList';
 
 const Home = () => {
   return (
     <div>
-      <CourseList />
+      <div className='bg-blue-200 text-blue-800 text-center'>Learning Management System</div>
     </div>
   );
 };

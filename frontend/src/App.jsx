@@ -1,18 +1,14 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import CoursePage from './pages/CoursePage';
+import { Outlet } from 'react-router-dom';
+import Navbar from './components/Shared/Navbar';
+import Footer from './components/Shared/Footer';
 
 const App = () => {
   return (
     <>
-    <div className='bg-blue-200 text-blue-800 text-center'>Learning Management System</div>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/courses/:id" element={<CoursePage />} />
-      </Routes>
-    </Router>
+      <Navbar/>
+      <Outlet/>
+      <Footer/>
     </>
   )
 }

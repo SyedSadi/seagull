@@ -1,15 +1,12 @@
 import React from 'react';
-import CourseDetails from '../components/Courses/CourseDetails';
-import CourseContent from '../components/Courses/CourseContent';
-import { useParams } from 'react-router-dom';
+import CourseList from '../components/Courses/CourseList';
 
 const CoursePage = () => {
-  const { id } = useParams;
 
   return (
     <div>
-      <CourseDetails id={id} />
-      <CourseContent courseId={id} />
+      <h1>all courses page</h1>
+      <CourseList />
     </div>
   );
 };
