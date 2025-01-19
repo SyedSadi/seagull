@@ -4,8 +4,8 @@ import CourseList from '../components/Courses/CourseList';
 const CoursePage = () => {
 
   return (
-    <div>
-      <h1>all courses page</h1>
+    <div className='text-center bg-blue-200'>
+      <h1 className='text-xl'>all courses page</h1>
       <CourseList />
     </div>
   );

@@ -1,12 +1,13 @@
-from django.shortcuts import render
-from rest_framework import viewsets
-from .models import Course, CourseContents
+from rest_framework import generics, viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from .models import Course
 from .serializers import CourseSerializer, CourseContentsSerializer
 
-class CourseViewSet(viewsets.ModelViewSet):
+class CourseViewSet(viewsets.ReadOnlyModelViewSet):  # For listing all courses
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-class CourseContentsViewSet(viewsets.ModelViewSet):
-    queryset = CourseContents.objects.all()
-    serializer_class = CourseContentsSerializer
+class CourseDetailView(generics.RetrieveAPIView):  # For retrieving a specific course
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer

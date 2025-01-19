@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCourseById } from '../../services/api';
+import { getCourseDetailsById } from '../../services/api';
 import CourseContent from './CourseContent';
 
 const CourseDetails = () => {
@@ -10,7 +10,7 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const data = await getCourseById(id);
+        const data = await getCourseDetailsById(id);
         setCourse(data);
       } catch (error) {
         console.error('Error fetching course details:', error);
@@ -23,9 +23,8 @@ const CourseDetails = () => {
   if (!course) {
     return <div>Loading...</div>;
   }
-
   return (
-    <div>
+    <div className='text-center bg-blue-200'>
       <h1>Course Details</h1>
       <h1>{course.title}</h1>
       <p>{course.description}</p>
@@ -33,7 +32,7 @@ const CourseDetails = () => {
       <p>Ratings: {course.ratings}/5</p>
       <p>Difficulty: {course.difficulty}</p>
 
-      <CourseContent></CourseContent>
+      <CourseContent contents={course.contents}></CourseContent>
     </div>
   );
 };

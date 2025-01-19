@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCourses } from '../../services/api';
+import { getAllCourses } from '../../services/api';
 import { Link } from 'react-router-dom';
 
 const CourseList = () => {
@@ -8,7 +8,7 @@ const CourseList = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const data = await getCourses();
+        const data = await getAllCourses();
         setCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -19,11 +19,11 @@ const CourseList = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Available Courses</h1>
+    <div className='bg-blue-400'>
+      <h1 className='m-6 text-lg'>Available Courses</h1>
       <ul>
         {courses.map((course) => (
-          <li key={course.id}>
+          <li key={course.id} className='m-4'>
             <Link to={`/courses/${course.id}`}>{course.title}</Link>
              - {course.description}
           </li>
