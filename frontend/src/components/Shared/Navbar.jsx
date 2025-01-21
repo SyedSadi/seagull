@@ -1,51 +1,154 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navOptions = <>
-  <li><NavLink to={'/'}>Home</NavLink></li>
-  <li><NavLink to={'/courses'}>Courses</NavLink></li>
-  </>
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+	};
 
-  return (
-    <div className="navbar bg-blue-800 text-white">
-      <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16" />
-            </svg>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-blue-800 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            {navOptions}
-          </ul>
-        </div>
-        <NavLink to={'/'} className="btn btn-ghost text-xl">LMS</NavLink>
-      </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-        {navOptions}
-        </ul>
-      </div>
-    </div>
-  );
+	const navOptions = (
+		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center">
+			<li>
+				<NavLink
+					to={"/courses"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					Courses
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
+					to={"/forum"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					Forum
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
+					to={"/aboutus"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					About Us
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
+					to={"/career"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					Career
+				</NavLink>
+			</li>
+		</ul>
+	);
+
+	return (
+		<div className="navbar bg-[#323d5e]">
+			{/* Menu Button */}
+			<div
+				className="absolute left-4 lg:hidden text-white"
+				onClick={toggleMenu}
+			>
+				<div className="text-2xl">
+					{isMenuOpen ? (
+						<FontAwesomeIcon icon={faX} />
+					) : (
+						<FontAwesomeIcon icon={faBars} />
+					)}
+				</div>
+			</div>
+
+			{/* Logo */}
+			<div className="navbar-start w-full flex justify-center lg:w-1/3">
+				<NavLink
+					to={"/"}
+					className="text-white text-2xl font-bold cursor-pointer"
+				>
+					KUETx
+				</NavLink>
+			</div>
+
+			{/* Nav Options - Center */}
+			<div className="navbar-center hidden lg:flex lg:w-1/3 justify-center">
+				<ul className="flex flex-row space-x-20">{navOptions}</ul>
+			</div>
+
+			{/* Right section */}
+			<div className="navbar-end hidden lg:flex lg:w-1/3 justify-end space-x-3">
+				<NavLink
+					to={"/login"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+				>
+					Log in
+				</NavLink>
+				<NavLink
+					to={"/signup"}
+					className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+				>
+					Sign Up
+				</NavLink>
+			</div>
+
+			{/* Mobile Menu */}
+			<div
+				className={`absolute top-16 left-0 w-full bg-[#323d5e] text-white shadow-lg transform ${
+					isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+				} overflow-hidden transition-all duration-300`}
+			>
+				<div className="p-6">{navOptions}</div>
+				<div className="p-4 flex flex-col items-center space-y-4">
+					<NavLink
+						to={"/profile"}
+						className={({ isActive }) =>
+							isActive
+								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+						}
+						onClick={() => setIsMenuOpen(false)}
+					>
+						Log in
+					</NavLink>
+					<NavLink
+						to={"/signup"}
+						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+						onClick={() => setIsMenuOpen(false)}
+					>
+						Sign Up
+					</NavLink>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default Navbar;
-
-
-
-
-    
