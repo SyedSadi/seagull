@@ -6,7 +6,6 @@ import Footer from "./components/Shared/Footer";
 const App = () => {
 	return (
 		<>
-			<Navbar />
 			<Outlet />
 			<Footer />
 		</>

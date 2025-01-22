@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Navbar from "../components/Shared/Navbar";
+import Hero from "../components/LandingPage/Hero";
 
 const Home = () => {
 	return (
 		<div>
-			<div className="bg-blue-200 text-blue-800 text-center h-48">
-				Learning Management System
-			</div>
+			<Navbar />
+			<Hero />
 		</div>
 	);
 };
