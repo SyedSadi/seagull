@@ -16,10 +16,4 @@ export const getCourseDetailsById = async (id) => {
   return response.data;
 };
 
-
-// export const getCourseContents = async (courseId) => {
-//   const response = await API.get(`/courses/${courseId}`);
-//   return response.data;
-// };
-
 export default API;

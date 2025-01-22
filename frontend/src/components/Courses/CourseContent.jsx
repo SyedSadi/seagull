@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const CourseContent = ({ contents }) => {
+  console.log(contents)
   return (
     <div className='bg-blue-400'>
       <h2 style={{marginTop: '50px'}}>Course Contents</h2>
