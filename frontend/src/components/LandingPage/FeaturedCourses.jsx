@@ -6,9 +6,11 @@ import {
 	faChevronLeft,
 	faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { sort } from "fast-sort";
 
 //implement data fetching logic here.
 
+//sample data to show
 const coursesData = [
 	{
 		id: 1,
@@ -37,7 +39,18 @@ const coursesData = [
 		difficulty: "Beginner",
 		rating: 4.3,
 	},
+	{
+		id: 4,
+		title: "Competitive Programming Foundational Course",
+		subject: "Computer Science",
+		description:
+			"Start the thrilling journey of competitve programming with Competitive Programming Foundational Course where various techniques, contest hacks, DSA will be taught.",
+		difficulty: "Beginner",
+		rating: 4.7,
+	},
 ];
+
+let NoOfCardsToShow = 3;
 
 // Individual Course Card Component
 const CourseCard = ({ course }) => {
@@ -84,29 +97,33 @@ const TrendingCourses = () => {
 
 	//Right arrow click
 	const handleNext = () => {
-		setCurrentCourseIndex((prev) => (prev + 1) % coursesData.length);
+		setCurrentCourseIndex((prev) => (prev + 1) % NoOfCardsToShow);
 	};
 
 	//left arrow click
 	const handlePrev = () => {
 		setCurrentCourseIndex((prev) =>
-			prev === 0 ? coursesData.length - 1 : prev - 1
+			prev === 0 ? NoOfCardsToShow - 1 : prev - 1
 		);
 	};
 
+	//sorting the courses based on rating for top rated courses
+	const sortedCourses = sort(coursesData).desc((u) => u.rating);
+
 	return (
 		<section className="container mx-auto px-4 py-16 bg-gray-50">
-			<h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+			{/*Trending courses section*/}
+			<h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
 				Trending Courses
 			</h2>
-
 			{/* Desktop grid layout */}
 			<div className="hidden md:grid md:grid-cols-3 gap-8">
-				{coursesData.map((course) => (
-					<CourseCard key={course.id} course={course} />
+				{coursesData.slice(0, NoOfCardsToShow).map((course) => (
+					<div className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
+						<CourseCard key={course.id} course={course} />
+					</div>
 				))}
 			</div>
-
 			{/* Mobile Carousel */}
 			<div className="md:hidden relative flex items-center justify-center">
 				<button
@@ -129,7 +146,7 @@ const TrendingCourses = () => {
 
 				{/* Pagination Dots */}
 				<div className="absolute bottom-[-30px] flex space-x-2">
-					{coursesData.map((_, index) => (
+					{coursesData.slice(0, NoOfCardsToShow).map((_, index) => (
 						<span
 							key={index}
 							className={`
@@ -139,6 +156,18 @@ const TrendingCourses = () => {
 						/>
 					))}
 				</div>
+			</div>
+			{/*Top Rated courses section*/}
+			<h2 className="text-3xl font-bold text-center text-gray-800 mt-16 mb-10">
+				Top Rated Courses
+			</h2>
+			{/* Desktop grid layout */}
+			<div className="hidden md:grid md:grid-cols-3 gap-8">
+				{sortedCourses.slice(0, NoOfCardsToShow).map((course) => (
+					<div className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
+						<CourseCard key={course.id} course={course} />
+					</div>
+				))}
 			</div>
 		</section>
 	);

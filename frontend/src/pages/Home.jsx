@@ -1,14 +1,14 @@
 import React from "react";
 import Navbar from "../components/Shared/Navbar";
 import Hero from "../components/LandingPage/Hero";
-import TrendingCourses from "../components/LandingPage/TrendingCourses";
+import FeaturedCourses from "../components/LandingPage/FeaturedCourses";
 
 const Home = () => {
 	return (
 		<div>
 			<Navbar />
 			<Hero />
-			<TrendingCourses />
+			<FeaturedCourses />
 		</div>
 	);
 };
