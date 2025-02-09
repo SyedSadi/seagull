@@ -30,17 +30,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = []
+STATIC_URL = "static/"
 
-STATIC_URL = config('STATIC_URL', default='/static/')
-
-# Directory to collect static files for production
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Add the path to the static files
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # This is where your static files (like CSS) will go
-]
 
 
 # Application definition
@@ -141,8 +133,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
