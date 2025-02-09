@@ -23,14 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from decouple import config, Csv
 import os
 
-# DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-DEBUG = True
+# DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 STATIC_URL = "static/"
 
 
