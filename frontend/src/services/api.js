@@ -16,4 +16,16 @@ export const getCourseDetailsById = async (id) => {
   return response.data;
 };
 
+// Add a new course
+export const addCourse = async (courseData) => {
+  const response = await API.post("/courses/add/", courseData);
+  return response.data;
+}
+
+// fetch all instructors
+export const getAllInstructors = async () => {
+  const response = await API.get('/instructors/');
+  return response.data;
+};
+
 export default API;

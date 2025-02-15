@@ -9,6 +9,7 @@ import CourseDetails from "./components/Courses/CourseDetails.jsx";
 import ForumPage from "./pages/ForumPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import CareerPage from "./pages/CareerPage.jsx";
+import AddCoursesPage from "./pages/AddCoursesPage.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
 			{
 				path: "/courses/:id",
 				element: <CourseDetails />,
+				// loader: productsLoader
+			},
+			{
+				path: "/add-courses",
+				element: <AddCoursesPage />,
 				// loader: productsLoader
 			},
 			{
