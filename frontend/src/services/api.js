@@ -4,6 +4,7 @@ const API = axios.create({
   baseURL: 'http://127.0.0.1:8000/', // Your Django backend URL
 });
 
+// ----------------------- COURSES -----------------------------------
 // Fetch all courses
 export const getAllCourses = async () => {
   const response = await API.get('/courses/');
@@ -22,6 +23,21 @@ export const addCourse = async (courseData) => {
   return response.data;
 }
 
+// ----------------------- CONTENTS -----------------------------------
+// Edit contents
+export const updateContentById = async (contentId, updatedContent) => {
+  try {
+    const response = await API.put(`/courses/content/${contentId}/`, updatedContent);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating content with ID ${contentId}:`, error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+// ----------------------- INSTRUCTORS -----------------------------------
 // fetch all instructors
 export const getAllInstructors = async () => {
   const response = await API.get('/instructors/');

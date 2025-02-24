@@ -10,6 +10,7 @@ import ForumPage from "./pages/ForumPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import CareerPage from "./pages/CareerPage.jsx";
 import AddCoursesPage from "./pages/AddCoursesPage.jsx";
+import ManageContentsPage from "./pages/ManageContentsPage.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
 				path: "/add-courses",
 				element: <AddCoursesPage />,
 				// loader: productsLoader
+			},
+			{
+				path: "/contents/manage/:courseId",
+				element: <ManageContentsPage />,
 			},
 			{
 				path: "/forum",

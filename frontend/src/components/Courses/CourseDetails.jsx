@@ -23,6 +23,7 @@ const CourseDetails = () => {
   if (!course) {
     return <div>Loading...</div>;
   }
+  console.log(course)
   return (
     <div className='text-center bg-blue-200'>
       <h1>Course Details</h1>
@@ -32,7 +33,7 @@ const CourseDetails = () => {
       <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
       <p className='text-lg my-4'>Difficulty: {course.difficulty}</p>
 
-      <CourseContent contents={course.contents}></CourseContent>
+      <CourseContent course={course}></CourseContent>
     </div>
   );
 };
