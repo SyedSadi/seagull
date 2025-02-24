@@ -9,7 +9,7 @@ const CourseList = () => {
     const fetchCourses = async () => {
       try {
         const data = await getAllCourses();
-        setCourses(data);
+        setCourses(data.results);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
@@ -17,6 +17,7 @@ const CourseList = () => {
 
     fetchCourses();
   }, []);
+  console.log(courses)
 
   return (
     <div className='bg-blue-400'>
@@ -46,6 +47,7 @@ const CourseList = () => {
         ))}
       </ul>
     </div>
+    // <h3>dfjalskfj</h3>
   );
 };
 
