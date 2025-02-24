@@ -44,8 +44,23 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework"
+    "rest_framework",
+    "forum",
 ]
+
+
+REST_FRAMEWORK = {
+
+    # Add permissions (allows read-only access to anonymous users)
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    
+
+    # Enable PageNumberPagination globally
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10  # Number of items per page
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
