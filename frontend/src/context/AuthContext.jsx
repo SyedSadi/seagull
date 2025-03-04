@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect } from "react";
 import API from "../services/api";
-import { useNavigate } from "react-router-dom";
 
 
 export const AuthContext = createContext();
@@ -47,12 +46,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No refresh token available.");
       }
   
-      // Send the refresh token in the Authorization header (with Bearer scheme)
       const res = await API.post("/logout/", { refresh: refreshToken });
   
       console.log("Logout successful:", res);
   
-      // Clear session data after logout
       localStorage.clear();
       setUser(null);
       window.location.href = "/login";
