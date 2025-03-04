@@ -35,8 +35,6 @@ export const updateContentById = async (contentId, updatedContent) => {
   }
 };
 
-
-
 // ----------------------- INSTRUCTORS -----------------------------------
 // fetch all instructors
 export const getAllInstructors = async () => {
