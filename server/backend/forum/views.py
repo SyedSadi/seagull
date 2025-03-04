@@ -24,10 +24,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import Vote, Post
-from .serializers import VoteSerializer
+
+
+
 
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
