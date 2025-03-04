@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const {user, logoutUser} = useContext(AuthContext)
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -101,22 +103,32 @@ const Navbar = () => {
 
 			{/* Right section */}
 			<div className="navbar-end hidden lg:flex lg:w-1/3 justify-end space-x-3">
-				<NavLink
-					to={"/login"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
-				>
-					Log in
-				</NavLink>
-				<NavLink
-					to={"/signup"}
+				{!user ? 
+				<>
+					<NavLink
+						to={"/login"}
+						className={({ isActive }) =>
+							isActive
+								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+						}
+					>
+						Log in
+					</NavLink>
+					<NavLink
+						to={"/register"}
+						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+					>
+						Sign Up
+					</NavLink>
+				</> : 
+					<button
+					onClick={logoutUser}
 					className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
-				>
-					Sign Up
-				</NavLink>
+					>
+					Log out
+					</button>
+				}
 			</div>
 
 			{/* Mobile Menu */}
@@ -128,7 +140,7 @@ const Navbar = () => {
 				<div className="p-6">{navOptions}</div>
 				<div className="p-4 flex flex-col items-center space-y-4">
 					<NavLink
-						to={"/profile"}
+						to={"/login"}
 						className={({ isActive }) =>
 							isActive
 								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
@@ -139,7 +151,7 @@ const Navbar = () => {
 						Log in
 					</NavLink>
 					<NavLink
-						to={"/signup"}
+						to={"/register"}
 						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
 						onClick={() => setIsMenuOpen(false)}
 					>
