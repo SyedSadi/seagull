@@ -6,7 +6,6 @@ import FeaturedCourses from "../components/LandingPage/FeaturedCourses";
 const Home = () => {
 	return (
 		<div>
-			<Navbar />
 			<Hero />
 			<FeaturedCourses />
 		</div>

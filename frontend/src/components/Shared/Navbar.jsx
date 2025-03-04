@@ -28,6 +28,19 @@ const Navbar = () => {
 			</li>
 			<li>
 				<NavLink
+					to={"/quiz"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					Quiz
+				</NavLink>
+			</li>
+			<li>
+				<NavLink
 					to={"/forum"}
 					className={({ isActive }) =>
 						isActive
@@ -44,8 +57,8 @@ const Navbar = () => {
 					to={"/aboutus"}
 					className={({ isActive }) =>
 						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px] whitespace-nowrap"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0 whitespace-nowrap"
 					}
 					onClick={() => setIsMenuOpen(false)}
 				>
@@ -85,7 +98,7 @@ const Navbar = () => {
 			</div>
 
 			{/* Logo */}
-			<div className="navbar-start w-full flex justify-center lg:w-1/3">
+			<div className="flex justify-center lg:w-1/3">
 				<NavLink
 					to={"/"}
 					className="text-white text-2xl font-bold cursor-pointer"
