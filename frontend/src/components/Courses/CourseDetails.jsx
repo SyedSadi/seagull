@@ -23,16 +23,17 @@ const CourseDetails = () => {
   if (!course) {
     return <div>Loading...</div>;
   }
+  console.log(course)
   return (
     <div className='text-center bg-blue-200'>
       <h1>Course Details</h1>
-      <h1>{course.title}</h1>
-      <p>{course.description}</p>
-      <p>Duration: {course.duration} hours</p>
-      <p>Ratings: {course.ratings}/5</p>
-      <p>Difficulty: {course.difficulty}</p>
+      <h1 className='text-4xl my-4'>{course.title}</h1>
+      <p className='text-lg my-4'>{course.description}</p>
+      <p className='text-lg my-4'>Duration: {course.duration} hours</p>
+      <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
+      <p className='text-lg my-4'>Difficulty: {course.difficulty}</p>
 
-      <CourseContent contents={course.contents}></CourseContent>
+      <CourseContent course={course}></CourseContent>
     </div>
   );
 };
