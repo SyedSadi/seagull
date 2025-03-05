@@ -1,6 +1,7 @@
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 from .models import Course, CourseContents
 from .serializers import CourseSerializer, CourseContentsSerializer
 from rest_framework.decorators import api_view
@@ -17,6 +18,7 @@ class CourseDetailView(generics.RetrieveAPIView):  # For retrieving a specific c
     serializer_class = CourseSerializer
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_course(request):
     serializer = CourseSerializer(data=request.data)
     if serializer.is_valid():
@@ -25,6 +27,7 @@ def add_course(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_content(request, id):
     content = get_object_or_404(CourseContents, id=id)
     
