@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { getAllInstructors, addCourse } from '../services/api';
 
 const AddCoursesPage = () => {
