@@ -9,7 +9,7 @@ const CourseList = () => {
     const fetchCourses = async () => {
       try {
         const data = await getAllCourses();
-        setCourses(data.results);
+        setCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
@@ -46,6 +46,7 @@ const CourseList = () => {
           
         ))}
       </ul>
+      {/* <h3>dfjlk</h3> */}
     </div>
   );
 };

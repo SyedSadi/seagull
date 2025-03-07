@@ -25,7 +25,7 @@ const CourseContent = () => {
   const contents = course.contents;
   return (
     <div className='bg-blue-400 p-16'>
-      {/* <Link className='my-4 bg-red-200 p-2' to={`/contents/manage/${course.id}`}>Manage Contents</Link> */}
+      <Link className='my-4 bg-red-200 p-2' to={`/contents/manage/${course.id}`}>Manage Contents</Link>
       <ul>
         {contents.map((content) => (
           <div key={content.id}>

@@ -19,7 +19,7 @@ const AddCoursesPage = () => {
           const fetchInstructors = async () => {
             try {
               const data = await getAllInstructors();
-              setInstructors(data.results);
+              setInstructors(data);
             } catch (error) {
               console.error('Error fetching instructors:', error);
             }
