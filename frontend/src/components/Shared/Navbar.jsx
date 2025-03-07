@@ -14,7 +14,7 @@ const Navbar = () => {
 	};
 
 	const navOptions = (
-		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center">
+		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-sm">
 			<li>
 				<NavLink
 					to={"/courses"}
@@ -87,7 +87,7 @@ const Navbar = () => {
 			</div>
 
 			{/* Logo */}
-			<div className="navbar-start w-full flex justify-center lg:w-1/3">
+			<div className="navbar-start w-full flex justify-center lg:w-1/4">
 				<NavLink
 					to={"/"}
 					className="text-white text-2xl font-bold cursor-pointer"
@@ -97,12 +97,12 @@ const Navbar = () => {
 			</div>
 
 			{/* Nav Options - Center */}
-			<div className="navbar-center hidden lg:flex lg:w-1/3 justify-center">
+			<div className="navbar-center hidden lg:flex lg:w-1/2 justify-center">
 				<ul className="flex flex-row space-x-20">{navOptions}</ul>
 			</div>
 
 			{/* Right section */}
-			<div className="navbar-end hidden lg:flex lg:w-1/3 justify-end space-x-3">
+			<div className="navbar-end hidden lg:flex lg:w-1/4 justify-end space-x-3">
 				{!user ? 
 				<>
 					<NavLink

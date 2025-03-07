@@ -2,7 +2,7 @@ import API from "./api";
 
 // Attach Access Token to Requests
 API.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const accessToken = localStorage.getItem("access_token");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
