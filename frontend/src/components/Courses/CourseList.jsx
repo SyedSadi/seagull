@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getAllCourses } from '../../services/api';
 import { Link } from 'react-router-dom';
+import { getAllCourses } from '../../services/coursesApi';
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);

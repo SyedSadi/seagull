@@ -17,6 +17,7 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
 import CourseContent from "./components/Courses/CourseContent.jsx";
+import ModifyCoursePage from "./pages/ModifyCoursePage.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
 						path: "/add-courses",
 						element: <AddCoursesPage />,
 						// loader: productsLoader
+					},
+					{
+						path: "/course/modify/:courseId",
+						element: <ModifyCoursePage />,
 					},
 					{
 						path: "/contents/manage/:courseId",

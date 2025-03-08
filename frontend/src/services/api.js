@@ -1,66 +1,58 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/', // Your Django backend URL
+  baseURL: 'http://127.0.0.1:8000/',
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// ----------------------- COURSES -----------------------------------
-// Fetch all courses
-export const getAllCourses = async () => {
-  const response = await API.get('/courses/');
-  return response.data;
-};
-
-// Fetch course details by ID
-export const getCourseDetailsById = async (id) => {
-  const response = await API.get(`/courses/${id}/`);
-  return response.data;
-};
-
-// Add a new course
-export const addCourse = async (courseData) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error("Authentication token is missing");
+// Attach Token to Requests
+API.interceptors.request.use(
+  async (config) => {
+    let token = localStorage.getItem("access_token");
+    console.log("Attaching Token:", token);
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+      console.log("conf", config);
     }
-    const response = await API.post("/courses/add/", courseData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding course:", error);
-    throw error;  // Optionally, handle the error as per your application's need
-  }
-};
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// ----------------------- CONTENTS -----------------------------------
-// Edit contents
-export const updateContentById = async (contentId, updatedContent) => {
-  try {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error("Authentication token is missing");
+// Auto-refresh token if expired
+API.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    console.log("Interceptor Error:", error.response?.status);
+
+    if (error.response?.status === 401) {
+      console.log("401 Unauthorized - Attempting Token Refresh...");
+
+      const refreshToken = localStorage.getItem("refresh_token");
+      if (!refreshToken) {
+        console.log("No refresh token found! Redirecting to login.");
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      try {
+        const res = await axios.post("http://127.0.0.1:8000/token/refresh/", { refresh: refreshToken });
+        console.log("New Token Received:", res.data.access);
+
+        localStorage.setItem("access_token", res.data.access);
+        API.defaults.headers.common["Authorization"] = `Bearer ${res.data.access}`;
+        error.config.headers["Authorization"] = `Bearer ${res.data.access}`;
+        return axios(error.config);
+      } catch (refreshError) {
+        console.error("Token Refresh Failed:", refreshError.response);
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        window.location.href = "/login";
+      }
     }
-    const response = await API.put(`/courses/content/${contentId}/`, updatedContent, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`Error updating content with ID ${contentId}:`, error.response?.data || error.message);
-    throw error;
-  }
-};
 
-// ----------------------- INSTRUCTORS -----------------------------------
-// fetch all instructors
-export const getAllInstructors = async () => {
-  const response = await API.get('/instructors/');
-  return response.data;
-};
+    return Promise.reject(error);
+  }
+);
 
 export default API;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCourseDetailsById } from '../../services/api';
 import CourseContent from './CourseContent';
+import { getCourseDetailsById } from '../../services/coursesApi';
 
 const CourseDetails = () => {
   const { id } = useParams(); // Get course ID from URL
@@ -34,6 +34,7 @@ const CourseDetails = () => {
           <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
           <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           <Link to={`/courseContents/${course.id}`} className='my-4 bg-red-600 p-2'>Enroll Now!</Link>
+          <Link to={`/course/modify/${course.id}`} className='m-4 bg-red-600 p-2'>Edit Course</Link>
         </div>  
         <div>
         <img width="400px" height="400px" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="course-img" />

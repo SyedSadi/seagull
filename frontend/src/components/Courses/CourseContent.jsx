@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCourseDetailsById } from '../../services/api';
+import { getCourseDetailsById } from '../../services/coursesApi';
 
 const CourseContent = () => {
   const { id } = useParams(); // Get course ID from URL
