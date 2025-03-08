@@ -4,13 +4,12 @@ import Footer from "./components/Shared/Footer";
 import Navbar from "./components/Shared/Navbar";
 
 const App = () => {
-	return (
-		<>
-			<Navbar />
-			<Outlet />
-			<Footer />
-		</>
-	);
-};
-
+  return (
+    <div>
+      <Navbar/>
+      <Outlet/>
+      <Footer/>
+    </div>
+  )
+}
 export default App;

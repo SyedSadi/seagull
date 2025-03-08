@@ -36,9 +36,8 @@ class CourseContents(models.Model):
     course = models.ManyToManyField(Course, related_name='contents')
     content_type = models.CharField(max_length=20, choices=CONTENT_TYPES)
     title = models.CharField(max_length=255)
-    video_url = models.URLField(null=True, blank=True)
-    file_link = models.URLField(null=True, blank=True)
-    text_content = models.TextField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+    text_content = models.TextField(blank=True)
 
 
     def __str__(self):
@@ -60,7 +59,7 @@ class Enrollment(models.Model):
 
 class Rating(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='ratings_set')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField()
 
     class Meta:

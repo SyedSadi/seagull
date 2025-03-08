@@ -4,7 +4,7 @@ from .models import Course, CourseContents, Enrollment, Rating
 class CourseContentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseContents
-        fields = ['id', 'content_type', 'title', 'video_url', 'file_link', 'text_content']
+        fields = ['id', 'content_type', 'title', 'url', 'text_content']
 
 
 class CourseSerializer(serializers.ModelSerializer):
