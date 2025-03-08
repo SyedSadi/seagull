@@ -1,21 +1,19 @@
 # Virtual Environment
 myenv/
-venv/
-.venv/
 
-# Python/Django Specific
-__pycache__/
+# Django Specific
 **/__pycache__/
-*.py[cod]
-*$py.class
+__pycache__/
 *.pyc
 *.pyo
 backend/db.sqlite3
 
+# Ignore Django migrations
+**/migrations/*
+!**/migrations/__init__.py
+
 # Environment Variables
 .env
-.env.local
-.env.*.local
 
 # Static and Media Files
 staticfiles/
