@@ -19,6 +19,8 @@ import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
 import CourseContent from "./components/Courses/CourseContent.jsx";
 import ModifyCoursePage from "./pages/ModifyCoursePage.jsx";
 import Profile from "./pages/Profile.jsx";
+import AdminRoute from "./components/Shared/AdminRoute.jsx";
+import Dashboard from "./pages/Admin/Dashboard.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -87,6 +89,15 @@ const router = createBrowserRouter([
 						path: "/courseContents/:id",
 						element: <CourseContent/>
 					},
+				]
+			},
+			{
+				element: <AdminRoute />,
+				children: [
+					{
+						path: "/admin/dashboard",
+						element: <Dashboard/>
+					}
 				]
 			},
 		],

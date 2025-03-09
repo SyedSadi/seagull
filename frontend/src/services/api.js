@@ -1,18 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/',
-  headers: { 'Content-Type': 'application/json' },
+  baseURL: "http://127.0.0.1:8000/",
+  headers: { "Content-Type": "application/json" },
 });
 
 // Attach Token to Requests
 API.interceptors.request.use(
   async (config) => {
-    let token = localStorage.getItem("access_token");
-    console.log("Attaching Token:", token);
+    const token = localStorage.getItem("access_token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-      console.log("conf", config);
     }
     return config;
   },
@@ -23,8 +21,6 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("Interceptor Error:", error.response?.status);
-
     if (error.response?.status === 401) {
       console.log("401 Unauthorized - Attempting Token Refresh...");
 
@@ -36,13 +32,16 @@ API.interceptors.response.use(
       }
 
       try {
-        const res = await axios.post("http://127.0.0.1:8000/token/refresh/", { refresh: refreshToken });
-        console.log("New Token Received:", res.data.access);
+        const res = await axios.post("http://127.0.0.1:8000/token/refresh/", {
+          refresh: refreshToken,
+        });
 
-        localStorage.setItem("access_token", res.data.access);
-        API.defaults.headers.common["Authorization"] = `Bearer ${res.data.access}`;
-        error.config.headers["Authorization"] = `Bearer ${res.data.access}`;
-        return axios(error.config);
+        const newAccessToken = res.data.access;
+        console.log("New Access Token:", newAccessToken);
+        localStorage.setItem("access_token", newAccessToken);
+
+        error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return API(error.config);
       } catch (refreshError) {
         console.error("Token Refresh Failed:", refreshError.response);
         localStorage.removeItem("access_token");
