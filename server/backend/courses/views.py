@@ -35,7 +35,7 @@ class UpdateDeleteCourseView(APIView):
     permission_classes = [IsAuthenticated]
     
     def put(self, request, course_id):
-        print('aaa', request.headers.get("Authorization"))
+        # print('aaa', request.headers.get("Authorization"))
         course = get_object_or_404(Course, id=course_id)
         serializer = CourseSerializer(course, data=request.data, partial=True)
         if serializer.is_valid():

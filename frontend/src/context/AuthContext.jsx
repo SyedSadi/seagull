@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (credentials, navigate, location) => {
     try {
+      console.log(credentials)
       const response = await API.post("/login/", credentials);
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);

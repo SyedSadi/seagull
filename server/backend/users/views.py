@@ -6,7 +6,8 @@ from .models import Instructor
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -57,8 +58,14 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
+class AdminDashboardView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAdminUser]
 
+    def get(self, request, *args, **kwargs):
+        return Response({"message": "Welcome, Admin!"})
 
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):  # For listing all courses
     queryset = Instructor.objects.all()

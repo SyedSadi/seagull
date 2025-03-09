@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Instructor, Student
 
 User = get_user_model()
@@ -15,7 +16,7 @@ class InstructorSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'bio']
+        fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser']
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -50,9 +51,22 @@ class LoginSerializer(serializers.Serializer):
         user = User.objects.filter(username=data['username']).first()
         if user and user.check_password(data['password']):
             refresh = RefreshToken.for_user(user)
+            access_token = refresh.access_token
+            access_token['role'] = user.role
+            access_token['is_superuser'] = user.is_superuser
+
             return {
                 'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'access': str(access_token),
                 'user': UserSerializer(user).data
             }
         raise serializers.ValidationError("Invalid credentials")
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def get_token(self, user):
+        token = super().get_token(user)
+        print("mmmmm",token)
+        token['role'] = user.role  # Add role to the token
+        token['is_superuser'] = user.is_superuser  # Add admin status
+        print("mmmmm",token)
+        return token
