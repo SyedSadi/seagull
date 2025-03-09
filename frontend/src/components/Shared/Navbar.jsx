@@ -122,12 +122,16 @@ const Navbar = () => {
 						Sign Up
 					</NavLink>
 				</> : 
-					<button
-					onClick={logoutUser}
-					className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
-					>
-					Log out
-					</button>
+					<>
+						<NavLink
+						to={"/profile"}
+						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer">
+						Profile</NavLink>
+						<button
+						onClick={logoutUser}
+						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer">
+						Log out</button>
+					</>
 				}
 			</div>
 

@@ -18,6 +18,7 @@ import Register from "./pages/Register.jsx";
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
 import CourseContent from "./components/Courses/CourseContent.jsx";
 import ModifyCoursePage from "./pages/ModifyCoursePage.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
 			{	
 				element: <ProtectedRoute />,
 				children: [
+					{
+						path: "/profile",
+						element: <Profile/>
+					},
 					{
 						path: "/add-courses",
 						element: <AddCoursesPage />,

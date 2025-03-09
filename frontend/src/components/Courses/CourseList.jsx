@@ -34,7 +34,7 @@ const CourseList = () => {
           </figure>
           <div className="card-body">
             <h3 className="text-left mb-2">#{course.subject}</h3>
-            <h2 className="card-title">{course.title}</h2>
+            <Link to={`/courses/${course.id}`} className='hover:underline'><h2 className="card-title">{course.title}</h2></Link>
             <p className="text-left text-sm">{course.description}</p>
             <h3 className="text-left mt-4">{course.difficulty}</h3>
             <div className="card-actions justify-end">
