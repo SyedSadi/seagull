@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import { getAllInstructors, addCourse } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { getAllInstructors } from '../services/instructorsApi';
+import { addCourse } from '../services/coursesApi';
 
 const AddCoursesPage = () => {
-
+    const navigate = useNavigate()
     const [course, setCourse] = useState({
         title: "",
         description: "",
@@ -38,15 +40,17 @@ const AddCoursesPage = () => {
         try{
             const data = await addCourse(course);
             // console.log('course added',data);
+            alert('course added successfully')
+            navigate("/courses")
             setCourse({
-                title: "",
-                description: "",
-                duration: "",
-                difficulty: "beginner",
-                subject: "",
-                created_by: "",
-              })
-              alert('course added successfully')
+              title: "",
+              description: "",
+              duration: "",
+              difficulty: "beginner",
+              subject: "",
+              created_by: "",
+            })
+            console.log(data)
         }catch(err){
             // console.log('eerror posting course', err)
             alert('something went wrong')

@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCourseDetailsById } from '../../services/api';
-import CourseContent from './CourseContent';
+import { getCourseDetailsById } from '../../services/coursesApi';
+import { AuthContext } from '../../context/AuthContext';
 
 const CourseDetails = () => {
-  const { id } = useParams(); // Get course ID from URL
+  const { id } = useParams();
   const [course, setCourse] = useState(null);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -23,7 +24,7 @@ const CourseDetails = () => {
   if (!course) {
     return <div>Loading...</div>;
   }
-  console.log(course)
+  // console.log(course, user)
   return (
     <div className='bg-red-200 p-16'>
       <section className="flex justify-between items-center">
@@ -34,13 +35,12 @@ const CourseDetails = () => {
           <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
           <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           <Link to={`/courseContents/${course.id}`} className='my-4 bg-red-600 p-2'>Enroll Now!</Link>
+          {user && <Link to={`/course/modify/${course.id}`} className='m-4 bg-red-600 p-2'>Edit Course</Link>}
         </div>  
         <div>
         <img width="400px" height="400px" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="course-img" />
         </div>
       </section>
-
-      {/* <CourseContent course={course}></CourseContent> */}
     </div>
   );
 };

@@ -28,5 +28,5 @@ class Student(models.Model):
     course_enrolled = models.IntegerField(default=0)
     # Add other student-specific fields
 
-    def __str__(self):
+    def __str__(self): 
         return self.user.username
