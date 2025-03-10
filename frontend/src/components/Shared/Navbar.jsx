@@ -67,6 +67,19 @@ const Navbar = () => {
 					Career
 				</NavLink>
 			</li>
+			{user?.is_superuser && <li>
+				<NavLink
+					to={"/admin/dashboard"}
+					className={({ isActive }) =>
+						isActive
+							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
+							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+					}
+					onClick={() => setIsMenuOpen(false)}
+				>
+					Dashboard
+				</NavLink>
+			</li>}
 		</ul>
 	);
 

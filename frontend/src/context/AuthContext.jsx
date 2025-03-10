@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import API from "../services/api";
+import { jwtDecode } from "jwt-decode";
 
 
 export const AuthContext = createContext();
@@ -35,10 +36,13 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (credentials, navigate, location) => {
     try {
+      console.log(credentials)
       const response = await API.post("/login/", credentials);
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
       localStorage.setItem("user", JSON.stringify(response.data.user));
+      console.log('new token after lgoin', response.data.access)
+      console.log('new decoded token after login ', jwtDecode(response.data.access))
       setUser(response.data.user);
       // console.log("Redirecting to:", location.state?.from?.pathname || "/");
       navigate(location.state?.from?.pathname, { replace: true });
