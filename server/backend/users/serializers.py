@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from .models import Instructor, Student
 
 User = get_user_model()
@@ -70,3 +70,20 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_superuser'] = user.is_superuser  # Add admin status
         print("mmmmm",token)
         return token
+    
+class CustomTokenRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        
+        # Decode the refresh token to get the user
+        refresh = RefreshToken(attrs['refresh'])
+        user = User.objects.get(id=refresh.payload['user_id'])
+
+        # Add custom claims to the new access token
+        access_token = refresh.access_token
+        access_token['role'] = user.role
+        access_token['is_superuser'] = user.is_superuser
+
+        # Return modified token data
+        data['access'] = str(access_token)
+        return data

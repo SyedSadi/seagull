@@ -89,15 +89,15 @@ const router = createBrowserRouter([
 						path: "/courseContents/:id",
 						element: <CourseContent/>
 					},
-				]
-			},
-			{
-				element: <AdminRoute />,
-				children: [
 					{
-						path: "/admin/dashboard",
-						element: <Dashboard/>
-					}
+						element: <AdminRoute />,
+						children: [
+							{
+								path: "/admin/dashboard",
+								element: <Dashboard/>
+							}
+						]
+					},
 				]
 			},
 		],

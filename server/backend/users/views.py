@@ -6,8 +6,8 @@ from .models import Instructor
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import CustomTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -60,6 +60,9 @@ class LogoutView(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer
 
 class AdminDashboardView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAdminUser]
