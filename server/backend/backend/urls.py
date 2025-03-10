@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, AdminDashboardView
+from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,12 +24,13 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name='login'),
     path("logout/", LogoutView.as_view(), name='logout'),
 
+    #token
     path("token/",  CustomTokenObtainPairView.as_view(), name='get_token'),
     path("token/refresh/", CustomTokenRefreshView.as_view(), name='token_refresh'),
     path("api-auth/", include("rest_framework.urls")),
 
     # Admin Panel
-    path('admin/dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path("dashboard/stats/", DashboardStatsView.as_view(), name="dashboard-stats"),
 
     path("courses/", include('courses.urls')),
     path("instructors/", include('users.urls')),

@@ -18,6 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser']
 
+# ------------------------- AUTHENTICATION --------------------------------
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     role = serializers.ChoiceField(choices=User.ROLE_CHOICES, required=True)  # Explicitly add role
@@ -62,6 +64,9 @@ class LoginSerializer(serializers.Serializer):
             }
         raise serializers.ValidationError("Invalid credentials")
 
+
+
+# ------------------------- TOKEN --------------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(self, user):
         token = super().get_token(user)
@@ -87,3 +92,12 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
         # Return modified token data
         data['access'] = str(access_token)
         return data
+    
+
+# ------------------------- ADMIN --------------------------------
+class DashboardStatsSerializer(serializers.Serializer):
+    total_users = serializers.IntegerField()
+    total_students = serializers.IntegerField()
+    total_instructors = serializers.IntegerField()
+    total_courses = serializers.IntegerField()
+    total_contents = serializers.IntegerField()

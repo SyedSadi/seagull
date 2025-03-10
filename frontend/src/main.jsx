@@ -73,11 +73,6 @@ const router = createBrowserRouter([
 						element: <Profile/>
 					},
 					{
-						path: "/add-courses",
-						element: <AddCoursesPage />,
-						// loader: productsLoader
-					},
-					{
 						path: "/course/modify/:courseId",
 						element: <ModifyCoursePage />,
 					},
@@ -95,7 +90,11 @@ const router = createBrowserRouter([
 							{
 								path: "/admin/dashboard",
 								element: <Dashboard/>
-							}
+							},
+							{
+								path: "/add-courses",
+								element: <AddCoursesPage />,
+							},
 						]
 					},
 				]

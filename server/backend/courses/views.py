@@ -1,7 +1,6 @@
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Course, CourseContents
 from .serializers import CourseSerializer, CourseContentsSerializer
 from rest_framework.views import APIView
@@ -9,16 +8,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
-class CourseViewSet(viewsets.ReadOnlyModelViewSet):  # For listing all courses
+class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
-class CourseDetailView(generics.RetrieveAPIView):  # For retrieving a specific course
+class CourseDetailView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
 class AddCourseView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self, request):
         serializer = CourseSerializer(data=request.data)
@@ -32,7 +31,7 @@ class AddCourseView(APIView):
 
 class UpdateDeleteCourseView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
     
     def put(self, request, course_id):
         # print('aaa', request.headers.get("Authorization"))
@@ -50,7 +49,7 @@ class UpdateDeleteCourseView(APIView):
     
 
 class UpdateContentView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def put(self, request, id):
         content = get_object_or_404(CourseContents, id=id)

@@ -5,14 +5,18 @@ from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializ
 from .models import Instructor
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.exceptions import AuthenticationFailed
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
+from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer
+from users.models import User
+from courses.models import Course, CourseContents 
 
-
+# -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -35,7 +39,7 @@ class RegisterView(generics.CreateAPIView):
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -58,18 +62,33 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+# -------------------- TOKEN ---------------------------------
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 class CustomTokenRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
 
-class AdminDashboardView(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAdminUser]
 
+
+# -------------------- ADMIN PANEL ---------------------------------
+class DashboardStatsView(APIView):
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
     def get(self, request, *args, **kwargs):
-        return Response({"message": "Welcome, Admin!"})
+        stats = {
+            "total_users": User.objects.count(),
+            "total_students": User.objects.filter(role='student').count(),
+            "total_instructors": User.objects.filter(role='instructor').count(),
+            "total_courses": Course.objects.count(),
+            "total_contents": CourseContents.objects.count(),
+        }
 
-class InstructorViewSet(viewsets.ReadOnlyModelViewSet):  # For listing all courses
+        serializer = DashboardStatsSerializer(stats)
+        return Response(serializer.data)
+
+
+class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer

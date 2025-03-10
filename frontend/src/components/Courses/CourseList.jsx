@@ -17,7 +17,6 @@ const CourseList = () => {
 
     fetchCourses();
   }, []);
-  console.log(courses)
   return (
     <div className='bg-blue-400'>      
       <ul className='grid grid-cols-4 gap-4'>
