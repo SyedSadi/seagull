@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react'
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getCourseDetailsById } from '../services/coursesApi';
 import { updateContentById } from '../services/contentsApi';
 const ManageContentsPage = () => {
-    const { courseId } = useParams(); // Get course ID from URL
-    // console.log('course id: ',courseId)
+    const { courseId } = useParams();
+    const navigate = useNavigate()
     const [contents, setContents] = useState([]);
 
     useEffect(() => {
@@ -83,6 +83,7 @@ const ManageContentsPage = () => {
 
         alert("All contents updated successfully! 🎉");
         console.log('updated', contents)
+        navigate(`/courses/${courseId}`) 
       } catch (error) {
         alert("An error occurred while updating contents. Please try again.");
       }

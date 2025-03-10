@@ -35,7 +35,7 @@ const CourseDetails = () => {
           <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
           <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           <Link to={`/courseContents/${course.id}`} className='my-4 bg-red-600 p-2'>Enroll Now!</Link>
-          {user && <Link to={`/course/modify/${course.id}`} className='m-4 bg-red-600 p-2'>Edit Course</Link>}
+          {user?.is_superuser && <Link to={`/course/modify/${course.id}`} className='m-4 bg-red-600 p-2'>Edit Course</Link>}
         </div>  
         <div>
         <img width="400px" height="400px" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="course-img" />

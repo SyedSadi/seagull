@@ -95,5 +95,6 @@ class DashboardStatsView(APIView):
 
 
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
