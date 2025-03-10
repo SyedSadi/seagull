@@ -23,7 +23,6 @@ const CourseContent = () => {
     if (!course) {
       return <div>Loading...</div>;
     }
-  console.log(course)
   const contents = course.contents;
   return (
     <div className='bg-blue-400 p-16'>
