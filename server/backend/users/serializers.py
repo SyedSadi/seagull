@@ -101,3 +101,5 @@ class DashboardStatsSerializer(serializers.Serializer):
     total_instructors = serializers.IntegerField()
     total_courses = serializers.IntegerField()
     total_contents = serializers.IntegerField()
+    new_users_last_7_days = UserSerializer(many=True)
+    active_users_last_24_hours = UserSerializer(many=True)
