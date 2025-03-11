@@ -1,4 +1,3 @@
-// Comment.jsx
 import React, { useState } from 'react';
 import API from '../../services/api';
 
@@ -55,7 +54,8 @@ const Comment = ({ comment, postId, setComments }) => {
   return (
     <div className="ml-4 border-l-2 pl-4 mb-4">
       <div className="flex items-center text-sm text-gray-600 mb-1">
-        <span className="font-medium">{comment.user?.username || "Unknown User"}</span>
+      <span className="font-medium">{comment.user || "Unknown User"}</span>
+
         <span className="mx-2">•</span>
         <span>{new Date(comment.created_at).toLocaleString()}</span>
       </div>

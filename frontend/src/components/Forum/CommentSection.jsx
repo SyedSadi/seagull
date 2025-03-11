@@ -20,9 +20,12 @@ const CommentSection = ({ postId, comments }) => {
     }
   };
 
+
+
+
   return (
     <div className="mt-4 border-t pt-4">
-      <h3 className="font-semibold mb-4">Comments ({allComments.length})</h3>
+      {/* <h3 className="font-semibold mb-4">Comments ({allComments.length})</h3> */}
       
       <form onSubmit={handleSubmit} className="mb-4">
         <textarea

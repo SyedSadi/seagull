@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaArrowUp, FaArrowDown, FaComment } from 'react-icons/fa';
 
-const VoteButtons = ({ postId, totalVotes, onVote, toggleComments }) => {
+const VoteButtons = ({ postId, totalVotes, onVote, toggleComments,commentCount }) => {
   const [voteState, setVoteState] = useState(0); // 1 for upvoted, -1 for downvoted, 0 for none
 
   const handleVote = async (value) => {
@@ -29,9 +29,10 @@ const VoteButtons = ({ postId, totalVotes, onVote, toggleComments }) => {
       </button>
       <button
         onClick={toggleComments}
-        className="p-2 text-gray-500 hover:text-gray-700"
+        className="p-2 text-gray-500 hover:text-gray-700 flex items-center space-x-1"
       >
-        <FaComment size={20} />
+        <FaComment size={20} /> <span className="text-sm">({commentCount})</span> {/* Show comment count */}
+
       </button>
     </div>
   );
