@@ -7,6 +7,8 @@ from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
 
 
+
+
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at').prefetch_related('comments__replies', 'tags')
     serializer_class = PostSerializer
@@ -42,6 +44,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -53,6 +56,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
