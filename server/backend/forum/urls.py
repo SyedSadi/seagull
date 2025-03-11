@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostViewSet, CommentViewSet, VoteViewSet
+from .views import PostViewSet, CommentViewSet, VoteViewSet,TagViewSet
 
 urlpatterns = [
     path('posts/', PostViewSet.as_view({'get': 'list', 'post': 'create'})),
@@ -10,4 +10,6 @@ urlpatterns = [
 
     path('votes/', VoteViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('votes/<int:pk>/', VoteViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'})),
+    path('tags/', TagViewSet.as_view({'get': 'list'})), 
+
 ]
