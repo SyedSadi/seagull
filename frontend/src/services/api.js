@@ -19,15 +19,36 @@ export const getCourseDetailsById = async (id) => {
 
 // Add a new course
 export const addCourse = async (courseData) => {
-  const response = await API.post("/courses/add/", courseData);
-  return response.data;
-}
+  try {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      throw new Error("Authentication token is missing");
+    }
+    const response = await API.post("/courses/add/", courseData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding course:", error);
+    throw error;  // Optionally, handle the error as per your application's need
+  }
+};
 
 // ----------------------- CONTENTS -----------------------------------
 // Edit contents
 export const updateContentById = async (contentId, updatedContent) => {
   try {
-    const response = await API.put(`/courses/content/${contentId}/`, updatedContent);
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      throw new Error("Authentication token is missing");
+    }
+    const response = await API.put(`/courses/content/${contentId}/`, updatedContent, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(`Error updating content with ID ${contentId}:`, error.response?.data || error.message);

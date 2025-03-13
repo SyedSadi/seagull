@@ -17,6 +17,7 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
+import CourseContent from "./components/Courses/CourseContent.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
 					{
 						path: "/contents/manage/:courseId",
 						element: <ManageContentsPage />,
+					},
+					{
+						path: "/courseContents/:id",
+						element: <CourseContent/>
 					},
 				]
 			},

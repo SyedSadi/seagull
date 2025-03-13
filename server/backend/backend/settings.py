@@ -37,7 +37,7 @@ STATIC_URL = "static/"
 INSTALLED_APPS = [
     'users',
     'corsheaders',
-    "courses.apps.CoursesConfig",
+    # "courses.apps.CoursesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'rest_framework_simplejwt',
+    "rest_framework_simplejwt.token_blacklist",
+    "courses",
+    "quiz",
 ]
 
 MIDDLEWARE = [
