@@ -3,10 +3,10 @@ from rest_framework.routers import DefaultRouter
 from .views import CategoryViewSet, QuizAPIView, SubmitQuizAPIView
 
 router = DefaultRouter()
-router.register(r'categories', CategoryViewSet)
+router.register(r'quiz', CategoryViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('api/quiz/<int:category_id>/', QuizAPIView.as_view(), name='quiz'),
-    path('api/submit-quiz/', SubmitQuizAPIView.as_view(), name='submit-quiz'),
+    path('', include(router.urls)),
+    path('quiz/<int:category_id>/', QuizAPIView.as_view(), name='quiz'),
+    path('submit-quiz/', SubmitQuizAPIView.as_view(), name='submit-quiz'),
 ]

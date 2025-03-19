@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: 'http://127.0.0.1:8000/', // Your Django backend URL
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
 // ----------------------- COURSES -----------------------------------
@@ -62,5 +65,38 @@ export const getAllInstructors = async () => {
   const response = await API.get('/instructors/');
   return response.data;
 };
+
+// ----------------------- QUIZ CATEGORIES -----------------------------------
+// Fetch all quiz categories
+export const getAllCategories = async () => {
+  const response = await API.get('quiz/');
+   console.log('API Response:', response.data)
+  return response.data;
+};
+
+// ----------------------- QUIZ QUESTIONS -----------------------------------
+// Fetch quiz questions by category ID
+export const getQuizQuestions = async (categoryId) => {
+  const response = await API.get(`quiz/${categoryId}/`);
+  return response.data;
+};
+
+// ----------------------- SUBMIT QUIZ -----------------------------------
+// Submit quiz answers
+export const submitQuiz = async (quizData) => {
+  try {
+    const token = localStorage.getItem('access_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
+    const response = await API.post('submit-quiz/', quizData, {
+      headers
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting quiz:', error);
+    throw error;
+  }
+};
+
 
 export default API;

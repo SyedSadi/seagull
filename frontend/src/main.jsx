@@ -1,23 +1,34 @@
+// React and Router
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
-import Home from "./pages/Home.jsx";
-import CoursePage from "./pages/CoursePage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import CourseDetails from "./components/Courses/CourseDetails.jsx";
+
+// Context
+import { AuthProvider } from "./context/AuthContext.jsx";
+
+// Pages
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import App from "./App.jsx";
+import CoursePage from "./pages/CoursePage.jsx";
 import ForumPage from "./pages/ForumPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import CareerPage from "./pages/CareerPage.jsx";
-import QuizPage from "./pages/QuizPage.jsx";
 import AddCoursesPage from "./pages/AddCoursesPage.jsx";
 import ManageContentsPage from "./pages/ManageContentsPage.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import QuizHome from "./pages/QuizHome.jsx";
+
+// Components
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
+import CourseDetails from "./components/Courses/CourseDetails.jsx";
 import CourseContent from "./components/Courses/CourseContent.jsx";
+import Result from "./components/Quiz/Result.jsx";
+import Quizzes from "./components/Quiz/Quizzes.jsx";
+
+// Styles
+import "./index.css";
 
 const router = createBrowserRouter([
 	{
@@ -40,32 +51,34 @@ const router = createBrowserRouter([
 			{
 				path: "/forum",
 				element: <ForumPage />,
-				//loader: forumLoader
 			},
 			{
 				path: "/aboutus",
 				element: <AboutUsPage />,
-				//loader: aboutUsLoader
 			},
 			{
 				path: "/career",
 				element: <CareerPage />,
-				//loader: careerLoader
 			},
 			{
 				path: "/quiz",
-				element: <QuizPage />,
-				//loader: quizLoader
+				element: <QuizHome/>
+			},
+			{
+				path: "/quiz/:categoryId",
+				element: <Quizzes />,
+			},
+			{
+				path: "/result",
+				element: <Result />,
 			},
 			{
 				path: "/courses",
 				element: <CoursePage />,
-				// loader: productsLoader
 			},
 			{
 				path: "/courses/:id",
 				element: <CourseDetails />,
-				// loader: productsLoader
 			},
 			{	
 				element: <ProtectedRoute />,
@@ -73,7 +86,6 @@ const router = createBrowserRouter([
 					{
 						path: "/add-courses",
 						element: <AddCoursesPage />,
-						// loader: productsLoader
 					},
 					{
 						path: "/contents/manage/:courseId",
@@ -96,3 +108,16 @@ createRoot(document.getElementById("root")).render(
 		</AuthProvider>
 	</StrictMode>
 );
+
+// ErrorBoundary Component
+import { useRouteError } from 'react-router-dom';
+
+export default function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-2xl font-bold text-red-600">Oops!</h1>
+      <p className="text-gray-600">{error.message}</p>
+    </div>
+  );
+}
