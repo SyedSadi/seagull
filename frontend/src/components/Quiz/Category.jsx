@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCategories } from '../../services/api';
+import PropTypes from 'prop-types';
 
 function Category() {
   const [categories, setCategories] = useState([]);
@@ -37,6 +38,20 @@ function Category() {
     </div>
   );
 
+  if (!categories?.length) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-600">No quiz categories available at the moment.</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 text-blue-500 hover:text-blue-600"
+        >
+          Refresh page
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center">
       <h2 className="text-2xl font-semibold mb-8">Select a Quiz Category</h2>
@@ -46,6 +61,15 @@ function Category() {
             key={category.id} 
             className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer"
             onClick={() => handleCategorySelect(category.id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleCategorySelect(category.id);
+              }
+            }}
+            aria-label={`Start ${category.name} quiz`}
           >
             <div className="p-6">
               <h3 className="text-xl font-semibold text-blue-600 mb-2">{category.name}</h3>
@@ -60,5 +84,16 @@ function Category() {
     </div>
   );
 }
+
+Category.propTypes = {
+  categories: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      question_count: PropTypes.number.isRequired,
+    })
+  ),
+};
 
 export default Category;
