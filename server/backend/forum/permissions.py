@@ -2,9 +2,13 @@
 from rest_framework import permissions
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # Read-only permissions allowed for anyone
+     def has_object_permission(self, request, view, obj):
+        # Allow read-only permissions for anyone (GET, HEAD, OPTIONS)
         if request.method in permissions.SAFE_METHODS:
             return True
-        # Write permissions only for the author
-        return obj.author == request.user
+        
+        # Dynamically check if the object has 'author' (Post) or 'user' (Comment)
+        owner = getattr(obj, 'author', None) or getattr(obj, 'user', None)
+        
+        # Allow modification only if the logged-in user is the owner
+        return owner == request.user

@@ -1,36 +1,79 @@
-from django.shortcuts import render
-
-# Create your views here.
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.decorators import action
+
+from .models import Post, Comment, Vote,Tag
+from .serializers import PostSerializer, CommentSerializer, VoteSerializer,TagSerializer
 from .permissions import IsAuthorOrReadOnly
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from .models import Post, Comment, Vote
-from .serializers import PostSerializer, CommentSerializer, VoteSerializer
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import Vote, Post
+from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
+
+
+
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-created_at').select_related('author').prefetch_related('comments__replies')
+    queryset = Post.objects.all().order_by('-created_at').prefetch_related('comments__replies', 'tags')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
+    def get_queryset(self):
+        queryset = super().get_queryset().annotate(
+            upvotes=Count('votes', filter=Q(votes__value=1)),  # Count only upvotes
+            downvotes=Count('votes', filter=Q(votes__value=-1)),  # Count only downvotes
+            vote_count=F('upvotes') - F('downvotes')  # Compute total vote score
+        )
+        filter_type = self.request.query_params.get('filter', 'recent')
+        tag_name = self.request.query_params.get('tag')
+
+        if filter_type == 'highest_voted':
+             queryset = queryset.order_by('-vote_count')
+        elif filter_type == 'user_posts' and self.request.user.is_authenticated:
+            
+            queryset = queryset.filter(author=self.request.user)
+
+        if tag_name:
+            queryset = queryset.filter(tags__name__iexact=tag_name)
+
+        return queryset
+
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-        
+   
+
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all().order_by('-created_at').select_related('user', 'post')
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
+
+    def get_queryset(self):
+        """Return only top-level comments for listing, but all comments for detail/edit/delete."""
+        if self.action == 'list':  # Only fetch top-level comments when listing
+            return Comment.objects.filter(parent__isnull=True).order_by('-created_at')
+        return Comment.objects.all()  # Fetch all comments for other actions
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.user != request.user:
+            raise PermissionDenied("You do not have permission to delete this comment.")
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -45,20 +88,33 @@ class VoteViewSet(viewsets.ModelViewSet):
         except Post.DoesNotExist:
             return Response({"error": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Check if the user has already voted on this post
         existing_vote = Vote.objects.filter(user=user, post=post).first()
 
         if existing_vote:
             if existing_vote.value == value:
-                # If the user clicks the same vote again, remove the vote
+                # Remove vote if clicking the same vote again
                 existing_vote.delete()
-                return Response({"message": "Vote removed."}, status=status.HTTP_200_OK)
+                total_votes = post.votes.filter(value=1).count() - post.votes.filter(value=-1).count()
+                return Response({"message": "Vote removed.", "total_votes": total_votes, "user_vote": 0}, status=status.HTTP_200_OK)
             else:
-                # If the user clicks the opposite vote, update the vote
+                # Update vote
                 existing_vote.value = value
                 existing_vote.save()
-                return Response({"message": "Vote updated."}, status=status.HTTP_200_OK)
         else:
-            # Ensure votes are user-specific
-            new_vote = Vote.objects.create(user=user, post=post, value=value)
-            return Response({"message": "Vote recorded.", "vote_id": new_vote.id}, status=status.HTTP_201_CREATED)
+            # Create new vote
+            Vote.objects.create(user=user, post=post, value=value)
+
+        total_votes = post.votes.filter(value=1).count() - post.votes.filter(value=-1).count()
+        return Response({"message": "Vote updated.", "total_votes": total_votes, "user_vote": value}, status=status.HTTP_200_OK)
+
+
+
+    @action(detail=False, methods=['get'], url_path=r'(?P<post_id>\d+)/user-vote', permission_classes=[IsAuthenticated])
+    def get_user_vote(self, request, post_id=None):
+        """Allow only authenticated users to see their own vote on a post."""
+        vote = Vote.objects.filter(user=request.user, post_id=post_id).first()
+        return Response({"user_vote": vote.value if vote else 0}, status=status.HTTP_200_OK)
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
