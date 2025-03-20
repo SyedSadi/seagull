@@ -13,14 +13,24 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class QuizAPIView(APIView):
     def get(self, request, category_id):
+        try:
+            # Ensure category_id is valid
+            category_id = int(category_id)
+        except (TypeError, ValueError):
+            return Response(
+                {'error': 'Invalid category ID'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
         category = get_object_or_404(Category, pk=category_id)
         # Get 20 random questions for the category
         questions = Question.objects.filter(category=category).order_by('?')[:20]
+        # Serialize the questions
+        serializer = QuestionSerializer(questions, many=True)
         
         return Response({
             'category_id': category.id,
             'category_name': category.name,
-            'questions': QuestionSerializer(questions, many=True).data
+            'questions': serializer.data
         })
 
 class SubmitQuizAPIView(APIView):
