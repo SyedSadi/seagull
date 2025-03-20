@@ -7,6 +7,17 @@ const Comment = ({ comment, postId, setComments }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
 
+
+  const userData = localStorage.getItem('user');
+  const user = userData ? JSON.parse(userData) : null;
+  const userId = user ? user.id : null;
+ 
+  const is_owner = comment.author === Number(userId);
+  console.log("Comment Author ID:", comment.author);
+  console.log("Logged-in User ID:", userId);
+  console.log("Is Owner:", is_owner);
+  
+
   const handleReplySubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,37 +38,75 @@ const Comment = ({ comment, postId, setComments }) => {
       console.error('Error submitting reply:', error);
     }
   };
-
+  
   const handleEdit = async () => {
     try {
-      await API.put(`/forum/comments/${comment.id}/`, {
-        content: editedContent
-      });
+      console.log("Editing comment:", comment.id);
+      const token = localStorage.getItem('access_token'); 
+      
+      const response = await API.put(
+        `/forum/comments/${comment.id}/`,
+        { content: editedContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
       setIsEditing(false);
-      setComments(prev => prev.map(c => 
-        c.id === comment.id ? { ...c, content: editedContent } : c
-      ));
+  
+      // Update comments at all levels
+      setComments(prevComments => {
+        const updateComment = (comments) => comments.map(c => 
+          c.id === comment.id 
+            ? { ...c, content: editedContent } 
+            : { ...c, replies: c.replies ? updateComment(c.replies) : [] }
+        );
+        return updateComment(prevComments);
+      });
+  
     } catch (error) {
-      console.error('Error editing comment:', error);
+      console.error("Error editing comment:", error.response?.data || error);
     }
   };
+  
 
   const handleDelete = async () => {
+    const token = localStorage.getItem('access_token');
+  
+    if (!token) {
+      console.error("No token found, user might not be authenticated.");
+      return;
+    }
+  
     try {
-      await API.delete(`/forum/comments/${comment.id}/`);
-      setComments(prev => prev.filter(c => c.id !== comment.id));
+      await API.delete(`/forum/comments/${comment.id}/`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      // Recursively remove the comment from all levels
+      setComments(prevComments => {
+        const removeComment = (comments) => 
+          comments.filter(c => c.id !== comment.id)
+                  .map(c => ({ ...c, replies: removeComment(c.replies || []) }));
+  
+        return removeComment(prevComments);
+      });
+  
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      console.error("Error deleting comment:", error.response?.data || error.message);
     }
   };
+  
+
 
   return (
+    
     <div className="ml-4 border-l-2 pl-4 mb-4">
       <div className="flex items-center text-sm text-gray-600 mb-1">
       <span className="font-medium">{comment.user || "Unknown User"}</span>
 
         <span className="mx-2">•</span>
+        
         <span>{new Date(comment.created_at).toLocaleString()}</span>
+        
       </div>
       
       {isEditing ? (
@@ -71,45 +120,57 @@ const Comment = ({ comment, postId, setComments }) => {
       )}
       
       <div className="flex gap-4 mt-2">
-        {!isEditing && (
-          <>
-            <button 
-              onClick={() => setIsReplying(!isReplying)}
-              className="text-blue-600 hover:text-blue-800 text-sm"
-            >
-              Reply
-            </button>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-gray-600 hover:text-gray-800 text-sm"
-            >
-              Edit
-            </button>
-          </>
-        )}
-        <button
-          onClick={handleDelete}
-          className="text-red-600 hover:text-red-800 text-sm"
-        >
-          Delete
-        </button>
-        {isEditing && (
-          <>
-            <button
-              onClick={handleEdit}
-              className="text-green-600 hover:text-green-800 text-sm"
-            >
-              Save
-            </button>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="text-gray-600 hover:text-gray-800 text-sm"
-            >
-              Cancel
-            </button>
-          </>
-        )}
-      </div>
+  {!isEditing && (
+    <>
+      <button 
+        onClick={() => setIsReplying(!isReplying)}
+        className="text-blue-600 hover:text-blue-800 text-sm"
+      >
+        Reply
+      </button>
+    
+      {/* Only show edit & delete buttons if the logged-in user is the author */}
+      {is_owner && (
+        <>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="text-gray-600 hover:text-gray-800 text-sm"
+          >
+            Edit
+          </button>
+          
+          <button
+            onClick={handleDelete}
+            
+            className="text-red-600 hover:text-red-800 text-sm"
+          >
+            Delete
+          </button>
+        </>
+      )}
+    </>
+  )}
+
+  {isEditing && (
+    <>
+      <button
+        onClick={handleEdit}
+        className="text-green-600 hover:text-green-800 text-sm"
+      >
+        Save
+      </button>
+      <button
+        onClick={() => setIsEditing(false)}
+        className="text-gray-600 hover:text-gray-800 text-sm"
+      >
+        Cancel
+      </button>
+    </>
+  )}
+</div>
+
+  
+
 
       {isReplying && (
         <form onSubmit={handleReplySubmit} className="mt-4">

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import API from '../../services/api';
+import { AuthContext } from '../../context/AuthContext'; // Import AuthContext
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [allTags, setAllTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const { user } = useContext(AuthContext); // Get the authenticated user from AuthContext
 
   // Fetch available tags from the backend
   useEffect(() => {
@@ -38,16 +40,28 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       alert('Please select at least one tag.');
       return;
     }
+
+    // Check if the user is authenticated
+    if (!user) {
+      alert('User not authenticated. Please log in.');
+      return;
+    }
+
     try {
-      await API.post('/forum/posts/', {
-        title,
-        content,
+      const payload = {
+        title: title,
+        content: content,
         tag_ids: selectedTags.map((t) => t.id),
-      });
+        author: user.id, // Include the authenticated user's ID as the author
+      };
+
+      console.log('Payload:', payload); // Log the payload for debugging
+      const response = await API.post('/forum/posts/', payload);
+      console.log('Post created:', response.data);
       refreshPosts(); // Refresh the list after posting
       onClose(); // Close the modal
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Error creating post:', error.response?.data);
     }
   };
 
@@ -55,7 +69,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
         <h2 className="text-2xl font-bold mb-4">Create New Post</h2>
-        <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg"> {/* Updated background */}
+        <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg">
           <input
             type="text"
             placeholder="Title"

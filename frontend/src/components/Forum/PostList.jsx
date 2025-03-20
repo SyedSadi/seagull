@@ -1,26 +1,28 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FiFilter } from 'react-icons/fi'; // Import the filter icon from Feather Icons
+import { FiFilter } from 'react-icons/fi';
+import { AiOutlineEdit } from 'react-icons/ai';
+import { FaSearch } from 'react-icons/fa';
 import API from '../../services/api';
 import Post from './Post';
 import CreatePostModal from './CreatePostModal';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [filter, setFilter] = useState('recent'); // "recent", "highest_voted", "my_posts"
+  const [filter, setFilter] = useState('recent'); // Default filter
   const [searchTag, setSearchTag] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false); // State to control dropdown visibility
-  const filterRef = useRef(null); // Ref for the filter dropdown
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const filterRef = useRef(null);
 
+  // Fetch posts whenever filter or searchTag changes
   useEffect(() => {
     fetchPosts();
   }, [filter, searchTag]);
 
-  // Fetch posts from the API
   const fetchPosts = async () => {
     try {
       let url = `/forum/posts/?filter=${filter}`;
-      if (searchTag) url += `&tag=${searchTag}`;
+      if (searchTag.trim() !== '') url += `&tag=${searchTag.trim()}`;
       const response = await API.get(url);
       setPosts(response.data);
     } catch (error) {
@@ -28,62 +30,71 @@ const PostList = () => {
     }
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
         setShowFilterDropdown(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      {/* Filtering & Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-6 space-y-4 sm:space-y-0">
-        <div className="flex space-x-2 items-center">
-          {/* Filter Icon and Text */}
-          <div
-            className="flex items-center space-x-2 cursor-pointer"
-            onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-            ref={filterRef}
-          >
-            <FiFilter className="h-5 w-5 text-gray-600" /> {/* Filter icon */}
-            <span className="text-gray-600">Filter</span>
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setShowFilterDropdown(false); // Close dropdown after selection
+  };
 
+  return (
+    <div className="max-w-3xl mx-auto py-8 px-4">
+      {/* Search & Actions Row */}
+      <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-6 space-y-4 sm:space-y-0">
+        
+        {/* Search Bar */}
+        <div className="relative w-full sm:w-2/3">
+          <input
+            type="text"
+            placeholder="Search posts by tag..."
+            value={searchTag}
+            onChange={(e) => setSearchTag(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
+
+        {/* Icons: Filter & Create */}
+        <div className="flex items-center gap-4">
+          {/* Filter Button */}
+          <div className="relative" ref={filterRef}>
+            <button
+              className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+            >
+              <FiFilter className="text-gray-600" />
+              <span className="text-gray-600">Filter</span>
+            </button>
+            
             {/* Dropdown */}
             {showFilterDropdown && (
-              <div className="absolute mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+              <div className="absolute mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                 <ul className="py-2">
-                  <li
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      setFilter('recent');
-                      setShowFilterDropdown(false);
-                    }}
+                  <li 
+                    className={`px-4 py-2 cursor-pointer ${filter === 'recent' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
+                    onClick={() => handleFilterChange('recent')}
                   >
                     Recent Posts
                   </li>
-                  <li
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      setFilter('highest_voted');
-                      setShowFilterDropdown(false);
-                    }}
+                  <li 
+                    className={`px-4 py-2 cursor-pointer ${filter === 'highest_voted' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
+                    onClick={() => handleFilterChange('highest_voted')}
                   >
                     Top Voted
                   </li>
-                  <li
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      setFilter('my_posts');
-                      setShowFilterDropdown(false);
-                    }}
+                  <li 
+                    className={`px-4 py-2 cursor-pointer ${filter === 'user_posts' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
+                    onClick={() => handleFilterChange('user_posts')}
                   >
                     My Posts
                   </li>
@@ -91,21 +102,24 @@ const PostList = () => {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Create Post Button */}
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          Create Post
-        </button>
+          {/* Create Post Button */}
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            <AiOutlineEdit className="mr-2" />
+            Create
+          </button>
+        </div>
       </div>
 
       {/* Post List */}
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      {posts.length === 0 ? (
+        <p className="text-gray-500 text-center mt-6">No posts found.</p>
+      ) : (
+        posts.map((post) => <Post key={post.id} post={post} />)
+      )}
 
       {/* Create Post Modal */}
       {showCreateModal && <CreatePostModal onClose={() => setShowCreateModal(false)} refreshPosts={fetchPosts} />}
