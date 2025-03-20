@@ -19,4 +19,8 @@ class CourseSerializer(serializers.ModelSerializer):
         return CourseContentsSerializer(obj.contents.all(), many=True).data
 
 
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = ['id', 'course', 'student', 'enrolled_at']
 

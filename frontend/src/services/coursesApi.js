@@ -30,3 +30,21 @@ try {
     throw error;  // Optionally, handle the error as per your application's need
 }
 };
+
+//enroll to a course
+export const enroll = async (courseId) => {
+    const res = await API.post(`/courses/enroll/${courseId}/`);
+    return res;
+}
+
+//get enrolled courses by a student
+export const getEnrolledCourses = async () => {
+    const res = await API.get("/courses/enrolled/");
+    return res;
+}
+
+//get courses by an instructor
+export const getInstructorCourses = async () => {
+    const res = await API.get("/courses/by-instructor");
+    return res;
+}

@@ -33,7 +33,7 @@ class CourseContents(models.Model):
         ('text', 'Text'),
         ('article', 'Article'),
     ]
-    course = models.ManyToManyField(Course, related_name='contents')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='contents')
     content_type = models.CharField(max_length=20, choices=CONTENT_TYPES)
     title = models.CharField(max_length=255)
     url = models.URLField(null=True, blank=True)

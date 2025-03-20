@@ -7,7 +7,7 @@ export const updateContentById = async (contentId, updatedContent) => {
       if (!token) {
         throw new Error("Authentication token is missing");
       }
-      const response = await API.put(`/courses/content/${contentId}/`, updatedContent, {
+      const response = await API.put(`/courses/content/update/${contentId}/`, updatedContent, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
