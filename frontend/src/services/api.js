@@ -69,7 +69,7 @@ export const getAllInstructors = async () => {
 // ----------------------- QUIZ CATEGORIES -----------------------------------
 // Fetch all quiz categories
 export const getAllCategories = async () => {
-  const response = await API.get('quiz/');
+  const response = await API.get('/quiz/');
    console.log('API Response:', response.data)
   return response.data;
 };
@@ -77,7 +77,7 @@ export const getAllCategories = async () => {
 // ----------------------- QUIZ QUESTIONS -----------------------------------
 // Fetch quiz questions by category ID
 export const getQuizQuestions = async (categoryId) => {
-  const response = await API.get(`quiz/${categoryId}/`);
+  const response = await API.get(`/quiz/${categoryId}/`);
   return response.data;
 };
 
@@ -88,7 +88,7 @@ export const submitQuiz = async (quizData) => {
     const token = localStorage.getItem('access_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
     
-    const response = await API.post('submit-quiz/', quizData, {
+    const response = await API.post('/submit-quiz/', quizData, {
       headers
     });
     return response.data;
