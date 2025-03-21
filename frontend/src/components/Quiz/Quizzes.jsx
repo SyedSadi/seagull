@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getQuizQuestions, submitQuiz } from '../../services/api'; // Import from your new API file
+import { AuthContext } from '../../context/AuthContext';
 
 function Quizzes() {
   const { categoryId } = useParams();
@@ -12,9 +13,12 @@ function Quizzes() {
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes in seconds
   const [categoryName, setCategoryName] = useState('');
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    // Fetch questions for the selected category
+  if (!user) {
+    navigate('/login');  // Redirect to login if not authenticated
+  } else {
     getQuizQuestions(categoryId)
       .then(data => {
         setQuestions(data.questions);
@@ -24,9 +28,9 @@ function Quizzes() {
       .catch(err => {
         setError('Failed to load quiz questions. Please try again later.');
         setLoading(false);
-        console.error('Error fetching questions:', err);
       });
-  }, [categoryId]);
+  }
+}, [categoryId, user]);
 
   // Timer countdown
   useEffect(() => {
@@ -67,12 +71,14 @@ function Quizzes() {
 
   const handleQuizComplete = () => {
     // Submit answers to backend and navigate to results
+    setLoading(true);
     submitQuiz({
       category_id: categoryId,
       answers: selectedAnswers
     })
       .then(data => {
-        navigate('/results', { 
+        console.log("Quiz submission response:", data); // Debugging
+        navigate('/result', { 
           state: { 
             results: data,
             categoryName: categoryName,
@@ -83,6 +89,7 @@ function Quizzes() {
       .catch(err => {
         console.error('Error submitting quiz:', err);
         setError('Failed to submit quiz. Please try again.');
+        setLoading(false);
       });
   };
 

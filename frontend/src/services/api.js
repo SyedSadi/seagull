@@ -86,17 +86,23 @@ export const getQuizQuestions = async (categoryId) => {
 export const submitQuiz = async (quizData) => {
   try {
     const token = localStorage.getItem('access_token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    
-    const response = await API.post('/submit-quiz/', quizData, {
-      headers
+    if (!token) {
+      throw new Error("Authentication token is missing. Please log in again.");
+    }
+
+    const response = await API.post('/quiz/submit-quiz/', quizData, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Attach token
+      },
     });
+
     return response.data;
   } catch (error) {
-    console.error('Error submitting quiz:', error);
+    console.error('🚨 Error submitting quiz:', error);
     throw error;
   }
 };
+
 
 
 export default API;

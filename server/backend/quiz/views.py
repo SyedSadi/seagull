@@ -115,4 +115,4 @@ class SubmitQuizAPIView(APIView):
             'incorrect_answers': incorrect_answers,
             'unanswered': unanswered,
             'questions': questions_data
-        })
+        }, status=status.HTTP_200_OK)
