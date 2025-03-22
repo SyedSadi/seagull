@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaArrowUp, FaArrowDown, FaComment } from 'react-icons/fa';
 import API from '../../services/api';
 
-const VoteButtons = ({ postId, totalVotes, onVote, toggleComments, commentCount }) => {
+const VoteButtons = ({ postId, totalVotes, onVote, toggleComments }) => {
   const [voteState, setVoteState] = useState(0); // 1 for upvote, -1 for downvote, 0 for no vote
   const [voteCount, setVoteCount] = useState(totalVotes);
   
@@ -74,7 +74,7 @@ const VoteButtons = ({ postId, totalVotes, onVote, toggleComments, commentCount 
         <FaArrowDown size={20} />
       </button>
       <button onClick={toggleComments} className="p-2 text-gray-500 hover:text-gray-700 flex items-center">
-        <FaComment size={20} className="mr-1" /> {commentCount}
+        <FaComment size={20} className="mr-1" /> 
       </button>
     </div>
   );

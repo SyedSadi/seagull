@@ -12,7 +12,7 @@ from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-created_at').prefetch_related('comments__replies', 'tags')
+    queryset = Post.objects.all().order_by('-created_at').prefetch_related('tags')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
@@ -45,16 +45,20 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def get_queryset(self):
-        """Return only top-level comments for listing, but all comments for detail/edit/delete."""
-        if self.action == 'list':  # Only fetch top-level comments when listing
-            return Comment.objects.filter(parent__isnull=True).order_by('-created_at')
-        return Comment.objects.all()  # Fetch all comments for other actions
+        queryset = Comment.objects.select_related('user', 'post').prefetch_related('children')
 
+        if self.action == 'list':
+            queryset = queryset.filter(parent=None)  # ✅ Fetch only top-level comments
+
+        return queryset
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+        if instance.user != request.user:
+            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -63,7 +67,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.user != request.user:
-            raise PermissionDenied("You do not have permission to delete this comment.")
+            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
