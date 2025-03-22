@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getEnrolledCourses, enroll, getCourseDetailsById } from '../../services/coursesApi';
 import { AuthContext } from '../../context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
@@ -10,7 +10,6 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(null);
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [isEnrolled, setIsEnrolled] = useState(null);
 
   useEffect(() => {
@@ -63,6 +62,29 @@ const CourseDetails = () => {
     return <div>Loading...</div>;
   }
 
+  let actionButton;
+
+  if (isEnrolled) {
+    actionButton = (
+      <Link
+        to={`/courseContents/${course.id}`}
+        className="mt-8 btn btn-primary flex items-center gap-2"
+      >
+        Go to Course <FaArrowRight />
+      </Link>
+    );
+  } else {
+    actionButton = (
+      <button
+        onClick={handleEnroll}
+        className="mt-8 btn btn-accent flex items-center gap-2"
+        disabled={loading}
+      >
+        {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
+      </button>
+    );
+  }
+
   return (
     <div className='py-8'>
       <section className="flex justify-between items-center">
@@ -74,11 +96,7 @@ const CourseDetails = () => {
           <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           <p className='text-lg my-4'>Duration: {course.duration} hours</p>
           <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
-          {/* <Link to={`/courseContents/${course.id}`} className='my-4 bg-red-600 p-2'>Enroll Now!</Link> */}
-          {/* <button className="btn btn-primary mt-4 w-full" onClick={handleEnroll} disabled={loading}>
-            {loading ? "Enrolling..." : "Enroll Now"}
-          </button> */}
-          {isEnrolled === null ? (
+          {/* {isEnrolled === null ? (
             <span className="loading loading-spinner loading-lg"></span>) : isEnrolled ? (
             <Link to={`/courseContents/${course.id}`} className='mt-8 btn btn-primary flex items-center gap-2'>Go to Course <FaArrowRight /></Link>) : (
             <button
@@ -88,7 +106,8 @@ const CourseDetails = () => {
             >
             {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
             </button>
-          )}
+          )} */}
+          {actionButton}
           {user?.is_superuser && <Link to={`/course/modify/${course.id}`} className='m-4 bg-red-600 p-2'>Edit Course</Link>}
         </div>  
         <div>

@@ -28,22 +28,6 @@ const CourseContent = () => {
   const pdfUrl = "https://arxiv.org/pdf/1708.08021.pdf";
 
   return (
-    // <div className='bg-blue-400 p-16'>
-    //   {user?.is_superuser && <Link className='my-4 bg-red-200 p-2' to={`/contents/manage/${course.id}`}>Manage Contents</Link>}
-    //   <ul>
-    //     {contents.map((content) => (
-    //       <div key={content.id}>
-    //         <li className='text-xl my-4'>
-    //         <strong>Title: {content.title}</strong> - Type: {content.content_type}
-    //         </li>
-    //         <li className='text-xl my-4'>
-    //         <strong>Text: {content.text_content}</strong>
-    //         </li>
-    //         {content.url && <a className='my-4 bg-red-200 p-2' href={content.url}>{content.content_type == "video" ? 'Watch' : 'PDF'}</a>}
-    //       </div>          
-    //     ))}
-    //   </ul>
-    // </div>
     <div className="bg-gray-50">
       {/* Admin management link */}
       {user?.is_superuser && (
@@ -129,7 +113,7 @@ const CourseContent = () => {
 };
 
 const getYouTubeId = (url) => {
-  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.*|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/;
+  const regExp = /(?:youtu\.be\/|youtube\.com\/(?:.*[?&]v=|embed\/|shorts\/))([\w-]{11})/;
   const match = url.match(regExp);
   return match ? match[1] : null;
 };
