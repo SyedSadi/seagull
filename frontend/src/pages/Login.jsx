@@ -17,8 +17,9 @@ const Login = () => {
         const res = await loginUser(formData, navigate, location);
         console.log('res', res);
         if(res?.status === 200){
-            navigate('/')
-            alert('login successful')
+            const redirectTo = location.state?.from?.pathname || "/";
+            navigate(redirectTo);
+            alert('login successful');
         }
         
     };

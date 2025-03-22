@@ -1,11 +1,12 @@
 import React from "react";
+import Hero from "../components/LandingPage/Hero";
+import FeaturedCourses from "../components/LandingPage/FeaturedCourses";
 
 const Home = () => {
 	return (
 		<div>
-			<div className="bg-blue-200 text-blue-800 text-center h-48">
-				Learning Management System
-			</div>
+			<Hero />
+			<FeaturedCourses />
 		</div>
 	);
 };

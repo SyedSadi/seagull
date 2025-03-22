@@ -35,5 +35,5 @@ urlpatterns = [
     path("courses/", include('courses.urls')),
     path("instructors/", include('users.urls')),
     path("forum/", include('forum.urls')),
-   
+    path("quiz/", include('quiz.urls')),
 ]

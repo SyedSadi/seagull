@@ -1,7 +1,7 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom';
-import Navbar from './components/Shared/Navbar';
-import Footer from './components/Shared/Footer';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Footer from "./components/Shared/Footer";
+import Navbar from "./components/Shared/Navbar";
 
 const App = () => {
   return (
@@ -10,8 +10,6 @@ const App = () => {
       <Outlet/>
       <Footer/>
     </div>
-
   )
 }
-
-export default App
+export default App;
