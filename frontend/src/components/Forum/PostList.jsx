@@ -99,32 +99,36 @@ const PostList = () => {
             
             {/* Dropdown */}
             {showFilterDropdown && (
-              <div className="absolute mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                <ul className="py-2">
-                  <li 
-                    className={`px-4 py-2 cursor-pointer ${filter === 'recent' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
-                    onClick={() => handleFilterChange('recent')}
-                    tabIndex={0}
-                  >
-                    Recent Posts
-                  </li>
-                  <li 
-                    className={`px-4 py-2 cursor-pointer ${filter === 'highest_voted' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
-                    onClick={() => handleFilterChange('highest_voted')}
-                    tabIndex={0}
-                  >
-                    Top Voted
-                  </li>
-                  <li 
-                    className={`px-4 py-2 cursor-pointer ${filter === 'user_posts' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
-                    onClick={() => handleFilterChange('user_posts')}
-                    tabIndex={0}
-                  >
-                    My Posts
-                  </li>
-                </ul>
-              </div>
-            )}
+  <div className="absolute mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+    <ul className="py-2">
+      <li>
+        <button
+          className={`w-full text-left px-4 py-2 ${filter === 'recent' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+          onClick={() => handleFilterChange('recent')}
+        >
+          Recent Posts
+        </button>
+      </li>
+      <li>
+        <button
+          className={`w-full text-left px-4 py-2 ${filter === 'highest_voted' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+          onClick={() => handleFilterChange('highest_voted')}
+        >
+          Top Voted
+        </button>
+      </li>
+      <li>
+        <button
+          className={`w-full text-left px-4 py-2 ${filter === 'user_posts' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+          onClick={() => handleFilterChange('user_posts')}
+        >
+          My Posts
+        </button>
+      </li>
+    </ul>
+  </div>
+)}
+
           </div>
 
           {/* Create Post Button */}
