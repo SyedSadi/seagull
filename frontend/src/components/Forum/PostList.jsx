@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { AiOutlineEdit } from 'react-icons/ai';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 import API from '../../services/api';
 import Post from './Post';
 import CreatePostModal from './CreatePostModal';
+import { debounce } from 'lodash'; // Import debounce function
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -13,13 +14,12 @@ const PostList = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const filterRef = useRef(null);
+  
 
-  // Fetch posts whenever filter or searchTag changes
-  useEffect(() => {
-    fetchPosts();
-  }, [filter, searchTag]);
 
-  const fetchPosts = async () => {
+  
+  // Optimized fetchPosts function using useCallback
+  const fetchPosts = useCallback(async () => {
     try {
       let url = `/forum/posts/?filter=${filter}`;
       if (searchTag.trim() !== '') url += `&tag=${searchTag.trim()}`;
@@ -28,8 +28,17 @@ const PostList = () => {
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
-  };
+  }, [filter, searchTag]);
 
+  // Debounced search to avoid excessive API calls
+  const debouncedFetchPosts = useCallback(debounce(fetchPosts, 500), [fetchPosts]);
+
+  useEffect(() => {
+    debouncedFetchPosts();
+    return () => debouncedFetchPosts.cancel(); // Cleanup to avoid memory leaks
+  }, [filter, searchTag, debouncedFetchPosts]);
+
+  // Click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (filterRef.current && !filterRef.current.contains(event.target)) {
@@ -63,9 +72,17 @@ const PostList = () => {
             placeholder="Search posts by tag..."
             value={searchTag}
             onChange={(e) => setSearchTag(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
           />
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          {searchTag && (
+            <button 
+              onClick={() => setSearchTag('')} 
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              <FaTimes />
+            </button>
+          )}
         </div>
 
         {/* Icons: Filter & Create */}
@@ -87,18 +104,21 @@ const PostList = () => {
                   <li 
                     className={`px-4 py-2 cursor-pointer ${filter === 'recent' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
                     onClick={() => handleFilterChange('recent')}
+                    tabIndex={0}
                   >
                     Recent Posts
                   </li>
                   <li 
                     className={`px-4 py-2 cursor-pointer ${filter === 'highest_voted' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
                     onClick={() => handleFilterChange('highest_voted')}
+                    tabIndex={0}
                   >
                     Top Voted
                   </li>
                   <li 
                     className={`px-4 py-2 cursor-pointer ${filter === 'user_posts' ? 'bg-blue-100' : 'hover:bg-gray-100'}`} 
                     onClick={() => handleFilterChange('user_posts')}
+                    tabIndex={0}
                   >
                     My Posts
                   </li>

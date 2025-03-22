@@ -1,16 +1,15 @@
-from django.urls import path
-from .views import PostViewSet, CommentViewSet, VoteViewSet,TagViewSet
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import PostViewSet, CommentViewSet, VoteViewSet, TagViewSet
+
+# Use a router to auto-generate URL patterns for viewsets
+router = DefaultRouter()
+router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet , basename='comment')
+router.register(r'votes', VoteViewSet)
+router.register(r'tags', TagViewSet)
 
 urlpatterns = [
-    path('posts/', PostViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('posts/<int:pk>/', PostViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-
-    path('comments/', CommentViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('comments/<int:pk>/', CommentViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-
-    path('votes/', VoteViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('votes/<int:pk>/', VoteViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'})),
-    path('votes/<int:post_id>/user-vote/', VoteViewSet.as_view({'get': 'get_user_vote'})),  
-    path('tags/', TagViewSet.as_view({'get': 'list'})), 
-
+    path('', include(router.urls)),  # Automatically include all viewset routes
+    path('votes/<int:post_id>/user-vote/', VoteViewSet.as_view({'get': 'get_user_vote'})),  # Keep custom endpoint
 ]

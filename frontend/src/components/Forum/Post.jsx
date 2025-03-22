@@ -9,6 +9,9 @@ const Post = ({ post, onDelete }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedPost, setUpdatedPost] = useState(post);
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+
 
   const userData = localStorage.getItem('user');
   const user = userData ? JSON.parse(userData) : null;
@@ -18,7 +21,25 @@ const Post = ({ post, onDelete }) => {
   const isAuthor = Number(post.author) === Number(userId);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
-  const toggleComments = () => setShowComments(!showComments);
+ 
+  const fetchComments = async () => {
+    setComments([]);  // Clear previous comments before fetching new ones
+    setLoadingComments(true);
+    try {
+      const response = await API.get(`/forum/comments/?post=${post.id}`);
+      setComments(response.data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+  
+  const toggleComments = () => {
+    if (!showComments) fetchComments();
+    setShowComments(!showComments);
+  };
+  
   const openEditModal = () => setIsEditing(true);
   const closeEditModal = () => setIsEditing(false);
   const refreshPost = (newPostData) => setUpdatedPost(newPostData);
@@ -44,11 +65,15 @@ const Post = ({ post, onDelete }) => {
 
   return (
     <div className="bg-white shadow-lg rounded-2xl p-6 mb-6 border border-gray-200">
+      {/* Post Title */}
       <h2 className="text-2xl font-bold mb-2 text-gray-800">{updatedPost.title}</h2>
+
+      {/* Author & Timestamp */}
       <p className="text-gray-500 text-sm mb-4">
         Posted by <span className="font-semibold">{updatedPost.author_name}</span> • {new Date(updatedPost.created_at).toLocaleDateString()}
       </p>
 
+      {/* Post Content */}
       <div className="mb-4 text-gray-700">
         {isExpanded ? updatedPost.content : `${updatedPost.content.slice(0, 200)}...`}
         {updatedPost.content.length > 200 && !isExpanded && (
@@ -58,6 +83,7 @@ const Post = ({ post, onDelete }) => {
         )}
       </div>
 
+      {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {updatedPost.tags?.map((tag) => (
           <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
@@ -66,6 +92,7 @@ const Post = ({ post, onDelete }) => {
         ))}
       </div>
 
+      {/* Voting & Comments */}
       <VoteButtons 
         postId={post.id} 
         totalVotes={updatedPost.total_votes} 
@@ -74,6 +101,7 @@ const Post = ({ post, onDelete }) => {
         commentCount={updatedPost.comments?.length || 0} 
       />
 
+      {/* Edit & Delete Buttons (Only for Author) */}
       {isAuthor && (
         <div className="flex gap-4 mt-4">
           <button onClick={openEditModal} className="text-blue-600 hover:underline font-medium">Edit</button>
@@ -81,8 +109,16 @@ const Post = ({ post, onDelete }) => {
         </div>
       )}
 
-      {showComments && <CommentSection postId={post.id} comments={updatedPost.comments} />}
+      {/* Comments Section */}
+      {showComments && (
+        loadingComments ? (
+          <p>Loading comments...</p>
+     ) : (
+      <CommentSection postId={post.id} comments={comments}  setComments={setComments} />
+     )
+   )}
 
+      {/* Edit Modal */}
       {isEditing && <EditPostModal post={updatedPost} onClose={closeEditModal} refreshPost={refreshPost} />}
     </div>
   );
