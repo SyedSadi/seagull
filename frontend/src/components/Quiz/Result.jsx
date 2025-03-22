@@ -60,35 +60,56 @@ if (!results) {
           <div className="mt-10">
             <h3 className="text-xl font-semibold mb-6">Review Your Answers</h3>
             <div className="space-y-4">
-              {results.questions.map((q, index) => (
-                <div 
-                  key={index} 
-                  className={`border rounded-lg overflow-hidden ${
-                    q.is_correct ? 'border-green-500' : 'border-red-500'
-                  }`}
-                >
+              {results.questions.map((q, index) => {
+                const toggleQuestion = () => {
+                  document.getElementById(`question-${index}`).classList.toggle('hidden');
+                };
+
+                return (
                   <div 
-                    className={`px-6 py-4 flex items-center justify-between cursor-pointer ${
-                      q.is_correct ? 'bg-green-50' : 'bg-red-50'
+                    key={index} 
+                    className={`border rounded-lg overflow-hidden ${
+                      q.is_correct ? 'border-green-500' : 'border-red-500'
                     }`}
-                    onClick={() => document.getElementById(`question-${index}`).classList.toggle('hidden')}
                   >
-                    <h4 className="font-medium">
-                      Question {index + 1}: {q.text.length > 50 ? `${q.text.substring(0, 50)}...` : q.text}
-                    </h4>
-                    <span className={q.is_correct ? 'text-green-600' : 'text-red-600'}>
-                      {q.is_correct ? '✓' : '✗'}
-                    </span>
-                  </div>
-                  <div id={`question-${index}`} className={q.is_correct ? 'hidden' : ''}>
-                    <div className="p-6 bg-white border-t">
-                      <p className="mb-2"><strong>Question:</strong> {q.text}</p>
-                      <p className="mb-2"><strong>Your Answer:</strong> {q.your_answer || 'Unanswered'}</p>
-                      {!q.is_correct && <p className="mb-2"><strong>Correct Answer:</strong> {q.correct_answer}</p>}
+                    <div 
+                      role="button"
+                      tabIndex={0}
+                      className={`px-6 py-4 flex items-center justify-between cursor-pointer ${
+                        q.is_correct ? 'bg-green-50' : 'bg-red-50'
+                      }`}
+                      onClick={toggleQuestion}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleQuestion();
+                        }
+                      }}
+                      aria-expanded={!document.getElementById(`question-${index}`)?.classList.contains('hidden')}
+                      aria-controls={`question-${index}`}
+                    >
+                      <h4 className="font-medium">
+                        Question {index + 1}: {q.text.length > 50 ? `${q.text.substring(0, 50)}...` : q.text}
+                      </h4>
+                      <span className={q.is_correct ? 'text-green-600' : 'text-red-600'}>
+                        {q.is_correct ? '✓' : '✗'}
+                      </span>
+                    </div>
+                    <div 
+                      id={`question-${index}`} 
+                      className={q.is_correct ? 'hidden' : ''}
+                      role="region"
+                      aria-labelledby={`question-${index}-header`}
+                    >
+                      <div className="p-6 bg-white border-t">
+                        <p className="mb-2"><strong>Question:</strong> {q.text}</p>
+                        <p className="mb-2"><strong>Your Answer:</strong> {q.your_answer || 'Unanswered'}</p>
+                        {!q.is_correct && <p className="mb-2"><strong>Correct Answer:</strong> {q.correct_answer}</p>}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

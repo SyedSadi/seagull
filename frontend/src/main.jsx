@@ -94,6 +94,8 @@ const router = createBrowserRouter([
 					{
 						path: "/course/modify/:courseId",
 						element: <ModifyCoursePage />,
+					},
+					{
 						path: "/add-courses",
 						element: <AddCoursesPage />,
 					},
