@@ -5,9 +5,11 @@ import Footer from './components/Shared/Footer';
 
 const App = () => {
   return (
-    <div>
+    <div className='bg-gray-100'>
       <Navbar/>
-      <Outlet/>
+      <div className="container mx-auto p-6">
+        <Outlet/>
+      </div>
       <Footer/>
     </div>
 

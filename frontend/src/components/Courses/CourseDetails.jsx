@@ -64,24 +64,26 @@ const CourseDetails = () => {
   }
 
   return (
-    <div className='bg-red-200 p-16'>
+    <div className='py-8'>
       <section className="flex justify-between items-center">
         <div>
-          <h1 className='text-5xl mb-4'>{course.title}</h1>
+          <h1 className='text-5xl mb-6'>{course.title}</h1>
           <p className='text-lg my-4 text-gray-600'>{course.description}</p>
+          <p className='text-lg my-4'>Subject: {course.subject}</p>
+          <p className='text-lg my-4'>Instructor: {course.created_by}</p>
+          <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           <p className='text-lg my-4'>Duration: {course.duration} hours</p>
           <p className='text-lg my-4'>Ratings: {course.ratings}/5</p>
-          <p className='text-lg my-4'>Difficulty: {course.difficulty.toUpperCase()}</p>
           {/* <Link to={`/courseContents/${course.id}`} className='my-4 bg-red-600 p-2'>Enroll Now!</Link> */}
           {/* <button className="btn btn-primary mt-4 w-full" onClick={handleEnroll} disabled={loading}>
             {loading ? "Enrolling..." : "Enroll Now"}
           </button> */}
           {isEnrolled === null ? (
             <span className="loading loading-spinner loading-lg"></span>) : isEnrolled ? (
-            <Link to={`/courseContents/${course.id}`} className='btn btn-primary flex items-center gap-2'>Go to Course <FaArrowRight /></Link>) : (
+            <Link to={`/courseContents/${course.id}`} className='mt-8 btn btn-primary flex items-center gap-2'>Go to Course <FaArrowRight /></Link>) : (
             <button
             onClick={handleEnroll}
-            className="btn btn-accent flex items-center gap-2"
+            className="mt-8 btn btn-accent flex items-center gap-2"
             disabled={loading}
             >
             {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
