@@ -24,21 +24,114 @@ const CourseContent = () => {
       return <div>Loading...</div>;
     }
   const contents = course.contents;
+  console.log(contents)
+  const pdfUrl = "https://arxiv.org/pdf/1708.08021.pdf";
+
   return (
-    <div className='bg-blue-400 p-16'>
-      {user?.is_superuser && <Link className='my-4 bg-red-200 p-2' to={`/contents/manage/${course.id}`}>Manage Contents</Link>}
-      <ul>
+    // <div className='bg-blue-400 p-16'>
+    //   {user?.is_superuser && <Link className='my-4 bg-red-200 p-2' to={`/contents/manage/${course.id}`}>Manage Contents</Link>}
+    //   <ul>
+    //     {contents.map((content) => (
+    //       <div key={content.id}>
+    //         <li className='text-xl my-4'>
+    //         <strong>Title: {content.title}</strong> - Type: {content.content_type}
+    //         </li>
+    //         <li className='text-xl my-4'>
+    //         <strong>Text: {content.text_content}</strong>
+    //         </li>
+    //         {content.url && <a className='my-4 bg-red-200 p-2' href={content.url}>{content.content_type == "video" ? 'Watch' : 'PDF'}</a>}
+    //       </div>          
+    //     ))}
+    //   </ul>
+    // </div>
+    <div className="bg-gray-50">
+      {/* Admin management link */}
+      {user?.is_superuser && (
+        <Link
+          className="mb-6 inline-block bg-blue-600 text-white text-lg font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-500 transition"
+          to={`/contents/manage/${course.id}`}
+        >
+          Manage Contents
+        </Link>
+      )}
+
+      <div className="space-y-8">
+        {/* Display course contents */}
         {contents.map((content) => (
-          <div key={content.id}>
-            <li className='text-xl my-4'>
-            <strong>Title: {content.title}</strong> - Type: {content.content_type}
-            </li>
-            {content.url && <a className='my-4 bg-red-200 p-2' href={content.url}>{content.content_type == "video" ? 'Watch' : 'PDF'}</a>}
-          </div>          
+          <div key={content.id} className="bg-white shadow-lg rounded-lg p-6">
+            <div className="text-gray-800 font-semibold text-xl mb-2">
+              <strong>Title:</strong> {content.title}
+            </div>
+            <div className="text-gray-700 text-sm mb-2">
+              <strong>Type:</strong> {content.content_type}
+            </div>
+            <div className="text-gray-600 mb-4">
+              <strong>Text:</strong> {content.text_content}
+            </div>
+
+            {/* Display video if content type is video and a URL is provided */}
+            {content.content_type === 'video' && content.url && (
+              <div className="mb-4">
+                <iframe
+                  className="w-full h-60 rounded-lg"
+                  src={`https://www.youtube.com/embed/${getYouTubeId(content.url)}`}
+                  title="Course Video"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            )}
+
+            {/* for pdf */}
+            {content.url && content.content_type === "pdf" && (
+              <div className="my-4">
+                <iframe
+                  className="w-full h-[600px] rounded-lg shadow-md"
+                  src={pdfUrl}
+                  title="Course PDF"
+                />
+                <div className="mt-2 flex space-x-4">
+                  <a
+                    href={pdfUrl}
+                    className="bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-400 transition"
+                    download
+                  >
+                    Download PDF
+                  </a>
+                  <a
+                    href={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+                    className="bg-indigo-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-400 transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View in New Tab
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Watch Video button for external link */}
+            {content.content_type === 'video' && content.url && (
+              <a
+                className="mt-4 inline-block bg-blue-500 text-white text-center py-2 px-4 rounded-lg shadow-md hover:bg-blue-400 transition"
+                href={content.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Watch Video Externally
+              </a>
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
+};
+
+const getYouTubeId = (url) => {
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.*|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
 };
 
 export default CourseContent;

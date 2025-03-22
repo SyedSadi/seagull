@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllCourses } from '../../services/coursesApi';
+import { FaBookOpen } from 'react-icons/fa';  // A book icon to represent the course
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -17,34 +18,35 @@ const CourseList = () => {
 
     fetchCourses();
   }, []);
+
   return (
-    <div className='bg-blue-400'>      
-      <ul className='grid grid-cols-4 gap-4'>
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.map((course) => (
-          // <li key={course.id} className='m-4'>
-          //   <Link to={`/courses/${course.id}`}>{course.title}</Link>
-          //    - {course.description}
-          // </li>
-          <div key={course.id} className="card bg-base-100 w-84 shadow-xl">
-          <figure>
-            <img
-              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-              alt="Shoes" />
-          </figure>
-          <div className="card-body">
-            <h3 className="text-left mb-2">#{course.subject}</h3>
-            <Link to={`/courses/${course.id}`} className='hover:underline'><h2 className="card-title">{course.title}</h2></Link>
-            <p className="text-left text-sm">{course.description}</p>
-            <h3 className="text-left mt-4">{course.difficulty}</h3>
-            <div className="card-actions justify-end">
-              <Link to={`/courses/${course.id}`} className="btn btn-primary">Details</Link>
+          <div key={course.id} className="card bg-white shadow-xl rounded-lg h-full flex flex-col transition-all transform hover:shadow-2xl">
+            <figure className="m-0 flex-grow">
+              <img
+                className="w-full h-48 object-cover"
+                src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                alt="Course"
+              />
+            </figure>
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-sm text-gray-500 mb-2">#{course.subject}</h3>
+              <Link to={`/courses/${course.id}`} className="text-2xl font-semibold text-gray-800 hover:underline">
+                {course.title}
+              </Link>
+              <p className="text-gray-600 text-sm mt-2">{course.description}</p>
+              <p className="text-sm text-gray-500 mt-4">{course.difficulty}</p>
+              <div className="mt-auto">
+                <Link to={`/courses/${course.id}`} className="btn btn-primary w-1/2 ml-auto flex items-center justify-center gap-2">
+                  <FaBookOpen className="text-white" />Details
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-          
         ))}
-      </ul>
-      {/* <h3>dfjlk</h3> */}
+      </div>
     </div>
   );
 };
