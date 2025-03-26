@@ -1,5 +1,6 @@
 // TrendingCourses.jsx
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
@@ -90,6 +91,16 @@ const CourseCard = ({ course }) => {
 		</div>
 	);
 };
+CourseCard.propTypes = {
+	course: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		title: PropTypes.string.isRequired,
+		subject: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+		difficulty: PropTypes.string.isRequired,
+		rating: PropTypes.number.isRequired,
+	}).isRequired,
+};
 
 const TrendingCourses = () => {
 	// State to manage current course in mobile view
@@ -119,8 +130,11 @@ const TrendingCourses = () => {
 			{/* Desktop grid layout */}
 			<div className="hidden md:grid md:grid-cols-3 gap-8">
 				{coursesData.slice(0, NoOfCardsToShow).map((course) => (
-					<div className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
-						<CourseCard key={course.id} course={course} />
+					<div
+						key={course.id}
+						className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
+					>
+						<CourseCard course={course} />
 					</div>
 				))}
 			</div>
@@ -164,8 +178,11 @@ const TrendingCourses = () => {
 			{/* Desktop grid layout */}
 			<div className="hidden md:grid md:grid-cols-3 gap-8">
 				{sortedCourses.slice(0, NoOfCardsToShow).map((course) => (
-					<div className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer">
-						<CourseCard key={course.id} course={course} />
+					<div
+						key={course.id}
+						className="transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer"
+					>
+						<CourseCard course={course} />
 					</div>
 				))}
 			</div>

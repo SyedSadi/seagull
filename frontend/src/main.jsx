@@ -66,7 +66,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/quiz",
-				element: <QuizHome/>
+				element: <QuizHome />,
 			},
 			{
 				path: "/quiz/:categoryId",
@@ -84,12 +84,12 @@ const router = createBrowserRouter([
 				path: "/courses/:id",
 				element: <CourseDetails />,
 			},
-			{	
+			{
 				element: <ProtectedRoute />,
 				children: [
 					{
 						path: "/profile",
-						element: <Profile/>
+						element: <Profile />,
 					},
 					{
 						path: "/course/modify/:courseId",
@@ -105,22 +105,22 @@ const router = createBrowserRouter([
 					},
 					{
 						path: "/courseContents/:id",
-						element: <CourseContent/>
+						element: <CourseContent />,
 					},
 					{
 						element: <AdminRoute />,
 						children: [
 							{
 								path: "/admin/dashboard",
-								element: <Dashboard/>
+								element: <Dashboard />,
 							},
 							{
 								path: "/add-courses",
 								element: <AddCoursesPage />,
 							},
-						]
+						],
 					},
-				]
+				],
 			},
 		],
 	},
@@ -135,14 +135,14 @@ createRoot(document.getElementById("root")).render(
 );
 
 // ErrorBoundary Component
-import { useRouteError } from 'react-router-dom';
+import { useRouteError } from "react-router-dom";
 
 export default function ErrorBoundary() {
-  const error = useRouteError();
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold text-red-600">Oops!</h1>
-      <p className="text-gray-600">{error.message}</p>
-    </div>
-  );
+	const error = useRouteError();
+	return (
+		<div className="flex flex-col items-center justify-center min-h-screen">
+			<h1 className="text-2xl font-bold text-red-600">Oops!</h1>
+			<p className="text-gray-600">{error.message}</p>
+		</div>
+	);
 }
