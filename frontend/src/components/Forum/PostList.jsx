@@ -50,6 +50,17 @@ const PostList = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  useEffect(() => {
+    const handleTagClick = (event) => {
+      setSearchTag(event.detail); // Update searchTag when a tag is clicked
+    };
+  
+    window.addEventListener('tagClicked', handleTagClick);
+    return () => {
+      window.removeEventListener('tagClicked', handleTagClick);
+    };
+  }, []);
+  
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);

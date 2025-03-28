@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import VoteButtons from './VoteButtons';
 import CommentSection from './CommentSection';
 import API from '../../services/api';
@@ -86,10 +87,14 @@ const Post = ({ post, onDelete }) => {
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {updatedPost.tags?.map((tag) => (
-          <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-            {tag.name}
-          </span>
-        ))}
+         <button 
+         key={tag.id} 
+         className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium hover:bg-blue-200 transition"
+         onClick={() => window.dispatchEvent(new CustomEvent('tagClicked', { detail: tag.name }))}
+    >
+      {tag.name}
+    </button>
+  ))}
       </div>
 
       {/* Voting & Comments */}
