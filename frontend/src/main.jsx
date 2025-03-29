@@ -22,6 +22,7 @@ import QuizHome from "./pages/QuizHome.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
 import ModifyCoursePage from "./pages/ModifyCoursePage.jsx";
 import Profile from "./pages/Profile.jsx";
+import AddQuizPage from "./pages/AddQuizPage.jsx";
 
 // Components
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
 						element: <CourseContent />,
 					},
 					{
+						path: "/add-quiz",
+						element: <AddQuizPage />,
+					},
+					{
 						element: <AdminRoute />,
 						children: [
 							{
@@ -117,6 +122,10 @@ const router = createBrowserRouter([
 							{
 								path: "/add-courses",
 								element: <AddCoursesPage />,
+							},
+							{
+								path: "/add-quiz",
+								element: <AddQuizPage />,
 							},
 						],
 					},

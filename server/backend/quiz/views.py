@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from .serializers import CategorySerializer, QuestionSerializer
 
@@ -32,6 +32,18 @@ class QuizAPIView(APIView):
             'category_name': category.name,
             'questions': serializer.data
         })
+
+class AddQuizView(APIView):
+    permission_classes=[IsAuthenticated, IsAdminUser]
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]

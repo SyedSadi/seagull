@@ -13,7 +13,9 @@ const AdminLayout = ({ children }) => {
 					<li className="mb-2 py-2 border-b-2 border-gray-200">
 						<Link to="/add-courses">Add Courses</Link>
 					</li>
-					{/* <li className="mb-2 py-2 border-b-2 border-gray-200"><Link to="/add-courses">Manage Contents</Link></li> */}
+					<li className="mb-2 py-2 border-b-2 border-gray-200">
+						<Link to="/add-quiz">Add Quiz</Link>
+					</li>
 				</ul>
 			</div>
 
