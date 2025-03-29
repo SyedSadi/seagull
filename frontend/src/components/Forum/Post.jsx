@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { formatDistanceToNow } from "date-fns";
 import VoteButtons from './VoteButtons';
 import CommentSection from './CommentSection';
 import API from '../../services/api';
@@ -71,7 +71,8 @@ const Post = ({ post, onDelete }) => {
 
       {/* Author & Timestamp */}
       <p className="text-gray-500 text-sm mb-4">
-        Posted by <span className="font-semibold">{updatedPost.author_name}</span> • {new Date(updatedPost.created_at).toLocaleDateString()}
+        Posted by <span className="font-semibold">{updatedPost.author_name}</span> •{" "}
+        {formatDistanceToNow(new Date(updatedPost.created_at), { addSuffix: true })}
       </p>
 
       {/* Post Content */}
