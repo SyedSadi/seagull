@@ -13,6 +13,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer
 from users.models import User
 from courses.models import Course, CourseContents 
+from quiz.models import Category
 
 # -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
@@ -86,6 +87,7 @@ class DashboardStatsView(APIView):
             "total_instructors": User.objects.filter(role='instructor').count(),
             "total_courses": Course.objects.count(),
             "total_contents": CourseContents.objects.count(),
+            "total_quizzes": Category.objects.count(),
             "new_users_last_7_days": UserSerializer(new_users_last_7_days, many=True).data,
             "active_users_last_24_hours": UserSerializer(active_users_last_24_hours, many=True).data,
         }
