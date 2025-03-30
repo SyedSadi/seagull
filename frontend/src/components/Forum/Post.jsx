@@ -78,17 +78,17 @@ const Post = ({ post, onDelete }) => {
     <h2 className="text-xl font-semibold text-gray-900 mb-3">{updatedPost.title}</h2>
 
     {/* Post Content */}
-    <div className="text-gray-700">
-      {isExpanded ? updatedPost.content : `${updatedPost.content.slice(0, 250)}...`}
-      {updatedPost.content.length > 250 && !isExpanded && (
-        <button
-          onClick={toggleExpand}
-          className="text-blue-600 ml-2 hover:underline font-medium"
-        >
-          See More
-        </button>
-      )}
-    </div>
+    <div className="mb-4 text-gray-700 leading-relaxed">
+  {isExpanded ? updatedPost.content : `${updatedPost.content.slice(0, 250)}...`}
+  {updatedPost.content.length > 250 && (
+    <button 
+      onClick={toggleExpand} 
+      className="text-blue-600 font-medium text-sm ml-2 hover:underline hover:text-blue-800 transition"
+    >
+      {isExpanded ? "See Less" : "See More"}
+    </button>
+  )}
+</div>
 
     {/* Tags */}
     <div className="flex flex-wrap gap-2 mt-4">
