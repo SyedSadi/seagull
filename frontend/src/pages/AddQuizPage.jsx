@@ -6,7 +6,7 @@ import AdminLayout from "../components/Admin/AdminLayout";
 const AddQuizPage = () => {
 	const navigate = useNavigate();
 	const [quiz, setQuiz] = useState({
-		title: "",
+		name: "",
 		description: "",
 	});
 
@@ -22,7 +22,7 @@ const AddQuizPage = () => {
 			alert("Quiz added successfully");
 			navigate("/quiz");
 			setQuiz({
-				title: "",
+				name: "",
 				description: "",
 			});
 			console.log(data);
@@ -40,8 +40,8 @@ const AddQuizPage = () => {
 						<span className="label-text">Title</span>
 						<input
 							type="text"
-							name="title"
-							value={quiz.title}
+							name="name"
+							value={quiz.name}
 							onChange={handleChange}
 							className="input input-bordered w-full"
 							required
