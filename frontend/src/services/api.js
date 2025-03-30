@@ -108,7 +108,7 @@ export const addQuiz = async (quizData) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error adding course:", error);
+		console.error("Error adding quiz:", error);
 		throw error; // Optionally, handle the error as per your application's need
 	}
 };
