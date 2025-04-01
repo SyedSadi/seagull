@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -45,6 +46,29 @@ class AddQuizView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AddQuestionView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def post(self, request):
+        try:
+            with transaction.atomic():
+                # Serialize and validate the question data
+                question_serializer = QuestionSerializer(data=request.data)
+                question_serializer.is_valid(raise_exception=True)
+                question = question_serializer.save()
+
+                # Serialize and validate the options data
+                options_data = request.data.get('options', [])
+                for option_data in options_data:
+                    option_data['question'] = question.id
+                    option_serializer = OptionSerializer(data=option_data)
+                    option_serializer.is_valid(raise_exception=True)
+                    option_serializer.save()
+
+                return Response({'message': 'Question added successfully'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
