@@ -56,3 +56,21 @@ export const addQuiz = async (quizData) => {
 		throw error; // Optionally, handle the error as per your application's need
 	}
 };
+
+// ----------------------- ADD Questions -----------------------------------
+export const addQuestion = async (questionData) => {
+	try {
+		const token = localStorage.getItem("access_token");
+		if (!token) {
+			throw new Error("Authentication token is missing");
+		}
+		const response = await API.post("/quiz/add-question/", questionData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error adding question:", error);
+	}
+};
