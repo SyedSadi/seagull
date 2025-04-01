@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllCategories } from "../../services/api";
+import { getAllCategories } from "../../services/quizApi";
 import PropTypes from "prop-types";
 
 function Category() {

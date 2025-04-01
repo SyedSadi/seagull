@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addQuiz } from "../services/api";
+import { addQuiz } from "../services/quizApi";
 import AdminLayout from "../components/Admin/AdminLayout";
 
 const AddQuizPage = () => {

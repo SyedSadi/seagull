@@ -3,11 +3,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from .serializers import CategorySerializer, QuestionSerializer
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes=[AllowAny]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
