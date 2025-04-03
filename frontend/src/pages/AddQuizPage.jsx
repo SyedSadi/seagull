@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { addQuiz } from "../services/quizApi";
 import AdminLayout from "../components/Admin/AdminLayout";
 import AddQuestionForm from "../components/Quiz/AddQuestionForm";
 
 const AddQuizPage = () => {
-	const navigate = useNavigate();
 	const [quiz, setQuiz] = useState({
 		name: "",
 		description: "",
