@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
-from .serializers import CategorySerializer, QuestionSerializer, OptionSerializer
+from .serializers import CategorySerializer, QuestionSerializer
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes=[AllowAny]
@@ -50,13 +50,13 @@ class AddQuestionView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self, request):
-        serializer = QuestionSerializer(data=request.data)
-
+        serializer =QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]

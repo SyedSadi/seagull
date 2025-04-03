@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { addQuestion } from "../../services/quizApi";
 import { useNavigate } from "react-router-dom";
 
-const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
+const AddQuestionForm = ({ categoryId }) => {
 	const navigate = useNavigate();
 	const [questionCount, setQuestionCount] = useState(0);
 	const [question, setQuestion] = useState({
@@ -49,20 +49,13 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 		if (!validateQuestion()) return;
 
 		try {
-			const formData = {
-				category_id: parseInt(categoryId), // Ensure categoryId is a number
-				text: question.text,
-				options: question.options.map((opt) => ({
-					text: opt.text.trim(),
-					is_correct: opt.is_correct,
-				})),
+			const questionData = {
+				...question,
+				category: categoryId,
 			};
-
-			console.log("Submitting data:", formData); // For debugging
-			await addQuestion(formData);
+			await addQuestion(questionData);
 
 			setQuestionCount((prev) => prev + 1);
-			onQuestionAdded();
 			// Reset form
 			setQuestion({
 				text: "",
@@ -99,7 +92,7 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 					<label className="block text-sm font-medium text-gray-700">
 						Question Text
 					</label>
-					<textarea
+					<input
 						value={question.text}
 						onChange={(e) => setQuestion({ ...question, text: e.target.value })}
 						className="mt-1 block w-full border rounded-md shadow-sm p-2"
@@ -159,7 +152,6 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 };
 AddQuestionForm.propTypes = {
 	categoryId: PropTypes.number.isRequired,
-	onQuestionAdded: PropTypes.func.isRequired,
 };
 
 export default AddQuestionForm;

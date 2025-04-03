@@ -64,24 +64,15 @@ export const addQuestion = async (questionData) => {
 		if (!token) {
 			throw new Error("Authentication token is missing");
 		}
-		const response = await API.post(
-			"/quiz/add-question/",
-			{
-				category_id: parseInt(questionData.category_id),
-				text: questionData.text,
-				options: questionData.options,
+		const response = await API.post("/quiz/add-question/", questionData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
 			},
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-					"Content-Type": "application/json",
-				},
-			}
-		);
-		console.log("API Response:", response.data); // For debugging
+		});
 		return response.data;
 	} catch (error) {
-		console.error("API Error Details:", error.response?.data); // Log detailed error
+		console.error("API Error Details:", error); // Log detailed error
 		throw error;
 	}
 };
