@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getQuizQuestions, submitQuiz } from "../../services/api"; // Import from your new API file
+import { getQuizQuestions, submitQuiz } from "../../services/quizApi"; // Import from your new API file
 import { AuthContext } from "../../context/AuthContext";
 
 function Quizzes() {

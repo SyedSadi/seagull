@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const AdminLayout = ({ children }) => {
 	return (
@@ -23,6 +24,9 @@ const AdminLayout = ({ children }) => {
 			<div className="flex-1 p-6">{children}</div>
 		</div>
 	);
+};
+AdminLayout.propTypes = {
+	children: PropTypes.node.isRequired,
 };
 
 export default AdminLayout;
