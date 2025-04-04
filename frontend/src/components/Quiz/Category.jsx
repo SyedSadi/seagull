@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCategories } from "../../services/quizApi";
-import PropTypes from "prop-types";
 
 function Category() {
 	const [categories, setCategories] = useState([]);
@@ -60,32 +59,35 @@ function Category() {
 	}
 
 	return (
-		<div className="text-center">
+		<div className="text-center mb-10 ml-8 mr-8">
 			<h2 className="text-2xl font-semibold mb-8">Select a Quiz Category</h2>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{categories.map((category) => (
 					<div
 						key={category.id}
-						className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer"
-						onClick={() => handleCategorySelect(category.id)}
-						role="button"
-						tabIndex={0}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" || e.key === " ") {
-								e.preventDefault();
-								handleCategorySelect(category.id);
-							}
-						}}
-						aria-label={`Start ${category.name} quiz`}
+						className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-default"
 					>
 						<div className="p-6">
 							<h3 className="text-xl font-semibold text-blue-600 mb-2">
 								{category.name}
 							</h3>
 							<p className="text-gray-600 mb-4">{category.description}</p>
-							<span className="inline-block bg-blue-500 text-white rounded-full px-3 py-1 text-sm font-semibold">
-								{category.question_count} questions
-							</span>
+							<p className="text-gray-600 mb-4">
+								No. of questions: {category.question_count}
+							</p>
+							<button
+								onClick={() => handleCategorySelect(category.id)}
+								className="bg-blue-500 text-white rounded-full px-5 py-2 text-lg font-semibold hover:bg-blue-600"
+								tabIndex={0}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										e.preventDefault();
+										handleCategorySelect(category.id);
+									}
+								}}
+							>
+								Start Quiz
+							</button>
 						</div>
 					</div>
 				))}
@@ -93,16 +95,5 @@ function Category() {
 		</div>
 	);
 }
-
-Category.propTypes = {
-	categories: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-			description: PropTypes.string.isRequired,
-			question_count: PropTypes.number.isRequired,
-		})
-	),
-};
 
 export default Category;
