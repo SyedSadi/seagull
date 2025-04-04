@@ -3,26 +3,28 @@ import PropTypes from "prop-types";
 import { addQuestion } from "../../services/quizApi";
 import { useNavigate } from "react-router-dom";
 
+const OPTION_COUNT = 4;
+
 const AddQuestionForm = ({ categoryId }) => {
 	const navigate = useNavigate();
 	const [questionCount, setQuestionCount] = useState(0);
 	const [question, setQuestion] = useState({
 		text: "",
-		options: [
-			{ text: "", is_correct: false },
-			{ text: "", is_correct: false },
-			{ text: "", is_correct: false },
-			{ text: "", is_correct: false },
-		],
+		options: Array.from({ length: OPTION_COUNT }, (_, i) => ({
+			id: `option-${Date.now()}-${i}`, //unique id for each options
+			text: "",
+			is_correct: false,
+		})),
 	});
 
-	const handleOptionChange = (index, field, value) => {
-		const newOptions = [...question.options];
-		newOptions[index] = { ...newOptions[index], [field]: value };
+	const handleOptionChange = (id, field, value) => {
+		const newOptions = question.options.map((opt) =>
+			opt.id === id ? { ...opt, [field]: value } : opt
+		);
 		if (field === "is_correct") {
 			// Ensure only one option is correct
-			newOptions.forEach((opt, i) => {
-				if (i !== index) opt.is_correct = false;
+			newOptions.forEach((opt) => {
+				if (opt.id !== id) opt.is_correct = false;
 			});
 		}
 		setQuestion({ ...question, options: newOptions });
@@ -52,19 +54,22 @@ const AddQuestionForm = ({ categoryId }) => {
 			const questionData = {
 				...question,
 				category: categoryId,
+				options: question.options.map((opt) => ({
+					text: opt.text,
+					is_correct: opt.is_correct,
+				})),
 			};
 			await addQuestion(questionData);
 
 			setQuestionCount((prev) => prev + 1);
-			// Reset form
+			// Reset form with new IDs
 			setQuestion({
 				text: "",
-				options: [
-					{ text: "", is_correct: false },
-					{ text: "", is_correct: false },
-					{ text: "", is_correct: false },
-					{ text: "", is_correct: false },
-				],
+				options: Array.from({ length: OPTION_COUNT }, (_, i) => ({
+					id: `option-${Date.now()}-${i}`,
+					text: "",
+					is_correct: false,
+				})),
 			});
 			alert("Question added successfully!");
 		} catch (error) {
@@ -89,45 +94,58 @@ const AddQuestionForm = ({ categoryId }) => {
 		<div className="spacae-y-6">
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
-					<label className="block text-sm font-medium text-gray-700">
+					<label
+						htmlFor="question text"
+						className="block text-sm font-medium text-gray-700"
+					>
 						Question Text
+						<input
+							id="question text"
+							value={question.text}
+							onChange={(e) =>
+								setQuestion({ ...question, text: e.target.value })
+							}
+							className="mt-1 block w-full border rounded-md shadow-sm p-2"
+							required
+						/>
 					</label>
-					<input
-						value={question.text}
-						onChange={(e) => setQuestion({ ...question, text: e.target.value })}
-						className="mt-1 block w-full border rounded-md shadow-sm p-2"
-						required
-					/>
 				</div>
 
 				<div className="space-y-2">
-					<label className="block text-sm font-medium text-gray-700">
+					<label
+						htmlFor="options"
+						className="block text-sm font-medium text-gray-700"
+					>
 						Options (Select one correct answer)
-					</label>
-					{question.options.map((option, index) => (
-						<div key={index} className="flex items-center space-x-2">
-							<input
-								type="text"
-								value={option.text}
-								onChange={(e) =>
-									handleOptionChange(index, "text", e.target.value)
-								}
-								className="flex-1 border rounded-md shadow-sm p-2"
-								placeholder={`Option ${index + 1}`}
-								required
-							/>
-							<label className="flex items-center">
+						{question.options.map((option) => (
+							<div key={option.id} className="flex items-center space-x-2">
 								<input
-									type="radio"
-									name="correct_answer"
-									checked={option.is_correct}
-									onChange={() => handleOptionChange(index, "is_correct", true)}
-									className="mr-2"
+									id="options"
+									type="text"
+									value={option.text}
+									onChange={(e) =>
+										handleOptionChange(option.id, "text", e.target.value)
+									}
+									className="flex-1 border rounded-md shadow-sm p-2"
+									placeholder={`Option ${question.options.indexOf(option) + 1}`}
+									required
 								/>
-								Correct
-							</label>
-						</div>
-					))}
+								<label htmlFor="correct option" className="flex items-center">
+									<input
+										id="correct option"
+										type="radio"
+										name="correct_answer"
+										checked={option.is_correct}
+										onChange={() =>
+											handleOptionChange(option.id, "is_correct", true)
+										}
+										className="mr-2"
+									/>{" "}
+									Correct
+								</label>
+							</div>
+						))}
+					</label>
 				</div>
 
 				<button
