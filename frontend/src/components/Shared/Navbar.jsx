@@ -1,8 +1,7 @@
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import { faX, faBars } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {

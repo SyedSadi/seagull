@@ -98,7 +98,7 @@ const AddQuestionForm = ({ categoryId }) => {
 						htmlFor="question text"
 						className="block text-sm font-medium text-gray-700"
 					>
-						Question Text
+						Question Text{" "}
 						<input
 							id="question text"
 							value={question.text}

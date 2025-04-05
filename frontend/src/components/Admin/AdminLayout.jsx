@@ -17,6 +17,9 @@ const AdminLayout = ({ children }) => {
 					<li className="mb-2 py-2 border-b-2 border-gray-200">
 						<Link to="/add-quiz">Add Quiz</Link>
 					</li>
+					<li className="mb-2 py-2 border-b-2 border-gray-200">
+						<Link to="/manage-quiz">Manage Quiz</Link>
+					</li>
 				</ul>
 			</div>
 
