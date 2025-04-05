@@ -1,19 +1,15 @@
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer, UserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer
 from .models import Instructor
 from rest_framework.views import APIView
-from django.utils.timezone import now, timedelta
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-from rest_framework.exceptions import AuthenticationFailed
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer
-from users.models import User
-from courses.models import Course, CourseContents 
-from quiz.models import Category
+from .services import DashboardStatsService
+
 
 # -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
@@ -78,22 +74,29 @@ class CustomTokenRefreshView(TokenRefreshView):
 # -------------------- ADMIN PANEL ---------------------------------
 class DashboardStatsView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
-    def get(self, request, *args, **kwargs):
-        new_users_last_7_days = User.objects.filter(date_joined__gte=now() - timedelta(days=7))
-        active_users_last_24_hours = User.objects.filter(last_login__gte=now() - timedelta(days=1))
-        stats = {
-            "total_users": User.objects.count(),
-            "total_students": User.objects.filter(role='student').count(),
-            "total_instructors": User.objects.filter(role='instructor').count(),
-            "total_courses": Course.objects.count(),
-            "total_contents": CourseContents.objects.count(),
-            "total_quizzes": Category.objects.count(),
-            "new_users_last_7_days": UserSerializer(new_users_last_7_days, many=True).data,
-            "active_users_last_24_hours": UserSerializer(active_users_last_24_hours, many=True).data,
-        }
 
-        serializer = DashboardStatsSerializer(stats)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        try:
+            stats_data = DashboardStatsService.get_dashboard_stats()
+            serializer = DashboardStatsSerializer(stats_data)
+            return Response(
+                {
+                    "success": True,
+                    "message": "Dashboard stats fetched successfully.",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Failed to fetch dashboard stats.",
+                    "error": str(e)
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):

@@ -10,8 +10,8 @@ const Dashboard = () => {
 		const fetchStats = async () => {
 			try {
 				const response = await API.get("dashboard/stats/");
-				setStats(response.data);
-				console.log(response);
+				setStats(response.data.data);
+				// console.log(response);
 			} catch (error) {
 				console.error("Failed to fetch dashboard stats:", error);
 			} finally {
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
 		fetchStats();
 	}, []);
-	console.log(stats);
+	// console.log(stats);
 	return (
 		<AdminLayout>
 			<div className="p-6 pt-0 shadow-md rounded-lg">
@@ -87,7 +87,7 @@ const Dashboard = () => {
 						</h3>
 						<div className="grid grid-cols-1 gap-4">
 							{stats?.active_users_last_24_hours?.map((user) => (
-								<div className="bg-gray-100 p-4 rounded-lg border-4 flex justify-between">
+								<div key={user.id} className="bg-gray-100 p-4 rounded-lg border-4 flex justify-between">
 									<div>
 										<p className="font-semibold">{user.username}</p>
 										<p>{user.email}</p>
