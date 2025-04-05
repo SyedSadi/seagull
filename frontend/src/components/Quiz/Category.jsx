@@ -42,22 +42,6 @@ function Category() {
 			</div>
 		);
 
-	if (!categories?.length) {
-		return (
-			<div className="text-center py-8">
-				<p className="text-gray-600">
-					No quiz categories available at the moment.
-				</p>
-				<button
-					onClick={() => window.location.reload()}
-					className="mt-4 text-blue-500 hover:text-blue-600"
-				>
-					Refresh page
-				</button>
-			</div>
-		);
-	}
-
 	return (
 		<div className="text-center mb-10 ml-8 mr-8">
 			<h2 className="text-2xl font-semibold mb-8">Select a Quiz Category</h2>

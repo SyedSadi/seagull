@@ -61,7 +61,10 @@ const AddQuizPage = () => {
 								/>
 							</label>
 
-							<button type="submit" className="btn btn-primary w-full">
+							<button
+								type="submit"
+								className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full"
+							>
 								Add Quiz
 							</button>
 						</form>
