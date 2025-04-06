@@ -8,6 +8,7 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
+import RateCourse from "./RateCourse";
 
 const CourseDetails = () => {
 	const { id } = useParams();
@@ -78,6 +79,7 @@ const CourseDetails = () => {
 			>
 				Go to Course <FaArrowRight />
 			</Link>
+			
 		);
 	} else {
 		actionButton = (
@@ -104,17 +106,6 @@ const CourseDetails = () => {
 					</p>
 					<p className="text-lg my-4">Duration: {course.duration} hours</p>
 					<p className="text-lg my-4">Ratings: {course.ratings}/5</p>
-					{/* {isEnrolled === null ? (
-            <span className="loading loading-spinner loading-lg"></span>) : isEnrolled ? (
-            <Link to={`/courseContents/${course.id}`} className='mt-8 btn btn-primary flex items-center gap-2'>Go to Course <FaArrowRight /></Link>) : (
-            <button
-            onClick={handleEnroll}
-            className="mt-8 btn btn-accent flex items-center gap-2"
-            disabled={loading}
-            >
-            {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
-            </button>
-          )} */}
 					{actionButton}
 					{user?.is_superuser && (
 						<Link

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseViewSet, CourseDetailView, AddCourseView, UpdateContentView, UpdateDeleteCourseView, EnrollCourseView, EnrolledCoursesView, CourseContentView, InstructorCoursesView
+from .views import CourseViewSet, CourseDetailView, AddCourseView, UpdateContentView, UpdateDeleteCourseView, EnrollCourseView, EnrolledCoursesView, CourseContentView, InstructorCoursesView, RateCourseView
 
 urlpatterns = [
     path('', CourseViewSet.as_view({'get': 'list'}), name='all_courses'),
@@ -11,4 +11,6 @@ urlpatterns = [
     path('enrolled/', EnrolledCoursesView.as_view(), name='get_enrolled_courses'),
     path('content/<int:course_id>/', CourseContentView.as_view(), name='get_course_content'),
     path("by-instructor/", InstructorCoursesView.as_view(), name="instructor-courses"),
+    path('<int:course_id>/rate/', RateCourseView.as_view(), name='course-rating'),
+    # path('<int:course_id>/my-rating/', MyCourseRatingView.as_view(), name='my-course-rating'),
 ]

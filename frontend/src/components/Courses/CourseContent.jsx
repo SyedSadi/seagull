@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCourseDetailsById } from "../../services/coursesApi";
 import { AuthContext } from "../../context/AuthContext";
+import RateCourse from "./RateCourse";
 
 const CourseContent = () => {
 	const { id } = useParams(); // Get course ID from URL
@@ -38,6 +39,8 @@ const CourseContent = () => {
 					Manage Contents
 				</Link>
 			)}
+
+			<RateCourse courseId={id} />
 
 			<div className="space-y-8">
 				{/* Display course contents */}

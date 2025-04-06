@@ -1,6 +1,8 @@
 from django.db import models
-from django.db.models import Avg
 from users.models import User, Instructor, Student
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 # Create your models here.
 class Course(models.Model):
@@ -24,7 +26,11 @@ class Course(models.Model):
     def update_avg_rating(self):
         avg_rating = self.ratings_set.aggregate(models.Avg('rating'))['rating__avg']
         self.ratings = avg_rating if avg_rating else 0.0
-        self.save()
+        self.save(update_fields=['ratings'])
+    
+    @property
+    def ratings_count(self):
+        return self.ratings_set.count()
 
 class CourseContents(models.Model):
     CONTENT_TYPES = [
@@ -56,18 +62,26 @@ class Enrollment(models.Model):
     def __str__(self):
         return self.course.title
     
-
 class Rating(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='ratings_set')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField()
+    rating = models.PositiveSmallIntegerField(
+    validators=[
+        MinValueValidator(1),
+        MaxValueValidator(5)
+    ]
+    )
 
     class Meta:
-        unique_together = ('course', 'user')  # Ensures a user can only rate a course once
+        unique_together = ('course', 'user')
 
     def save(self, *args, **kwargs):
+        # Ensure only enrolled students can rate
+        if not Enrollment.objects.filter(course=self.course, student__user=self.user).exists():
+            raise ValidationError("You must be enrolled in the course to rate it.")
+        
         super().save(*args, **kwargs)
-        self.course.update_avg_rating() 
+        self.course.update_avg_rating()
 
     def __str__(self):
         return f"{self.user.username} - {self.course.title} - {self.rating}"

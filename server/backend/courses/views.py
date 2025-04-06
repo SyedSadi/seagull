@@ -1,8 +1,8 @@
 from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from .models import Course, CourseContents, Enrollment
-from .serializers import CourseSerializer, CourseContentsSerializer, EnrollmentSerializer
+from .models import Course, CourseContents, Enrollment, Rating
+from .serializers import CourseSerializer, CourseContentsSerializer, RatingSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -137,3 +137,55 @@ class InstructorCoursesView(generics.ListAPIView):
 
         serializer = self.get_serializer(courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+# ------------------------------- RATING -------------------------------------
+class RateCourseView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, course_id):
+        course = Course.objects.filter(pk=course_id).first()
+        if not course:
+            return Response({"error": "Course not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if not Enrollment.objects.filter(course=course, student__user=request.user).exists():
+            return Response({"error": "You must be enrolled in this course to rate it."}, status=status.HTTP_403_FORBIDDEN)
+
+        rating_value = request.data.get('rating')
+        if rating_value is None:
+            return Response({"error": "Rating value is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            rating_value = int(rating_value)
+            if rating_value < 1 or rating_value > 5:
+                raise ValueError
+        except (ValueError, TypeError):
+            return Response({"error": "Rating must be an integer between 1 and 5."}, status=status.HTTP_400_BAD_REQUEST)
+
+        rating_obj, created = Rating.objects.update_or_create(
+            course=course,
+            user=request.user,
+            defaults={'rating': rating_value}
+        )
+
+        message = "Rating created successfully." if created else "Rating updated successfully."
+        return Response({"message": message, "rating": rating_value}, status=status.HTTP_200_OK)
+
+    def get(self, request, course_id):
+        course = Course.objects.filter(pk=course_id).first()
+        if not course:
+            return Response({"error": "Course not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        rating = Rating.objects.filter(course=course, user=request.user).first()
+
+        return Response({
+            "course": course.title,
+            "rating": rating.rating if rating else 0  # or None if you prefer
+        }, status=status.HTTP_200_OK)
+
+    
+# class MyCourseRatingView(generics.RetrieveUpdateAPIView):
+#     serializer_class = RatingSerializer
+
+#     def get_object(self):
+#         course_id = self.kwargs.get('course_id')
+#         return Rating.objects.get(course_id=course_id, user=self.request.user)
