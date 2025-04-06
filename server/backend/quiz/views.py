@@ -65,7 +65,7 @@ class UpdateDeleteQuizView(APIView):
     def delete(self, request, category_id: int) -> Response:
         category = get_object_or_404(Category, id=category_id)
         category.delete()
-        return Response({"message": "Quiz deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Quiz deleted successfully"}, status=status.HTTP_200_OK)
         
 
 class SubmitQuizAPIView(APIView):
