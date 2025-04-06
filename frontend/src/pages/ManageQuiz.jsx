@@ -39,12 +39,12 @@ const ManageQuiz = () => {
 		);
 	return (
 		<AdminLayout>
-			<div className="bg-blue-100 rounded-lg shadow-lg p-6">
+			<div className="bg-blue-100 rounded-lg shadow-lg p-10">
 				<h2 className="text-2xl font-bold text-center text-blue-700 mb-4">
 					Manage Quizzes
 				</h2>
 				<p className="text-lg font-medium text-gray-700 mb-6">
-					List of available quizzes:
+					List of quizzes:
 				</p>
 				<div className="space-y-4">
 					{categories.map((category, index) => (
@@ -56,6 +56,9 @@ const ManageQuiz = () => {
 								{index + 1}. {category.name}
 							</p>
 							<div className="space-x-2">
+								<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+									Manage Questions
+								</button>
 								<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
 									Update
 								</button>

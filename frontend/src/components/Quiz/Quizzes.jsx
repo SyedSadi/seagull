@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getQuizQuestions, submitQuiz } from "../../services/quizApi"; // Import from your new API file
+import { getQuizQuestions, submitQuiz } from "../../services/quizApi";
 import { AuthContext } from "../../context/AuthContext";
 
 function Quizzes() {
@@ -48,7 +48,7 @@ function Quizzes() {
 		}, 1000);
 
 		return () => clearInterval(timer);
-	}, [loading]);
+	});
 
 	const handleAnswerSelect = (questionId, answerId) => {
 		setSelectedAnswers((prev) => ({

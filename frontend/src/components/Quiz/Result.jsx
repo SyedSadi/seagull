@@ -5,9 +5,6 @@ function Result() {
 	const navigate = useNavigate();
 	const { results, categoryName, totalQuestions } = location.state || {};
 
-	//debugging
-	console.log("Results data:", location.state);
-
 	// Redirect if accessed directly without results
 	if (!results) {
 		console.log("No results found, redirecting...");
@@ -20,10 +17,12 @@ function Result() {
 
 	// Determine result color based on score percentage
 	let resultColorClass = "text-red-600";
-	if (percentage >= 70) {
+	if (percentage >= 80) {
 		resultColorClass = "text-green-600";
-	} else if (percentage >= 40) {
+	} else if (percentage >= 60) {
 		resultColorClass = "text-yellow-600";
+	} else if (percentage >= 40) {
+		resultColorClass = "text-orange-600";
 	}
 
 	return (
