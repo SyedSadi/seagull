@@ -56,6 +56,16 @@ class AddQuestionView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+from typing import ClassVar
+
+class UpdateDeleteQuizView(APIView):
+    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request, category_id: int) -> Response:
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return Response({"message": "Quiz deleted successfully"}, status=status.HTTP_200_OK)
         
 
 class SubmitQuizAPIView(APIView):
