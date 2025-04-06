@@ -3,6 +3,7 @@ import { getAllCategories } from "../services/quizApi";
 import AdminLayout from "../components/Admin/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import API from "../services/api";
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);
@@ -21,6 +22,20 @@ const ManageQuiz = () => {
 				setLoading(false);
 			});
 	}, []);
+
+	const handleDelete = async (categoryId) => {
+		if (window.confirm("Are you sure want to delete this quiz?")) {
+			try {
+				await API.delete(`/quiz/update-delete/${categoryId}/`);
+				setCategories(categories.filter((cat) => cat.id !== categoryId));
+				alert("Quiz Deleted successfully!");
+			} catch (error) {
+				console.error("Delete error: ", error);
+				alert("Failed to delete quiz. Please try again.");
+			}
+		}
+	};
+
 	if (loading)
 		return (
 			<div className="flex justify-center items-center h-64">
@@ -62,7 +77,10 @@ const ManageQuiz = () => {
 								<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
 									Update
 								</button>
-								<button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+								<button
+									onClick={() => handleDelete(category.id)}
+									className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+								>
 									<FontAwesomeIcon icon={faTrashCan} />
 								</button>
 							</div>
