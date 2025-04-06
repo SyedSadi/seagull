@@ -24,14 +24,18 @@ const ManageQuiz = () => {
 	}, []);
 
 	const handleDelete = async (categoryId) => {
-		if (window.confirm("Are you sure want to delete this quiz?")) {
+		if (window.confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) {
 			try {
+				setLoading(true);
 				await API.delete(`/quiz/update-delete/${categoryId}/`);
 				setCategories(categories.filter((cat) => cat.id !== categoryId));
-				alert("Quiz Deleted successfully!");
+				// Use a toast notification or custom component instead
+				alert("Quiz deleted successfully!");
 			} catch (error) {
 				console.error("Delete error: ", error);
-				alert("Failed to delete quiz. Please try again.");
+				alert(`Failed to delete quiz: ${error.response?.data?.message || 'Unknown error occurred'}`);
+			} finally {
+				setLoading(false);
 			}
 		}
 	};
