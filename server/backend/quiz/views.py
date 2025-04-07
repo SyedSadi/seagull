@@ -4,6 +4,7 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
+from typing import ClassVar
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from .serializers import CategorySerializer, QuestionSerializer
@@ -57,10 +58,8 @@ class AddQuestionView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-from typing import ClassVar
 
-class UpdateDeleteQuizView(APIView):
+class DeleteQuizView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
     def delete(self, request: Request) -> Response:
@@ -77,6 +76,16 @@ class UpdateDeleteQuizView(APIView):
         deleted_count = Category.objects.filter(id__in=category_ids).delete()[0]
         return Response({"message": f"{deleted_count} categories and their associated data deleted."}, status=status.HTTP_200_OK)
         
+class UpdateQuizView(APIView):
+    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
+
+    def put(self, request, category_id):
+        category=get_object_or_404(Category, id=category_id)
+        serializer=CategorySerializer(category, date=request.data, partial=True)
+        if serializer.valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
