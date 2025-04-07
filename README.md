@@ -1,70 +1,141 @@
-# seagull
+# 🎓 Learning Management System (LMS)
 
-## Team Members
-- ImamIfti056 (Team Leader)
-- yuusaif
-- SyedSadi
+[![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)](https://reactjs.org/)
+[![Django](https://img.shields.io/badge/Django-4.2-092e20.svg)](https://www.djangoproject.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.0-336791.svg)](https://www.postgresql.org/)
 
-## Mentor
-- maahad767
+## 👥 Team
 
-## Project Description
-# Learning Management System (LMS)
+| Role        | Name                                          |
+| ----------- | --------------------------------------------- |
+| Team Leader | [ImamIfti056](https://github.com/ImamIfti056) |
+| Developer   | [yuusaif](https://github.com/yuusaif)         |
+| Developer   | [SyedSadi](https://github.com/SyedSadi)       |
+| Mentor      | [maahad767](https://github.com/maahad767)     |
 
-## Overview
-The **Learning Management System (LMS)** is a web application designed to facilitate learning by offering tools for course content management, navigation, community engagement, and evaluation through quizzes. Built with modern web technologies, this system aims to provide a seamless experience for both students and instructors.
+## 📝 Overview
 
----
+A modern Learning Management System built to revolutionize online education. Our platform provides comprehensive tools for course management, interactive learning, and assessment.
 
-## Features
-1. **Course Content Management**
-   - Upload and organize videos, PDFs, PPTs, and articles.
-   - Embed YouTube videos directly into courses.
+### 🌟 Key Features
 
-2. **Course Navigation**
-   - Organize courses by subject and topic for easy access.
-   - Search and filter options for efficient content discovery.
+- **📚 Course Management**
 
-3. **Community Newsfeed**
-   - Authenticated users can post and answer questions.
-   - Voting system for highlighting the best answers.
+  - Create and organize course content
+  - Upload multiple file formats (PDF, PPT, Video)
+  - Embed YouTube videos seamlessly
+  - Track course progress
 
-4. **Exam System**
-   - Quizzes with 25 multiple-choice questions (MCQs) and a 25-minute timer.
-   - Results display correct and incorrect answers post-completion.
+- **🎯 Interactive Learning**
 
-5. **User Interaction**
-   - Rating and feedback system for courses.
+  - Real-time discussion forums
+  - Q&A sections
+  - Community engagement features
+  - Rating and feedback system
 
----
+- **📝 Assessment System**
+  - Timed MCQ quizzes (25 questions, 25 minutes)
+  - Instant results and feedback
+  - Progress tracking
+  - Performance analytics
 
-## Technologies Used
-- **Frontend:** React.js
-- **Backend:** Django
-- **Database:** PostgreSQL
-- **Version Control:** Git & GitHub
+## 🛠️ Tech Stack
 
----
+- **Frontend:**
 
-## Setup and Installation
+  - React.js with Vite
+  - TailwindCSS for styling
+  - Redux for state management
+  - Axios for API calls
+
+- **Backend:**
+  - Django REST Framework
+  - PostgreSQL database
+  - JWT Authentication
+  - Celery for async tasks
+
+## 🚀 Getting Started
+
 ### Prerequisites
-- Python 3.8 or higher
-- Node.js and npm
-- PostgreSQL
-- Git
 
-## Getting Started
-1. Clone the repository
-2. Install dependencies
-3. Start development
+```bash
+# Required versions
+Node.js >= 16.0.0
+Python >= 3.8.0
+PostgreSQL >= 14.0
+```
 
-## Development Guidelines
-1. Create feature branches
-2. Make small, focused commits
-3. Write descriptive commit messages
-4. Create pull requests for review
+### Installation
 
-## Resources
-- [Project Documentation](docs/)
-- [Development Setup](docs/setup.md)
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/yourusername/seagull.git
+cd seagull
+```
+
+2. **Backend Setup**
+
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run migrations
+python manage.py migrate
+
+# Start server
+python manage.py runserver
+```
+
+3. **Frontend Setup**
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## 🔧 Development
+
+### Branch Naming Convention
+
+- Feature: `feature/your-feature-name`
+- Bugfix: `bugfix/issue-description`
+- Hotfix: `hotfix/critical-fix`
+
+### Commit Guidelines
+
+- Use clear, descriptive commit messages
+- Reference issue numbers when applicable
+- Keep commits focused and atomic
+
+## 📚 Documentation
+
+- [API Documentation](docs/api.md)
+- [Development Guide](docs/development.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Special thanks to our mentor [@maahad767](https://github.com/maahad767)
+- All contributors who have helped shape this project
+
+---
+
+<p align="center">Made with ❤️ by Team Seagull</p>
