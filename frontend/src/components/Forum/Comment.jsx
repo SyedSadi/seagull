@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import API from '../../services/api';
+import PropTypes from 'prop-types';
+
 
 const Comment = ({ comment, postId, setComments }) => {
   const [isReplying, setIsReplying] = useState(false);
@@ -200,5 +202,18 @@ const removeCommentFromTree = (comments, commentId) => {
     </div>
   );
 };
+Comment.propTypes = {
+  comment: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    content: PropTypes.string.isRequired,
+    author: PropTypes.number.isRequired,
+    user: PropTypes.string,
+    created_at: PropTypes.string.isRequired,
+    children: PropTypes.arrayOf(PropTypes.object),
+  }).isRequired,
+  postId: PropTypes.number.isRequired,
+  setComments: PropTypes.func.isRequired,
+};
+
 
 export default Comment;
