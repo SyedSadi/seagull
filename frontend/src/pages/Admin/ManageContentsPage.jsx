@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import API from '../services/api';
-import AdminLayout from '../components/Admin/AdminLayout';
-import { updateContentById } from '../services/contentsApi';
+import API from '../../services/api';
+import AdminLayout from '../../components/Admin/AdminLayout';
+import { deleteContentById, updateContentById } from '../../services/contentsApi';
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
+import ShowConfirmation from '../../components/Shared/ShowConfirmation';
 
 const ManageContents = () => {
   const [courses, setCourses] = useState([]);
@@ -63,31 +64,19 @@ const ManageContents = () => {
 	}
   };
 
-  const handleDeleteContent = (contentId) => {
-    Swal.fire({
-      background: '#1f2937', // dark background
-      color: '#fff',
-      title: 'Are you sure?',
-      text: 'Think twice before you delete!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#3b82f6',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, keep it'
-    }).then((result) => {
+  const handleDeleteContent = async (contentId) => {
+    try {
+      const result = await ShowConfirmation();
+  
       if (result.isConfirmed) {
-        API.delete(`/courses/content/delete/${contentId}/`)
-          .then(() => {
-            setContents(prevContents => prevContents.filter(content => content.id !== contentId));
-            toast.success('Content deleted successfully!');
-          })
-          .catch((error) => {
-            console.error('Error deleting content:', error);
-            toast.error('Failed to delete content. Please try again.');
-          });
+        await deleteContentById(contentId);
+        setContents((prevContents) => prevContents.filter((content) => content.id !== contentId));
+        toast.success('Content deleted successfully!');
       }
-    });
+    } catch (error) {
+      console.error('Error deleting content:', error);
+      toast.error('Failed to delete content. Please try again.');
+    }
   };
   
 
