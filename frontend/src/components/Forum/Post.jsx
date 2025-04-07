@@ -120,10 +120,18 @@ const Post = ({ post, onDelete }) => {
       {/* Edit & Delete Buttons (Only for Author) */}
       {isAuthor && (
         <div className="flex gap-4">
-          <button onClick={openEditModal} className="text-blue-600 hover:underline font-medium">
+          <button 
+            type="button"
+            onClick={openEditModal} 
+            className="text-blue-600 hover:underline font-medium"
+          >
             Edit
           </button>
-          <button onClick={handleDelete} className="text-red-600 hover:underline font-medium">
+          <button 
+            type="button"
+            onClick={handleDelete} 
+            className="text-red-600 hover:underline font-medium"
+          >
             Delete
           </button>
         </div>
