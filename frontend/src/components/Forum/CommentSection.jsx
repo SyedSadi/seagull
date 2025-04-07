@@ -70,5 +70,9 @@ CommentSection.propTypes = {
   setComments: PropTypes.func.isRequired,
 };
 
+CommentSection.defaultProps = {
+  comments: [],
+};
+
 
 export default CommentSection;
