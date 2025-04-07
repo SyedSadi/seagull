@@ -125,6 +125,9 @@ const ManageQuiz = () => {
 								<p className="text-lg font-semibold text-gray-800">
 									{index + 1}. {category.name}
 								</p>
+								<p className="text-base text-gray-600 ml-1">
+									(Question count: {category.question_count})
+								</p>
 							</div>
 							<div className="space-x-3">
 								<button className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300">
