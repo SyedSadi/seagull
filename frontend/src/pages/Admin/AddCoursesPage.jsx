@@ -38,7 +38,7 @@ const AddCoursesPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await addCourse(course);
+      await addCourse(course);
       setTimeout(() => {
         navigate("/courses");
       }, 1500);

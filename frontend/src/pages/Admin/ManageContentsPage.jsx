@@ -3,7 +3,6 @@ import API from '../../services/api';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { deleteContentById, updateContentById } from '../../services/contentsApi';
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2';
 import ShowConfirmation from '../../components/Shared/ShowConfirmation';
 
 const ManageContents = () => {
@@ -100,60 +99,75 @@ const ManageContents = () => {
 
       {contents?.length > 0 ? (
           <form onSubmit={handleUpdateContents}>
-            {contents.map((content, index) => (
-              <div key={content.id} className="mb-6 border p-4 rounded shadow">
-                <label className="block font-semibold mb-1">Title</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={content.title || ''}
-                  onChange={(e) => handleContentChange(index, e)}
-                  className="p-2 border rounded w-full"
-                />
-
-                <label className="block font-semibold mt-4 mb-1">Content Type</label>
-                <input
-                  type="text"
-                  name="content_type"
-                  value={content.content_type || ''}
-                  onChange={(e) => handleContentChange(index, e)}
-                  className="p-2 border rounded w-full"
-                  disabled
-                />
-
-                <label className="block font-semibold mt-4 mb-1">URL (optional)</label>
-                <input
-                  type="url"
-                  name="url"
-                  value={content.url || ''}
-                  onChange={(e) => handleContentChange(index, e)}
-                  className="p-2 border rounded w-full"
-                />
-
-                <label className="block font-semibold mt-4 mb-1">Text Content (optional)</label>
-                <textarea
-                  name="text_content"
-                  value={content.text_content || ''}
-                  onChange={(e) => handleContentChange(index, e)}
-                  className="p-2 border rounded w-full"
-                  rows="4"
-                />
-
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteContent(content.id)}
-                    className="mt-4 bg-red-500 text-white p-2 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
+          {contents.map((content, index) => (
+            <div key={content.id} className="mb-6 border p-4 rounded shadow">
+              
+              <label htmlFor={`title-${content.id}`} className="block font-semibold mb-1">
+                Title
+              </label>
+              <input
+                id={`title-${content.id}`}
+                type="text"
+                name="title"
+                value={content.title || ''}
+                onChange={(e) => handleContentChange(index, e)}
+                className="p-2 border rounded w-full"
+              />
+        
+              <label htmlFor={`content_type-${content.id}`} className="block font-semibold mt-4 mb-1">
+                Content Type
+              </label>
+              <input
+                id={`content_type-${content.id}`}
+                type="text"
+                name="content_type"
+                value={content.content_type || ''}
+                onChange={(e) => handleContentChange(index, e)}
+                className="p-2 border rounded w-full"
+                disabled
+              />
+        
+              <label htmlFor={`url-${content.id}`} className="block font-semibold mt-4 mb-1">
+                URL (optional)
+              </label>
+              <input
+                id={`url-${content.id}`}
+                type="url"
+                name="url"
+                value={content.url || ''}
+                onChange={(e) => handleContentChange(index, e)}
+                className="p-2 border rounded w-full"
+              />
+        
+              <label htmlFor={`text_content-${content.id}`} className="block font-semibold mt-4 mb-1">
+                Text Content (optional)
+              </label>
+              <textarea
+                id={`text_content-${content.id}`}
+                name="text_content"
+                value={content.text_content || ''}
+                onChange={(e) => handleContentChange(index, e)}
+                className="p-2 border rounded w-full"
+                rows="4"
+              />
+        
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteContent(content.id)}
+                  className="mt-4 bg-red-500 text-white p-2 rounded"
+                >
+                  Delete
+                </button>
               </div>
-            ))}
-            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-              Save Changes
-            </button>
+            </div>
+          ))}
+          
+          <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
+            Save Changes
+          </button>
           </form>
+        
         ) : (
           <h2 className="text-center text-xl">No contents available. Add contents first.</h2>
         )}

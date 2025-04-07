@@ -1,7 +1,7 @@
 // React and Router
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useRouteError } from "react-router-dom";
 
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -156,8 +156,6 @@ createRoot(document.getElementById("root")).render(
 );
 
 // ErrorBoundary Component
-import { useRouteError } from "react-router-dom";
-
 export default function ErrorBoundary() {
 	const error = useRouteError();
 	return (

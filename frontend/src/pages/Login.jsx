@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
-import {AuthContext} from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,26 +16,35 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const res = await loginUser(formData, navigate, location);
-        console.log('res', res);
-        if(res?.status === 200){
-            const redirectTo = location.state?.from?.pathname || "/";
-            navigate(redirectTo);
-            alert('login successful');
-        }
         
+        try {
+            const res = await loginUser(formData, navigate, location);
+            console.log("res", res);
+
+            if (res?.status === 200) {
+                const redirectTo = location.state?.from?.pathname || "/";
+                navigate(redirectTo);
+                toast.success("Login successful!");
+            } else {
+                toast.error("Login failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            toast.error("An error occurred. Please try again.");
+        }
     };
-    
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <div className="card w-96 bg-white shadow-lg p-6 rounded-xl">
                 <h2 className="text-2xl font-bold text-center text-gray-700">Login</h2>
                 <form onSubmit={handleSubmit} className="mt-4">
                     <div className="form-control">
-                        <label className="label">
+                        <label htmlFor="username" className="label">
                             <span className="label-text">Username</span>
                         </label>
                         <input
+                            id="username"
                             type="text"
                             name="username"
                             placeholder="Enter your username"
@@ -44,10 +55,11 @@ const Login = () => {
                         />
                     </div>
                     <div className="form-control mt-2">
-                        <label className="label">
+                        <label htmlFor="password" className="label">
                             <span className="label-text">Password</span>
                         </label>
                         <input
+                            id="password"
                             type="password"
                             name="password"
                             placeholder="Enter your password"

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import API from "../services/api";
 import { jwtDecode } from "jwt-decode";
+import PropTypes from 'prop-types';
 
 
 export const AuthContext = createContext();
@@ -44,7 +45,6 @@ export const AuthProvider = ({ children }) => {
       console.log('new token after lgoin', response.data.access)
       console.log('new decoded token after login ', jwtDecode(response.data.access))
       setUser(response.data.user);
-      // console.log("Redirecting to:", location.state?.from?.pathname || "/");
       navigate(location.state?.from?.pathname, { replace: true });
 
       return response;
@@ -80,4 +80,8 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

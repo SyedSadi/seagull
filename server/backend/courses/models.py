@@ -14,9 +14,8 @@ class Course(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     created_by = models.ForeignKey(Instructor, on_delete=models.CASCADE, null=True)
-    duration = models.PositiveIntegerField()  # Hours
+    duration = models.PositiveIntegerField()
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS)
-    # topic = models.CharField(max_length=255)
     subject = models.CharField(max_length=255)
     ratings = models.FloatField(default=0.0)
 

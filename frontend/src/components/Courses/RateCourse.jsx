@@ -40,25 +40,23 @@ const RateCourse = ({ courseId }) => {
     <div className="flex flex-col items-center space-y-2 my-6 p-2 bg-white rounded-xl shadow-md w-1/3 mx-auto">
         <h3 className="text-2xl font-semibold text-gray-800">Rate this course</h3>
         <div className="flex space-x-2">
-            {[...Array(5)].map((_, index) => {
-            index += 1;
-            return (
-                <button
-                key={index}
-                type="button"
-                disabled={loading}
-                onClick={() => handleRating(index)}
-                onMouseEnter={() => setHover(index)}
-                onMouseLeave={() => setHover(0)}
-                className={`text-4xl transition-transform transform hover:scale-125 ${
-                    index <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
-                }`}
-                >
-                ★
-                </button>
-            );
-            })}
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={`star-${star}`} // now a unique key, not just a number
+              type="button"
+              disabled={loading}
+              onClick={() => handleRating(star)}
+              onMouseEnter={() => setHover(star)}
+              onMouseLeave={() => setHover(0)}
+              className={`text-4xl transition-transform transform hover:scale-125 ${
+                star <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
+              }`}
+            >
+              ★
+            </button>
+          ))}
         </div>
+
         {loading && <p className="text-sm text-gray-500">Submitting your rating...</p>}
     </div>
 
