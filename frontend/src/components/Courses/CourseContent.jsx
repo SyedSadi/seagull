@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { getCourseDetailsById } from "../../services/coursesApi";
-import { AuthContext } from "../../context/AuthContext";
 import RateCourse from "./RateCourse";
 
 const CourseContent = () => {
 	const { id } = useParams(); // Get course ID from URL
 	const [course, setCourse] = useState(null);
-	const { user } = useContext(AuthContext);
 	useEffect(() => {
 		const fetchCourse = async () => {
 			try {
@@ -29,16 +27,7 @@ const CourseContent = () => {
 	const pdfUrl = "https://arxiv.org/pdf/1708.08021.pdf";
 
 	return (
-		<div className="bg-gray-50">
-			{/* Admin management link */}
-			{user?.is_superuser && (
-				<Link
-					className="mb-6 inline-block bg-blue-600 text-white text-lg font-semibold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-500 transition"
-					to={`/contents/manage/${course.id}`}
-				>
-					Manage Contents
-				</Link>
-			)}
+		<div className="bg-gray-50">		
 
 			<RateCourse courseId={id} />
 

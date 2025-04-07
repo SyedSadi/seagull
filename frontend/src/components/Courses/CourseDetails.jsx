@@ -1,19 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
 	getEnrolledCourses,
 	enroll,
 	getCourseDetailsById,
 } from "../../services/coursesApi";
-import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
-import RateCourse from "./RateCourse";
 
 const CourseDetails = () => {
 	const { id } = useParams();
 	const [course, setCourse] = useState(null);
-	const { user } = useContext(AuthContext);
 	const [loading, setLoading] = useState(false);
 	const [isEnrolled, setIsEnrolled] = useState(null);
 
@@ -29,7 +26,7 @@ const CourseDetails = () => {
 
 		fetchCourse();
 	}, [id]);
-
+	
 	useEffect(() => {
 		const handleGetEnrolledCoureses = async () => {
 			try {
@@ -107,14 +104,6 @@ const CourseDetails = () => {
 					<p className="text-lg my-4">Duration: {course.duration} hours</p>
 					<p className="text-lg my-4">Ratings: {course.ratings}/5</p>
 					{actionButton}
-					{user?.is_superuser && (
-						<Link
-							to={`/course/modify/${course.id}`}
-							className="m-4 bg-red-600 p-2"
-						>
-							Edit Course
-						</Link>
-					)}
 				</div>
 				<div>
 					<img

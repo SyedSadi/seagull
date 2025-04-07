@@ -2,7 +2,7 @@ from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Course, CourseContents, Enrollment, Rating
-from .serializers import CourseSerializer, CourseContentsSerializer, RatingSerializer
+from .serializers import CourseSerializer, CourseContentsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -50,7 +50,28 @@ class UpdateDeleteCourseView(APIView):
         course = get_object_or_404(Course, id=course_id)
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-    
+
+
+class AddContentAPIView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def post(self, request, *args, **kwargs):
+        course_id = request.data.get('course')
+        if not course_id:
+            return Response({"error": "Course is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            course = Course.objects.get(id=course_id)
+        except Course.DoesNotExist:
+            return Response({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Create a new content entry
+        serializer = CourseContentsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(course=course)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateContentView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
@@ -65,6 +86,15 @@ class UpdateContentView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeleteContentView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request, id):
+        content = get_object_or_404(CourseContents, id=id)
+        content.delete()
+        return Response({'message': 'Content deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
     
 class EnrollCourseView(APIView):
     permission_classes = [IsAuthenticated]
