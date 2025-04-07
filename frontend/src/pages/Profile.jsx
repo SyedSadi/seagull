@@ -4,7 +4,7 @@ import {
 	getEnrolledCourses,
 	getInstructorCourses,
 } from "../services/coursesApi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
 	FaArrowRight,
 	FaUserGraduate,
@@ -50,6 +50,49 @@ const Profile = () => {
 		);
 	}
 
+	let content;
+
+	if (loading) {
+		content = <p className="text-center text-gray-500">Loading courses...</p>;
+	} else if (courses.length > 0) {
+		content = (
+			<ul className="space-y-3">
+				{courses.map((course) => (
+					<li
+						key={course.id}
+						className="flex justify-between items-center p-3 border rounded-lg"
+					>
+						<div>
+							<h3 className="text-lg font-medium">{course.title}</h3>
+							<p className="text-gray-500">{course.subject}</p>
+							{user.role === "instructor" && (
+								<p className="text-sm text-gray-600">
+									Rating: {course.ratings.toFixed(1)} ⭐
+								</p>
+							)}
+						</div>
+						<Link
+							to={`/courseContents/${course.id}`}
+							className="btn btn-primary"
+						>
+							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
+							<FaArrowRight />
+						</Link>
+					</li>
+				))}
+			</ul>
+		);
+	} else {
+		content = (
+			<p className="text-center text-gray-500">
+				{user.role === "student"
+					? "You are not enrolled in any courses."
+					: "You have not created any courses yet."}
+			</p>
+		);
+	}
+
+
 	return (
 		<div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
 			<div className="bg-blue-100 p-4 rounded-lg">
@@ -77,42 +120,7 @@ const Profile = () => {
 				<h2 className="text-xl font-semibold mb-3 text-center">
 					{user.role === "student" ? "Enrolled Courses" : "Courses Taught"}
 				</h2>
-
-				{loading ? (
-					<p className="text-center text-gray-500">Loading courses...</p>
-				) : courses.length > 0 ? (
-					<ul className="space-y-3">
-						{courses.map((course) => (
-							<li
-								key={course.id}
-								className="flex justify-between items-center p-3 border rounded-lg"
-							>
-								<div>
-									<h3 className="text-lg font-medium">{course.title}</h3>
-									<p className="text-gray-500">{course.subject}</p>
-									{user.role === "instructor" && (
-										<p className="text-sm text-gray-600">
-											Rating: {course.ratings.toFixed(1)} ⭐
-										</p>
-									)}
-								</div>
-								<Link
-									to={`/courseContents/${course.id}`}
-									className="btn btn-primary"
-								>
-									{user.role === "student" ? "Go to Course" : "View Course"}{" "}
-									<FaArrowRight />
-								</Link>
-							</li>
-						))}
-					</ul>
-				) : (
-					<p className="text-center text-gray-500">
-						{user.role === "student"
-							? "You are not enrolled in any courses."
-							: "You have not created any courses yet."}
-					</p>
-				)}
+				{content}
 			</div>
 		</div>
 	);

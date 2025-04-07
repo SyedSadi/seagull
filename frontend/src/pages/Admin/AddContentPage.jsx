@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import API from '../services/api';
-import AdminLayout from '../components/Admin/AdminLayout';
+import API from '../../services/api';
+import AdminLayout from '../../components/Admin/AdminLayout';
 import { toast } from 'react-toastify';
 
 const AddContentPage = () => {
@@ -86,59 +86,64 @@ const AddContentPage = () => {
 
         {selectedCourseId && (
           <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className="block font-semibold mb-1">Title</label>
-              <input
-                type="text"
-                name="title"
-                value={contentData.title}
-                onChange={handleInputChange}
-                className="p-2 border rounded w-full"
-                required
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block font-semibold mb-1">Content Type</label>
-              <select
-                name="content_type"
-                value={contentData.content_type}
-                onChange={handleInputChange}
-                className="p-2 border rounded w-full"
-              >
-                <option value="video">Video</option>
-                <option value="pdf">PDF</option>
-                <option value="text">Text</option>
-                <option value="article">Article</option>
-              </select>
-            </div>
-
-            <div className="mb-6">
-              <label className="block font-semibold mb-1">URL (optional)</label>
-              <input
-                type="url"
-                name="url"
-                value={contentData.url}
-                onChange={handleInputChange}
-                className="p-2 border rounded w-full"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block font-semibold mb-1">Text Content (optional)</label>
-              <textarea
-                name="text_content"
-                value={contentData.text_content}
-                onChange={handleInputChange}
-                className="p-2 border rounded w-full"
-                rows="4"
-              />
-            </div>
-
-            <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-              Add Content
-            </button>
-          </form>
+          <div className="mb-6">
+            <label htmlFor="title" className="block font-semibold mb-1">Title</label>
+            <input
+              id="title"
+              type="text"
+              name="title"
+              value={contentData.title}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+              required
+            />
+          </div>
+        
+          <div className="mb-6">
+            <label htmlFor="content_type" className="block font-semibold mb-1">Content Type</label>
+            <select
+              id="content_type"
+              name="content_type"
+              value={contentData.content_type}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+            >
+              <option value="video">Video</option>
+              <option value="pdf">PDF</option>
+              <option value="text">Text</option>
+              <option value="article">Article</option>
+            </select>
+          </div>
+        
+          <div className="mb-6">
+            <label htmlFor="url" className="block font-semibold mb-1">URL (optional)</label>
+            <input
+              id="url"
+              type="url"
+              name="url"
+              value={contentData.url}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+            />
+          </div>
+        
+          <div className="mb-6">
+            <label htmlFor="text_content" className="block font-semibold mb-1">Text Content (optional)</label>
+            <textarea
+              id="text_content"
+              name="text_content"
+              value={contentData.text_content}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+              rows="4"
+            />
+          </div>
+        
+          <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
+            Add Content
+          </button>
+        </form>      
+          
         )}
       </div>
     </AdminLayout>

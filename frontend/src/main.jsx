@@ -1,7 +1,7 @@
 // React and Router
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useRouteError } from "react-router-dom";
 
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -14,16 +14,17 @@ import CoursePage from "./pages/CoursePage.jsx";
 import ForumPage from "./pages/ForumPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import CareerPage from "./pages/CareerPage.jsx";
-import AddCoursesPage from "./pages/AddCoursesPage.jsx";
-import ManageContentsPage from "./pages/ManageContentsPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import Register from "./pages/Register.jsx";
 import QuizHome from "./pages/QuizHome.jsx";
 import Dashboard from "./pages/Admin/Dashboard.jsx";
-import ModifyCoursePage from "./pages/ModifyCoursePage.jsx";
 import Profile from "./pages/Profile.jsx";
-import AddQuizPage from "./pages/AddQuizPage.jsx";
-import ManageQuiz from "./pages/ManageQuiz.jsx";
+import AddContentPage from "./pages/Admin/AddContentPage.jsx";
+import ModifyCoursePage from "./pages/Admin/ModifyCoursePage.jsx";
+import AddCoursesPage from "./pages/Admin/AddCoursesPage.jsx";
+import AddQuizPage from "./pages/Admin/AddQuizPage.jsx";
+import ManageContentsPage from "./pages/Admin/ManageContentsPage.jsx";
+import ManageQuiz from "./pages/Admin/ManageQuiz.jsx";
 
 // Components
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
@@ -95,32 +96,8 @@ const router = createBrowserRouter([
 						element: <Profile />,
 					},
 					{
-						path: "/manage-courses",
-						element: <ModifyCoursePage />,
-					},
-					{
-						path: "/add-courses",
-						element: <AddCoursesPage />,
-					},
-					{
-						path: "/manage-contents",
-						element: <ManageContentsPage />,
-					},
-					{
-						path: "/add-contents",
-						element: <AddContentPage />,
-					},
-					{
 						path: "/courseContents/:id",
 						element: <CourseContent />,
-					},
-					{
-						path: "/add-quiz",
-						element: <AddQuizPage />,
-					},
-					{
-						path: "/manage-quiz",
-						element: <ManageQuiz />,
 					},
 					{
 						element: <AdminRoute />,
@@ -132,6 +109,18 @@ const router = createBrowserRouter([
 							{
 								path: "/add-courses",
 								element: <AddCoursesPage />,
+							},
+							{
+								path: "/manage-courses",
+								element: <ModifyCoursePage />,
+							},
+							{
+								path: "/manage-contents",
+								element: <ManageContentsPage />,
+							},
+							{
+								path: "/add-contents",
+								element: <AddContentPage />,
 							},
 							{
 								path: "/add-quiz",
@@ -167,9 +156,6 @@ createRoot(document.getElementById("root")).render(
 );
 
 // ErrorBoundary Component
-import { useRouteError } from "react-router-dom";
-import AddContentPage from "./pages/AddContentPage.jsx";
-
 export default function ErrorBoundary() {
 	const error = useRouteError();
 	return (
