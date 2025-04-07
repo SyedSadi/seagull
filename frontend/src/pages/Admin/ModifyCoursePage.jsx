@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllCourses, getCourseDetailsById } from "../services/coursesApi";
-import API from "../services/api";
-import AdminLayout from "../components/Admin/AdminLayout";
+import { getAllCourses, getCourseDetailsById } from "../../services/coursesApi";
+import AdminLayout from "../../components/Admin/AdminLayout";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API from "../../services/api";
 
 const ModifyCoursePage = () => {
   const navigate = useNavigate();

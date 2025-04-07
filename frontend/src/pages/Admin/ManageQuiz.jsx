@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { getAllCategories } from "../services/quizApi";
-import AdminLayout from "../components/Admin/AdminLayout";
-import API from "../services/api";
+import { getAllCategories } from "../../services/quizApi";
+import AdminLayout from "../../components/Admin/AdminLayout";
+import API from "../../services/api";
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);

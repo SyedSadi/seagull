@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { addQuiz } from "../services/quizApi";
-import AdminLayout from "../components/Admin/AdminLayout";
-import AddQuestionForm from "../components/Quiz/AddQuestionForm";
+import { addQuiz } from "../../services/quizApi";
+import AdminLayout from "../../components/Admin/AdminLayout";
+import AddQuestionForm from "../../components/Quiz/AddQuestionForm";
 
 const AddQuizPage = () => {
 	const [quiz, setQuiz] = useState({

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllInstructors } from "../services/instructorsApi";
-import { addCourse } from "../services/coursesApi";
-import AdminLayout from "../components/Admin/AdminLayout";
+import { getAllInstructors } from "../../services/instructorsApi";
+import { addCourse } from "../../services/coursesApi";
+import AdminLayout from "../../components/Admin/AdminLayout";
 import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 
