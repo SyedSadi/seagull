@@ -15,6 +15,15 @@ const AdminLayout = ({ children }) => {
 						<Link to="/add-courses">Add Courses</Link>
 					</li>
 					<li className="mb-2 py-2 border-b-2 border-gray-200">
+						<Link to="/manage-courses">Manage Courses</Link>
+					</li>
+					<li className="mb-2 py-2 border-b-2 border-gray-200">
+						<Link to="/add-contents">Add Contents</Link>
+					</li>
+					<li className="mb-2 py-2 border-b-2 border-gray-200">
+						<Link to="/manage-contents">Manage Contents</Link>
+					</li>
+					<li className="mb-2 py-2 border-b-2 border-gray-200">
 						<Link to="/add-quiz">Add Quiz</Link>
 					</li>
 					<li className="mb-2 py-2 border-b-2 border-gray-200">

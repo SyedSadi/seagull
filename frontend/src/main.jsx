@@ -34,6 +34,7 @@ import Result from "./components/Quiz/Result.jsx";
 import Quizzes from "./components/Quiz/Quizzes.jsx";
 
 // Styles
+import { ToastContainer } from "react-toastify";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -94,7 +95,7 @@ const router = createBrowserRouter([
 						element: <Profile />,
 					},
 					{
-						path: "/course/modify/:courseId",
+						path: "/manage-courses",
 						element: <ModifyCoursePage />,
 					},
 					{
@@ -102,8 +103,12 @@ const router = createBrowserRouter([
 						element: <AddCoursesPage />,
 					},
 					{
-						path: "/contents/manage/:courseId",
+						path: "/manage-contents",
 						element: <ManageContentsPage />,
+					},
+					{
+						path: "/add-contents",
+						element: <AddContentPage />,
 					},
 					{
 						path: "/courseContents/:id",
@@ -148,12 +153,22 @@ createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<AuthProvider>
 			<RouterProvider router={router} />
+			<ToastContainer
+				position="top-right"
+				autoClose={2000}
+				hideProgressBar={false}
+				newestOnTop
+				closeOnClick
+				pauseOnHover
+				draggable
+			/>
 		</AuthProvider>
 	</StrictMode>
 );
 
 // ErrorBoundary Component
 import { useRouteError } from "react-router-dom";
+import AddContentPage from "./pages/AddContentPage.jsx";
 
 export default function ErrorBoundary() {
 	const error = useRouteError();

@@ -1,18 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
 	getEnrolledCourses,
 	enroll,
 	getCourseDetailsById,
 } from "../../services/coursesApi";
-import { AuthContext } from "../../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
 
 const CourseDetails = () => {
 	const { id } = useParams();
 	const [course, setCourse] = useState(null);
-	const { user } = useContext(AuthContext);
 	const [loading, setLoading] = useState(false);
 	const [isEnrolled, setIsEnrolled] = useState(null);
 
@@ -28,7 +26,7 @@ const CourseDetails = () => {
 
 		fetchCourse();
 	}, [id]);
-
+	
 	useEffect(() => {
 		const handleGetEnrolledCoureses = async () => {
 			try {
@@ -78,6 +76,7 @@ const CourseDetails = () => {
 			>
 				Go to Course <FaArrowRight />
 			</Link>
+			
 		);
 	} else {
 		actionButton = (
@@ -104,26 +103,7 @@ const CourseDetails = () => {
 					</p>
 					<p className="text-lg my-4">Duration: {course.duration} hours</p>
 					<p className="text-lg my-4">Ratings: {course.ratings}/5</p>
-					{/* {isEnrolled === null ? (
-            <span className="loading loading-spinner loading-lg"></span>) : isEnrolled ? (
-            <Link to={`/courseContents/${course.id}`} className='mt-8 btn btn-primary flex items-center gap-2'>Go to Course <FaArrowRight /></Link>) : (
-            <button
-            onClick={handleEnroll}
-            className="mt-8 btn btn-accent flex items-center gap-2"
-            disabled={loading}
-            >
-            {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
-            </button>
-          )} */}
 					{actionButton}
-					{user?.is_superuser && (
-						<Link
-							to={`/course/modify/${course.id}`}
-							className="m-4 bg-red-600 p-2"
-						>
-							Edit Course
-						</Link>
-					)}
 				</div>
 				<div>
 					<img
