@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from .serializers import CategorySerializer, QuestionSerializer
+from rest_framework.request import Request
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes=[AllowAny]

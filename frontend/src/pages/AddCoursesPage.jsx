@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { getAllInstructors } from "../services/instructorsApi";
 import { addCourse } from "../services/coursesApi";
 import AdminLayout from "../components/Admin/AdminLayout";
-import { toast } from "react-toastify"; // import toast
-import "react-toastify/dist/ReactToastify.css"; // import toastify css
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
 
 const AddCoursesPage = () => {
   const navigate = useNavigate();
@@ -39,10 +39,10 @@ const AddCoursesPage = () => {
     e.preventDefault();
     try {
       const data = await addCourse(course);
-      toast.success("Course added successfully!");
       setTimeout(() => {
         navigate("/courses");
       }, 1500);
+      toast.success("Course added successfully!");
       setCourse({
         title: "",
         description: "",
