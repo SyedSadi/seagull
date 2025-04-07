@@ -22,11 +22,7 @@ const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return (
-      <AdminLayout>
-        <div className="p-6 text-center">Loading...</div>
-      </AdminLayout>
-    );
+    return <Loading />;
   }
 
   return (
@@ -34,17 +30,8 @@ const Dashboard = () => {
       <div className="p-6 pt-0 shadow-md rounded-lg">
         <h2 className="text-2xl text-center font-bold mb-6">Dashboard Stats</h2>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard title="Users" value={stats?.total_users} desc="Total registered users" />
-          <StatCard title="Students" value={stats?.total_students} desc="Total registered students" />
-          <StatCard title="Instructors" value={stats?.total_instructors} desc="Total registered instructors" />
-          <StatCard title="Courses" value={stats?.total_courses} desc="Total courses" />
-          <StatCard title="Contents" value={stats?.total_contents} desc="Total contents" />
-          <StatCard title="Quizzes" value={stats?.total_quizzes} desc="Total quizzes" />
-        </div>
+        <StatsGrid stats={stats} />
 
-        {/* New Users & Active Users */}
         <div className="flex flex-col md:flex-row gap-8">
           <UserList
             title="New Users in the Last 7 Days"
@@ -59,6 +46,28 @@ const Dashboard = () => {
     </AdminLayout>
   );
 };
+
+// Loading Spinner Component
+const Loading = () => (
+  <AdminLayout>
+    <div className="p-6 text-center">Loading...</div>
+  </AdminLayout>
+);
+
+const StatsGrid = ({ stats }) => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    {[
+      { title: "Users", value: stats?.total_users, desc: "Total registered users" },
+      { title: "Students", value: stats?.total_students, desc: "Total registered students" },
+      { title: "Instructors", value: stats?.total_instructors, desc: "Total registered instructors" },
+      { title: "Courses", value: stats?.total_courses, desc: "Total courses" },
+      { title: "Contents", value: stats?.total_contents, desc: "Total contents" },
+      { title: "Quizzes", value: stats?.total_quizzes, desc: "Total quizzes" },
+    ].map((stat) => (
+      <StatCard key={stat.title} {...stat} />
+    ))}
+  </div>
+);
 
 const StatCard = ({ title, value, desc }) => (
   <div className="bg-red-200 p-4 rounded-lg shadow-md text-center">
@@ -91,20 +100,21 @@ const UserList = ({ title, users }) => (
     <div className="grid gap-4">
       {users.length > 0 ? (
         users.map((user) => (
-          <div
-            key={user.id}
-            className="bg-gray-100 p-4 rounded-lg border-2 shadow-sm flex justify-between"
-          >
-            <div>
-              <p className="font-semibold">{user.username}</p>
-              <p>{user.email}</p>
-              <p className="text-sm text-gray-600">Role: {user.role}</p>
-            </div>
-          </div>
+          <UserCard key={user.id} user={user} />
         ))
       ) : (
         <p className="text-gray-500">No users found.</p>
       )}
+    </div>
+  </div>
+);
+
+const UserCard = ({ user }) => (
+  <div className="bg-gray-100 p-4 rounded-lg border-2 shadow-sm flex justify-between">
+    <div>
+      <p className="font-semibold">{user.username}</p>
+      <p>{user.email}</p>
+      <p className="text-sm text-gray-600">Role: {user.role}</p>
     </div>
   </div>
 );

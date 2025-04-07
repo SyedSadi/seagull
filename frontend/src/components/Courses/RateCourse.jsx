@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const RateCourse = ({ courseId }) => {
   const [rating, setRating] = useState(0);
@@ -9,27 +8,24 @@ const RateCourse = ({ courseId }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    API.get(`/courses/${courseId}/rate/`)
-      .then(response => {
-        console.log(response);
-        const existingRating = response.data.rating;
-        if (existingRating) {
-          setRating(existingRating);
-        }
-      })
-      .catch(err => {
+    const fetchRating = async () => {
+      try {
+        const { data } = await API.get(`/courses/${courseId}/rate/`);
+        if (data.rating) setRating(data.rating);
+      } catch (err) {
         toast.error(err.response?.data?.error || "Error fetching rating");
-      });
+      }
+    };
+    fetchRating();
   }, [courseId]);
 
-  const handleRating = async (rate) => {
+  const submitRating = async (rate) => {
     setLoading(true);
     try {
       await API.post(`/courses/${courseId}/rate/`, { rating: rate });
-      setRating(rate)
+      setRating(rate);
       toast.success('Rating submitted successfully!');
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error('Failed to submit rating.');
     } finally {
       setLoading(false);
@@ -37,15 +33,16 @@ const RateCourse = ({ courseId }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-2 my-6 p-2 bg-white rounded-xl shadow-md w-1/3 mx-auto">
-        <h3 className="text-2xl font-semibold text-gray-800">Rate this course</h3>
-        <div className="flex space-x-2">
-          {[1, 2, 3, 4, 5].map((star) => (
+    <div className="flex flex-col items-center space-y-2 my-6 p-4 bg-white rounded-xl shadow-md w-80 mx-auto">
+      <h3 className="text-2xl font-semibold text-gray-800">Rate this course</h3>
+      <div className="flex space-x-2">
+        {[...Array(5)].map((_, index) => {
+          const star = index + 1;
+          return (
             <button
-              key={`star-${star}`} // now a unique key, not just a number
-              type="button"
+              key={star}
               disabled={loading}
-              onClick={() => handleRating(star)}
+              onClick={() => submitRating(star)}
               onMouseEnter={() => setHover(star)}
               onMouseLeave={() => setHover(0)}
               className={`text-4xl transition-transform transform hover:scale-125 ${
@@ -54,12 +51,11 @@ const RateCourse = ({ courseId }) => {
             >
               ★
             </button>
-          ))}
-        </div>
-
-        {loading && <p className="text-sm text-gray-500">Submitting your rating...</p>}
+          );
+        })}
+      </div>
+      {loading && <p className="text-sm text-gray-500">Submitting...</p>}
     </div>
-
   );
 };
 

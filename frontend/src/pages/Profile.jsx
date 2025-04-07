@@ -1,15 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import {
-	getEnrolledCourses,
-	getInstructorCourses,
-} from "../services/coursesApi";
+import { getEnrolledCourses, getInstructorCourses } from "../services/coursesApi";
 import { Link } from "react-router-dom";
-import {
-	FaArrowRight,
-	FaUserGraduate,
-	FaChalkboardTeacher,
-} from "react-icons/fa";
+import { FaArrowRight, FaUserGraduate, FaChalkboardTeacher } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,16 +16,12 @@ const Profile = () => {
 
 		const fetchCourses = async () => {
 			try {
-				let response;
-				if (user.role === "student") {
-					response = await getEnrolledCourses();
-				} else if (user.role === "instructor") {
-					response = await getInstructorCourses();
-				}
-
+				const response = user.role === "student"
+					? await getEnrolledCourses()
+					: await getInstructorCourses();
 				setCourses(response.data || []);
 			} catch (error) {
-				console.error("Error fetching courses:", error);
+				console.error(error);
 				toast.error("Failed to fetch courses.");
 			} finally {
 				setLoading(false);
@@ -50,12 +39,22 @@ const Profile = () => {
 		);
 	}
 
-	let content;
+	const renderCourses = () => {
+		if (loading) {
+			return <p className="text-center text-gray-500">Loading courses...</p>;
+		}
 
-	if (loading) {
-		content = <p className="text-center text-gray-500">Loading courses...</p>;
-	} else if (courses.length > 0) {
-		content = (
+		if (courses.length === 0) {
+			return (
+				<p className="text-center text-gray-500">
+					{user.role === "student"
+						? "You are not enrolled in any courses."
+						: "You have not created any courses yet."}
+				</p>
+			);
+		}
+
+		return (
 			<ul className="space-y-3">
 				{courses.map((course) => (
 					<li
@@ -67,14 +66,11 @@ const Profile = () => {
 							<p className="text-gray-500">{course.subject}</p>
 							{user.role === "instructor" && (
 								<p className="text-sm text-gray-600">
-									Rating: {course.ratings.toFixed(1)} ⭐
+									Rating: {course.ratings?.toFixed(1) || "N/A"} ⭐
 								</p>
 							)}
 						</div>
-						<Link
-							to={`/courseContents/${course.id}`}
-							className="btn btn-primary"
-						>
+						<Link to={`/courseContents/${course.id}`} className="btn btn-primary">
 							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
 							<FaArrowRight />
 						</Link>
@@ -82,19 +78,11 @@ const Profile = () => {
 				))}
 			</ul>
 		);
-	} else {
-		content = (
-			<p className="text-center text-gray-500">
-				{user.role === "student"
-					? "You are not enrolled in any courses."
-					: "You have not created any courses yet."}
-			</p>
-		);
-	}
-
+	};
 
 	return (
 		<div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+			{/* Profile Header */}
 			<div className="bg-blue-100 p-4 rounded-lg">
 				<div className="flex items-center gap-4">
 					{user.role === "student" ? (
@@ -108,7 +96,6 @@ const Profile = () => {
 						<p className="text-gray-500">{user.email}</p>
 					</div>
 				</div>
-
 				<div className="mt-4">
 					<h2 className="text-lg font-semibold">Bio</h2>
 					<p className="text-gray-600">{user.bio || "No bio available"}</p>
@@ -120,7 +107,7 @@ const Profile = () => {
 				<h2 className="text-xl font-semibold mb-3 text-center">
 					{user.role === "student" ? "Enrolled Courses" : "Courses Taught"}
 				</h2>
-				{content}
+				{renderCourses()}
 			</div>
 		</div>
 	);
