@@ -145,6 +145,7 @@ const Post = ({ post, onDelete }) => {
   </div>
 );
 };
+
 Post.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
@@ -164,6 +165,21 @@ Post.propTypes = {
   }),
   onDelete: PropTypes.func.isRequired,
 };
+
+Post.defaultProps = {
+  post: {
+    id: 0,
+    title: 'Untitled',
+    content: '',
+    author: null,
+    author_name: 'Anonymous',
+    created_at: new Date().toISOString(),
+    tags: [],
+    comments: [],
+    total_votes: 0,
+  }
+};
+
 
 
 export default Post;
