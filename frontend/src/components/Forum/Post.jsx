@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { formatDistanceToNow } from "date-fns";
 import VoteButtons from './VoteButtons';
 import CommentSection from './CommentSection';
 import API from '../../services/api';
 import EditPostModal from './EditPostModal';
+import PropTypes from 'prop-types';
+
 
 const Post = ({ post, onDelete }) => {
   const [showComments, setShowComments] = useState(false);
@@ -64,64 +67,115 @@ const Post = ({ post, onDelete }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-6 mb-6 border border-gray-200">
-      {/* Post Title */}
-      <h2 className="text-2xl font-bold mb-2 text-gray-800">{updatedPost.title}</h2>
-
-      {/* Author & Timestamp */}
-      <p className="text-gray-500 text-sm mb-4">
-        Posted by <span className="font-semibold">{updatedPost.author_name}</span> • {new Date(updatedPost.created_at).toLocaleDateString()}
+    <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200 hover:shadow-lg transition duration-300">
+    {/* Author & Timestamp */}
+    <div className="flex items-center justify-between mb-2">
+      <p className="text-sm text-gray-500">
+        <span className="font-semibold text-gray-700">{updatedPost.author_name}</span> •{" "}
+        <span>{formatDistanceToNow(new Date(updatedPost.created_at), { addSuffix: true })}</span>
       </p>
+    </div>
 
-      {/* Post Content */}
-      <div className="mb-4 text-gray-700">
-        {isExpanded ? updatedPost.content : `${updatedPost.content.slice(0, 200)}...`}
-        {updatedPost.content.length > 200 && !isExpanded && (
-          <button onClick={toggleExpand} className="text-blue-600 ml-2 hover:underline font-medium">
-            See More
-          </button>
-        )}
-      </div>
+    {/* Post Title */}
+    <h2 className="text-xl font-semibold text-gray-900 mb-3">{updatedPost.title}</h2>
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {updatedPost.tags?.map((tag) => (
-          <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-            {tag.name}
-          </span>
-        ))}
-      </div>
+    {/* Post Content */}
+    <div className="mb-4 text-gray-700 leading-relaxed">
+  {isExpanded ? updatedPost.content : `${updatedPost.content.slice(0, 250)}...`}
+  {updatedPost.content.length > 250 && (
+    <button 
+      onClick={toggleExpand} 
+      className="text-blue-600 font-medium text-sm ml-2 hover:underline hover:text-blue-800 transition"
+    >
+      {isExpanded ? "See Less" : "See More"}
+    </button>
+  )}
+</div>
 
-      {/* Voting & Comments */}
-      <VoteButtons 
-        postId={post.id} 
-        totalVotes={updatedPost.total_votes} 
-        onVote={handleVoteUpdate} 
-        toggleComments={toggleComments} 
-        commentCount={updatedPost.comments?.length || 0} 
+    {/* Tags */}
+    <div className="flex flex-wrap gap-2 mt-4">
+      {updatedPost.tags?.map((tag) => (
+        <button type="button"
+          key={tag.id}
+          className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-medium hover:bg-blue-300 transition"
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("tagClicked", { detail: tag.name }))
+          }
+        >
+          #{tag.name}
+        </button>
+      ))}
+    </div>
+
+    {/* Voting & Comments Section */}
+    <div className="flex items-center justify-between mt-4 border-t pt-3">
+      <VoteButtons
+        postId={post.id}
+        totalVotes={updatedPost.total_votes}
+        onVote={handleVoteUpdate}
+        toggleComments={toggleComments}
+        commentCount={updatedPost.comments?.length || 0}
       />
 
       {/* Edit & Delete Buttons (Only for Author) */}
       {isAuthor && (
-        <div className="flex gap-4 mt-4">
-          <button onClick={openEditModal} className="text-blue-600 hover:underline font-medium">Edit</button>
-          <button onClick={handleDelete} className="text-red-600 hover:underline font-medium">Delete</button>
+        <div className="flex gap-4">
+          <button 
+            type="button"
+            onClick={openEditModal} 
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Edit
+          </button>
+          <button 
+            type="button"
+            onClick={handleDelete} 
+            className="text-red-600 hover:underline font-medium"
+          >
+            Delete
+          </button>
         </div>
       )}
-
-      {/* Comments Section */}
-      {showComments && (
-        loadingComments ? (
-          <p>Loading comments...</p>
-     ) : (
-      <CommentSection postId={post.id} comments={comments}  setComments={setComments} />
-     )
-   )}
-
-      {/* Edit Modal */}
-      {isEditing && <EditPostModal post={updatedPost} onClose={closeEditModal} refreshPost={refreshPost} />}
     </div>
-  );
+
+    {/* Comments Section */}
+    {showComments &&
+      (loadingComments ? (
+        <p className="text-gray-500 mt-2">Loading comments...</p>
+      ) : (
+        <CommentSection postId={post.id} comments={comments} setComments={setComments} />
+      ))}
+
+    {/* Edit Modal */}
+    {isEditing && (
+      <EditPostModal post={updatedPost} onClose={closeEditModal} refreshPost={refreshPost} />
+    )}
+  </div>
+);
 };
+
+
+
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    author: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    author_name: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    total_votes: PropTypes.number.isRequired,
+    comments: PropTypes.arrayOf(PropTypes.object),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
+
 
 export default Post;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
+import PropTypes from 'prop-types';
+
 
 const EditPostModal = ({ post, onClose, refreshPost }) => {
   const [title, setTitle] = useState(post.title);
@@ -97,5 +99,21 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
     </div>
   );
 };
+EditPostModal.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired
+      })
+    )
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
+  refreshPost: PropTypes.func.isRequired
+};
+
 
 export default EditPostModal;
