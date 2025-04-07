@@ -89,5 +89,8 @@ VoteButtons.propTypes = {
   toggleComments: PropTypes.func.isRequired,
 };
 
+VoteButtons.defaultProps = {
+  totalVotes: 0,
+};
 
 export default VoteButtons;
