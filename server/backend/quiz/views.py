@@ -80,13 +80,13 @@ class DeleteQuizView(APIView):
 class UpdateQuizView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
-    def put(self, request, category_id):
-        category=get_object_or_404(Category, id=category_id)
-        serializer=CategorySerializer(category, date=request.data, partial=True)
-        if serializer.valid():
+    def put(self, request: Request, category_id: int) -> Response:
+        category = get_object_or_404(Category, id=category_id)
+        serializer = CategorySerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
