@@ -95,7 +95,7 @@ const Post = ({ post, onDelete }) => {
     {/* Tags */}
     <div className="flex flex-wrap gap-2 mt-4">
       {updatedPost.tags?.map((tag) => (
-        <button
+        <button type="button"
           key={tag.id}
           className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-medium hover:bg-blue-300 transition"
           onClick={() =>
