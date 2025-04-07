@@ -215,5 +215,12 @@ Comment.propTypes = {
   setComments: PropTypes.func.isRequired,
 };
 
+Comment.defaultProps = {
+  comment: {
+    user: 'Unknown User',
+    children: [],
+  },
+};
+
 
 export default Comment;
