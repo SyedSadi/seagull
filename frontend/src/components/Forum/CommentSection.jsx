@@ -3,7 +3,7 @@ import Comment from './Comment';
 import API from '../../services/api';
 import PropTypes from 'prop-types';
 
-const CommentSection = ({ postId, comments, setComments }) => {
+const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
 
   useEffect(() => {
@@ -70,9 +70,6 @@ CommentSection.propTypes = {
   setComments: PropTypes.func.isRequired,
 };
 
-CommentSection.defaultProps = {
-  comments: [],
-};
 
 
 export default CommentSection;

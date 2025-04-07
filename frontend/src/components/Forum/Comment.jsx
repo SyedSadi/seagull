@@ -3,7 +3,7 @@ import API from '../../services/api';
 import PropTypes from 'prop-types';
 
 
-const Comment = ({ comment, postId, setComments }) => {
+const Comment = ({ comment={}, postId, setComments }) => {
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -215,12 +215,6 @@ Comment.propTypes = {
   setComments: PropTypes.func.isRequired,
 };
 
-Comment.defaultProps = {
-  comment: {
-    user: 'Unknown User',
-    children: [],
-  },
-};
 
 
 export default Comment;

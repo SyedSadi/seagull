@@ -4,12 +4,11 @@ import API from '../../services/api';
 import PropTypes from 'prop-types';
 
 
-const VoteButtons = ({ postId, totalVotes, onVote, toggleComments }) => {
+const VoteButtons = ({ postId, totalVotes =0 , onVote, toggleComments }) => {
   const [voteState, setVoteState] = useState(0); // 1 for upvote, -1 for downvote, 0 for no vote
   const [voteCount, setVoteCount] = useState(totalVotes);
   
-  const userData = localStorage.getItem('user');
-  const user = userData ? JSON.parse(userData) : null;
+  
   const token = localStorage.getItem('access_token');
 
   useEffect(() => {
@@ -89,8 +88,6 @@ VoteButtons.propTypes = {
   toggleComments: PropTypes.func.isRequired,
 };
 
-VoteButtons.defaultProps = {
-  totalVotes: 0,
-};
+
 
 export default VoteButtons;

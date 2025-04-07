@@ -166,18 +166,25 @@ Post.propTypes = {
   onDelete: PropTypes.func.isRequired,
 };
 
-Post.defaultProps = {
-  post: {
-    id: 0,
-    title: 'Untitled',
-    content: '',
-    author: null,
-    author_name: 'Anonymous',
-    created_at: new Date().toISOString(),
-    tags: [],
-    comments: [],
-    total_votes: 0,
-  }
+
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    author: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    author_name: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    total_votes: PropTypes.number.isRequired,
+    comments: PropTypes.arrayOf(PropTypes.object).isRequired,
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 
