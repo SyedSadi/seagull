@@ -157,7 +157,7 @@ const PostList = () => {
       {posts.length === 0 ? (
         <p className="text-gray-500 text-center mt-6">No posts found.</p>
       ) : (
-        posts.map((post) => <Post key={post.id} post={post} onDelete={handlePostDelete} />)
+        posts.map((post) => <Post key={post.id}  post={{ ...post, comments: post.comments || [] }} onDelete={handlePostDelete} />)
       )}
 
       {/* Create Post Modal */}

@@ -146,25 +146,6 @@ const Post = ({ post, onDelete }) => {
 );
 };
 
-Post.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number,
-    title: PropTypes.string,
-    content: PropTypes.string,
-    author: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    author_name: PropTypes.string,
-    created_at: PropTypes.string,
-    total_votes: PropTypes.number,
-    comments: PropTypes.arrayOf(PropTypes.object),
-    tags: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number,
-        name: PropTypes.string,
-      })
-    ),
-  }),
-  onDelete: PropTypes.func.isRequired,
-};
 
 
 Post.propTypes = {
@@ -176,7 +157,7 @@ Post.propTypes = {
     author_name: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
     total_votes: PropTypes.number.isRequired,
-    comments: PropTypes.arrayOf(PropTypes.object).isRequired,
+    comments: PropTypes.arrayOf(PropTypes.object),
     tags: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
