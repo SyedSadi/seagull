@@ -4,6 +4,8 @@ import VoteButtons from './VoteButtons';
 import CommentSection from './CommentSection';
 import API from '../../services/api';
 import EditPostModal from './EditPostModal';
+import PropTypes from 'prop-types';
+
 
 const Post = ({ post, onDelete }) => {
   const [showComments, setShowComments] = useState(false);
@@ -143,5 +145,25 @@ const Post = ({ post, onDelete }) => {
   </div>
 );
 };
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    author: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    author_name: PropTypes.string,
+    created_at: PropTypes.string,
+    total_votes: PropTypes.number,
+    comments: PropTypes.arrayOf(PropTypes.object),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+      })
+    ),
+  }),
+  onDelete: PropTypes.func.isRequired,
+};
+
 
 export default Post;
