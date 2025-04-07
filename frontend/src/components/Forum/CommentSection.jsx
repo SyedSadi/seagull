@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Comment from './Comment';
 import API from '../../services/api';
+import PropTypes from 'prop-types';
 
-const CommentSection = ({ postId, comments, setComments }) => {
+const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
 
   useEffect(() => {
@@ -53,5 +54,22 @@ const CommentSection = ({ postId, comments, setComments }) => {
     </div>
   );
 };
+CommentSection.propTypes = {
+  postId: PropTypes.number.isRequired,
+  comments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      content: PropTypes.string.isRequired,
+      post: PropTypes.number.isRequired,
+      author: PropTypes.number,
+      user: PropTypes.string,
+      created_at: PropTypes.string,
+      children: PropTypes.arrayOf(PropTypes.object),
+    })
+  ).isRequired,
+  setComments: PropTypes.func.isRequired,
+};
+
+
 
 export default CommentSection;
