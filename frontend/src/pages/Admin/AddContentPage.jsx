@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import API from '../services/api';
-import AdminLayout from '../components/Admin/AdminLayout';
+import API from '../../services/api';
+import AdminLayout from '../../components/Admin/AdminLayout';
 import { toast } from 'react-toastify';
 
 const AddContentPage = () => {
