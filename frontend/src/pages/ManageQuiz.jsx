@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { getAllCategories } from "../services/quizApi";
 import AdminLayout from "../components/Admin/AdminLayout";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import API from "../services/api";
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [selectMode, setSelectMode] = useState(false);
+	const [selectedOptions, setSelectedOptions] = useState([]);
 
 	useEffect(() => {
 		getAllCategories()
@@ -23,17 +23,42 @@ const ManageQuiz = () => {
 			});
 	}, []);
 
-	const handleDelete = async (categoryId) => {
-		if (window.confirm("Are you sure you want to delete this quiz? This action cannot be undone.")) {
+	const toggleSelectMode = () => {
+		setSelectMode(!selectMode);
+		setSelectedOptions([]);
+	};
+
+	const handleCheckboxChange = (id) => {
+		setSelectedOptions((prev) =>
+			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+		);
+	};
+
+	const handleDelete = async () => {
+		if (
+			window.confirm(
+				"Are you sure you want to delete this quiz? This action cannot be undone."
+			)
+		) {
 			try {
 				setLoading(true);
-				await API.delete(`/quiz/update-delete/${categoryId}/`);
-				setCategories(categories.filter((cat) => cat.id !== categoryId));
+				await API.delete("/quiz/delete/", {
+					data: { category_ids: selectedOptions },
+				});
+				setCategories((prev) =>
+					prev.filter((cat) => !selectedOptions.includes(cat.id))
+				);
+				setSelectedOptions([]);
+				setSelectMode(false);
 				// Use a toast notification or custom component instead
 				alert("Quiz deleted successfully!");
 			} catch (error) {
 				console.error("Delete error: ", error);
-				alert(`Failed to delete quiz: ${error.response?.data?.message || 'Unknown error occurred'}`);
+				alert(
+					`Failed to delete quiz: ${
+						error.response?.data?.message || "Unknown error occurred"
+					}`
+				);
 			} finally {
 				setLoading(false);
 			}
@@ -58,35 +83,55 @@ const ManageQuiz = () => {
 		);
 	return (
 		<AdminLayout>
-			<div className="bg-blue-100 rounded-lg shadow-lg p-10">
-				<h2 className="text-2xl font-bold text-center text-blue-700 mb-4">
+			<div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg shadow-lg p-10">
+				<h2 className="text-3xl font-bold text-center text-black mb-6">
 					Manage Quizzes
 				</h2>
-				<p className="text-lg font-medium text-gray-700 mb-6">
-					List of quizzes:
-				</p>
+				<div className="flex justify-between items-center mb-6">
+					<p className="text-lg font-semibold text-black">List of quizzes:</p>
+					<div className="space-x-4">
+						<button
+							className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+							onClick={toggleSelectMode}
+						>
+							{selectMode ? "Cancel" : "Select Multiple"}
+						</button>
+						{selectMode && selectedOptions.length > 0 && (
+							<button
+								onClick={handleDelete}
+								className="px-4 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition duration-300"
+							>
+								Delete Selected
+							</button>
+						)}
+					</div>
+				</div>
+
 				<div className="space-y-4">
 					{categories.map((category, index) => (
 						<div
 							key={category.id}
-							className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center"
+							className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center hover:shadow-lg transition duration-300"
 						>
-							<p className="text-lg font-semibold text-gray-800">
-								{index + 1}. {category.name}
-							</p>
-							<div className="space-x-2">
-								<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-									Manage Questions
-								</button>
-								<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+							<div className="flex items-center">
+								{selectMode && (
+									<input
+										type="checkbox"
+										checked={selectedOptions.includes(category.id)}
+										onChange={() => handleCheckboxChange(category.id)}
+										className="w-5 h-5 mr-4"
+									/>
+								)}
+								<p className="text-lg font-semibold text-gray-800">
+									{index + 1}. {category.name}
+								</p>
+							</div>
+							<div className="space-x-3">
+								<button className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300">
 									Update
 								</button>
-								<button
-									onClick={() => handleDelete(category.id)}
-									type="button"
-									className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-								>
-									<FontAwesomeIcon icon={faTrashCan} />
+								<button className="px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition duration-300">
+									Manage Questions
 								</button>
 							</div>
 						</div>

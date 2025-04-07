@@ -9,5 +9,5 @@ urlpatterns = [
     path('submit-quiz/', SubmitQuizAPIView.as_view(), name='submit-quiz'),
     path('add/', AddQuizView.as_view(), name='add_quiz'),
     path('add-question/', AddQuestionView.as_view(), name='add-question'),
-    path('update-delete/<int:category_id>/', UpdateDeleteQuizView.as_view(), name='update-delete-quiz')
+    path('delete/', UpdateDeleteQuizView.as_view(), name='delete-quiz')
 ]
