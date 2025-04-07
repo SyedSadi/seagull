@@ -209,7 +209,15 @@ Comment.propTypes = {
     author: PropTypes.number.isRequired,
     user: PropTypes.string,
     created_at: PropTypes.string.isRequired,
-    children: PropTypes.arrayOf(PropTypes.object),
+    children: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      content: PropTypes.string,
+      author: PropTypes.number,
+      user: PropTypes.string,
+      created_at: PropTypes.string,
+      // CIRCULAR REFERENCE NOT POSSIBLE IN PROP-TYPES
+      // CHILDREN PROPERTY INTENTIONALLY OMITTED
+    })),
   }).isRequired,
   postId: PropTypes.number.isRequired,
   setComments: PropTypes.func.isRequired,
