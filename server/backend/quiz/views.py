@@ -62,16 +62,19 @@ from typing import ClassVar
 class UpdateDeleteQuizView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
-    def delete(self, request) -> Response:
+    def delete(self, request: Request) -> Response:
         category_ids = request.data.get('category_ids', [])
-         # Delete all related questions and options first
+        if not category_ids:
+            return Response({"message": "No categories specified."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        # Delete all related questions and options first
         questions = Question.objects.filter(category_id__in=category_ids)
         Option.objects.filter(question__in=questions).delete()
         questions.delete()
                 
         # Delete the categories
-        Category.objects.filter(id__in=category_ids).delete()[0]
-        return Response({"message": "Options deleted."}, status=status.HTTP_200_OK)
+        deleted_count = Category.objects.filter(id__in=category_ids).delete()[0]
+        return Response({"message": f"{deleted_count} categories and their associated data deleted."}, status=status.HTTP_200_OK)
         
 
 class SubmitQuizAPIView(APIView):
