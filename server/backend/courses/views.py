@@ -108,7 +108,7 @@ class EnrollCourseView(APIView):
         course = get_object_or_404(Course, id=course_id)
 
         # Check if already enrolled
-        enrollment, created = Enrollment.objects.get_or_create(course=course, student=user.student)
+        _, created = Enrollment.objects.get_or_create(course=course, student=user.student)
 
         if not created:
             return Response({"message": "Already enrolled"}, status=400)
@@ -191,7 +191,7 @@ class RateCourseView(APIView):
         except (ValueError, TypeError):
             return Response({"error": "Rating must be an integer between 1 and 5."}, status=status.HTTP_400_BAD_REQUEST)
 
-        rating_obj, created = Rating.objects.update_or_create(
+        _, created = Rating.objects.update_or_create(
             course=course,
             user=request.user,
             defaults={'rating': rating_value}
@@ -211,11 +211,3 @@ class RateCourseView(APIView):
             "course": course.title,
             "rating": rating.rating if rating else 0  # or None if you prefer
         }, status=status.HTTP_200_OK)
-
-    
-# class MyCourseRatingView(generics.RetrieveUpdateAPIView):
-#     serializer_class = RatingSerializer
-
-#     def get_object(self):
-#         course_id = self.kwargs.get('course_id')
-#         return Rating.objects.get(course_id=course_id, user=self.request.user)

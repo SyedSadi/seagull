@@ -32,11 +32,12 @@ const Register = () => {
                 <h2 className="text-2xl font-bold text-center text-gray-700">Register</h2>
                 <form onSubmit={handleSubmit} className="mt-4">
                     <div className="form-control">
-                        <label className="label">
+                        <label htmlFor="username" className="label">
                             <span className="label-text">Username</span>
                         </label>
                         <input
                             type="text"
+                            id="username"
                             name="username"
                             placeholder="Enter a username"
                             className="input input-bordered w-full"
@@ -46,11 +47,12 @@ const Register = () => {
                         />
                     </div>
                     <div className="form-control mt-2">
-                        <label className="label">
+                        <label htmlFor="email" className="label">
                             <span className="label-text">Email</span>
                         </label>
                         <input
                             type="email"
+                            id="email"
                             name="email"
                             placeholder="Enter your email"
                             className="input input-bordered w-full"
@@ -60,11 +62,12 @@ const Register = () => {
                         />
                     </div>
                     <div className="form-control mt-2">
-                        <label className="label">
+                        <label htmlFor="password" className="label">
                             <span className="label-text">Password</span>
                         </label>
                         <input
                             type="password"
+                            id="password"
                             name="password"
                             placeholder="Enter your password"
                             className="input input-bordered w-full"
@@ -74,10 +77,11 @@ const Register = () => {
                         />
                     </div>
                     <div className="form-control mt-2">
-                        <label className="label">
+                        <label htmlFor="role" className="label">
                             <span className="label-text">Role</span>
                         </label>
                         <select
+                            id="role"
                             name="role"
                             className="select select-bordered w-full"
                             value={formData.role}
@@ -91,6 +95,7 @@ const Register = () => {
                         Register
                     </button>
                 </form>
+
                 <p className="text-sm text-gray-600 text-center mt-3">
                     Already have an account?{" "}
                     <Link to="/login" className="text-blue-500">

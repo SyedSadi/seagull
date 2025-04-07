@@ -1,129 +1,112 @@
+import { useEffect, useState } from "react";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
-import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-	const [stats, setStats] = useState(null);
-	const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchStats = async () => {
-			try {
-				const response = await API.get("dashboard/stats/");
-				setStats(response.data.data);
-				// console.log(response);
-			} catch (error) {
-				console.error("Failed to fetch dashboard stats:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await API.get("dashboard/stats/");
+        setStats(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-		fetchStats();
-	}, []);
-	// console.log(stats);
-	return (
-		<AdminLayout>
-			<div className="p-6 pt-0 shadow-md rounded-lg">
-				<h2 className="text-2xl text-center font-bold mb-4">Stats</h2>
-				<div className="stats shadow bg-red-400 rounded-lg w-full">
-					<StatCard
-						title={"Users"}
-						value={stats?.total_users}
-						desc={"Total number of registerd users"}
-					/>
-					<StatCard
-						title={"Students"}
-						value={stats?.total_students}
-						desc={"Total number of registerd students"}
-					/>
-					<StatCard
-						title={"Instructors"}
-						value={stats?.total_instructors}
-						desc={"Total number of registerd instructors"}
-					/>
-					<StatCard
-						title={"Courses"}
-						value={stats?.total_courses}
-						desc={"Total number of courses"}
-					/>
-					<StatCard
-						title={"Contents"}
-						value={stats?.total_contents}
-						desc={"Total number of contents"}
-					/>
-					<StatCard
-						title={"Quizzes"}
-						value={stats?.total_quizzes}
-						desc={"Total number of Quizzes"}
-					/>
-				</div>
+    fetchStats();
+  }, []);
 
-				<div className="flex gap-x-8">
-					{/* New Users Section */}
-					<div className="mt-6">
-						<h3 className="text-xl font-semibold mb-4">
-							New Users in the Last 7 Days{" "}
-							{`(${stats?.new_users_last_7_days?.length})`}
-						</h3>
-						<div className="grid grid-cols-1 gap-4">
-							{stats?.new_users_last_7_days?.map((user) => (
-								<div className="bg-gray-100 p-4 rounded-lg border-4 flex justify-between">
-									<div>
-										<p className="font-semibold">{user.username}</p>
-										<p>{user.email}</p>
-										<p className="text-sm text-gray-600">Role: {user.role}</p>
-									</div>
-								</div>
-							))}
-						</div>
-					</div>
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-6 text-center">Loading...</div>
+      </AdminLayout>
+    );
+  }
 
-					{/* Active Users Section */}
-					<div className="mt-6">
-						<h3 className="text-xl font-semibold mb-4">
-							Active Users in the Last 24 Hours{" "}
-							{`(${stats?.active_users_last_24_hours?.length})`}
-						</h3>
-						<div className="grid grid-cols-1 gap-4">
-							{stats?.active_users_last_24_hours?.map((user) => (
-								<div key={user.id} className="bg-gray-100 p-4 rounded-lg border-4 flex justify-between">
-									<div>
-										<p className="font-semibold">{user.username}</p>
-										<p>{user.email}</p>
-										<p className="text-sm text-gray-600">Role: {user.role}</p>
-									</div>
-								</div>
-							))}
-						</div>
-					</div>
-				</div>
-			</div>
-		</AdminLayout>
-	);
+  return (
+    <AdminLayout>
+      <div className="p-6 pt-0 shadow-md rounded-lg">
+        <h2 className="text-2xl text-center font-bold mb-6">Dashboard Stats</h2>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <StatCard title="Users" value={stats?.total_users} desc="Total registered users" />
+          <StatCard title="Students" value={stats?.total_students} desc="Total registered students" />
+          <StatCard title="Instructors" value={stats?.total_instructors} desc="Total registered instructors" />
+          <StatCard title="Courses" value={stats?.total_courses} desc="Total courses" />
+          <StatCard title="Contents" value={stats?.total_contents} desc="Total contents" />
+          <StatCard title="Quizzes" value={stats?.total_quizzes} desc="Total quizzes" />
+        </div>
+
+        {/* New Users & Active Users */}
+        <div className="flex flex-col md:flex-row gap-8">
+          <UserList
+            title="New Users in the Last 7 Days"
+            users={stats?.new_users_last_7_days || []}
+          />
+          <UserList
+            title="Active Users in the Last 24 Hours"
+            users={stats?.active_users_last_24_hours || []}
+          />
+        </div>
+      </div>
+    </AdminLayout>
+  );
 };
 
 const StatCard = ({ title, value, desc }) => (
-	<div className="stat bg-red-200  inline-block">
-		<div className="stat-figure text-secondary">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				className="inline-block h-8 w-8 stroke-current"
-			>
-				<path
-					strokeLinecap="round"
-					strokeLinejoin="round"
-					strokeWidth="2"
-					d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-				></path>
-			</svg>
-		</div>
-		<div className="stat-title">{title}</div>
-		<div className="stat-value">{value}</div>
-		<div className="stat-desc mt-2">{desc}</div>
-	</div>
+  <div className="bg-red-200 p-4 rounded-lg shadow-md text-center">
+    <div className="flex justify-center mb-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        className="h-8 w-8 stroke-current text-secondary"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4M6 18a2 2 0 100-4m0 4a2 2 0 110-4M6 18v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+        />
+      </svg>
+    </div>
+    <div className="text-lg font-semibold">{title}</div>
+    <div className="text-3xl font-bold mt-1">{value ?? 0}</div>
+    <div className="text-sm text-gray-600 mt-2">{desc}</div>
+  </div>
+);
+
+const UserList = ({ title, users }) => (
+  <div className="flex-1">
+    <h3 className="text-xl font-semibold mb-4">
+      {title} ({users.length})
+    </h3>
+    <div className="grid gap-4">
+      {users.length > 0 ? (
+        users.map((user) => (
+          <div
+            key={user.id}
+            className="bg-gray-100 p-4 rounded-lg border-2 shadow-sm flex justify-between"
+          >
+            <div>
+              <p className="font-semibold">{user.username}</p>
+              <p>{user.email}</p>
+              <p className="text-sm text-gray-600">Role: {user.role}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="text-gray-500">No users found.</p>
+      )}
+    </div>
+  </div>
 );
 
 export default Dashboard;
