@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import { getAllCategories, updateQuiz } from "../../services/quizApi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UpdateQuizPage = () => {
 	const { categoryId } = useParams();
@@ -17,7 +19,9 @@ const UpdateQuizPage = () => {
 		const fetchQuiz = async () => {
 			try {
 				const categories = await getAllCategories();
-				const category = categories.find((c) => c.id === Number.parseInt(categoryId, 10));
+				const category = categories.find(
+					(c) => c.id === Number.parseInt(categoryId, 10)
+				);
 				if (category) {
 					setQuiz({
 						name: category.name,
