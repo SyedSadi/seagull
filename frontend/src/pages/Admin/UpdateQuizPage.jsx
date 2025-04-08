@@ -17,7 +17,7 @@ const UpdateQuizPage = () => {
 		const fetchQuiz = async () => {
 			try {
 				const categories = await getAllCategories();
-				const category = categories.find((c) => c.id === parseInt(categoryId));
+				const category = categories.find((c) => c.id === Number.parseInt(categoryId, 10));
 				if (category) {
 					setQuiz({
 						name: category.name,
