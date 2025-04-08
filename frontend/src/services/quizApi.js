@@ -76,3 +76,23 @@ export const addQuestion = async (questionData) => {
 		throw error;
 	}
 };
+
+// ----------------------- UPDATE Quiz Category -----------------------------------
+export const updateQuiz = async (categoryId, quizData) => {
+	try {
+		const token = localStorage.getItem("access_token");
+		if (!token) {
+			throw new Error("Authentication token is missing");
+		}
+		const response = await API.put(`/quiz/update/${categoryId}/`, quizData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error updating quiz", error);
+		throw error;
+	}
+};
