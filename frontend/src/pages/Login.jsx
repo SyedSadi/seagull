@@ -9,6 +9,7 @@ const Login = () => {
     const location = useLocation();
     const { loginUser } = useContext(AuthContext);
     const [formData, setFormData] = useState({ username: "", password: "" });
+    const from = location.state?.from?.pathname || "/"; 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,8 +23,7 @@ const Login = () => {
             console.log("res", res);
 
             if (res?.status === 200) {
-                const redirectTo = location.state?.from?.pathname || "/";
-                navigate(redirectTo);
+                navigate(from, { replace: true });
                 toast.success("Login successful!");
             } else {
                 toast.error("Login failed. Please try again.");
