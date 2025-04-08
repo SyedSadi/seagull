@@ -48,17 +48,17 @@ const AddCoursesPage = () => {
 
   const handleImageUpload = async () => {
     if (!selectedImage) {
-      alert("Please select an image first!");
+      toast.error("Please select an image first!");
       return null;
     }
     try {
       const url = await ImageUploader(selectedImage);
       setUploadedUrl(url);
-      alert("Image uploaded successfully!");
+      toast.success("Image uploaded successfully!");
       console.log("Uploaded Image URL:", url);
       return url;
     } catch (error) {
-      alert("Failed to upload image.");
+      toast.error("Failed to upload image.");
       return null;
     }
   };
