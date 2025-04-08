@@ -17,7 +17,6 @@ import App from "./App.jsx";
 import CoursePage from "./pages/CoursePage.jsx";
 import ForumPage from "./pages/ForumPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
-import CareerPage from "./pages/CareerPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import Register from "./pages/Register.jsx";
 import QuizHome from "./pages/QuizHome.jsx";
@@ -70,10 +69,6 @@ const router = createBrowserRouter([
 				element: <AboutUsPage />,
 			},
 			{
-				path: "/career",
-				element: <CareerPage />,
-			},
-			{
 				path: "/quiz",
 				element: <QuizHome />,
 			},
@@ -90,15 +85,15 @@ const router = createBrowserRouter([
 				element: <CoursePage />,
 			},
 			{
-				path: "/courses/:id",
-				element: <CourseDetails />,
-			},
-			{
 				element: <ProtectedRoute />,
 				children: [
 					{
 						path: "/profile",
 						element: <Profile />,
+					},
+					{
+						path: "/courses/:id",
+						element: <CourseDetails />,
 					},
 					{
 						path: "/courseContents/:id",
