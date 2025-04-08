@@ -1,7 +1,11 @@
 // React and Router
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider, useRouteError } from "react-router-dom";
+import {
+	createBrowserRouter,
+	RouterProvider,
+	useRouteError,
+} from "react-router-dom";
 
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
@@ -25,6 +29,7 @@ import AddCoursesPage from "./pages/Admin/AddCoursesPage.jsx";
 import AddQuizPage from "./pages/Admin/AddQuizPage.jsx";
 import ManageContentsPage from "./pages/Admin/ManageContentsPage.jsx";
 import ManageQuiz from "./pages/Admin/ManageQuiz.jsx";
+import UpdateQuizPage from "./pages/Admin/UpdateQuizPage.jsx";
 
 // Components
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
@@ -129,6 +134,10 @@ const router = createBrowserRouter([
 							{
 								path: "/manage-quiz",
 								element: <ManageQuiz />,
+							},
+							{
+								path: "/update-quiz/:categoryId",
+								element: <UpdateQuizPage />,
 							},
 						],
 					},

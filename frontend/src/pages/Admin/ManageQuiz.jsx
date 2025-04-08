@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllCategories } from "../../services/quizApi";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);
@@ -9,6 +10,7 @@ const ManageQuiz = () => {
 	const [loading, setLoading] = useState(true);
 	const [selectMode, setSelectMode] = useState(false);
 	const [selectedOptions, setSelectedOptions] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		getAllCategories()
@@ -63,6 +65,10 @@ const ManageQuiz = () => {
 				setLoading(false);
 			}
 		}
+	};
+
+	const handleCategorySelect = (categoryId) => {
+		navigate(`/update-quiz/${categoryId}`);
 	};
 
 	if (loading)
@@ -130,7 +136,11 @@ const ManageQuiz = () => {
 								</p>
 							</div>
 							<div className="space-x-3">
-								<button className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300">
+								<button
+									type="button"
+									onClick={() => handleCategorySelect(category.id)}
+									className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300"
+								>
 									Update
 								</button>
 								<button className="px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition duration-300">
