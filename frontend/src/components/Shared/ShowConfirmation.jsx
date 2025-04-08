@@ -2,7 +2,7 @@ import React from 'react'
 import Swal from 'sweetalert2'
 const ShowConfirmation = () => {
   return Swal.fire({
-    background: '#1f2937', // dark background
+    background: '#1f2937',
     color: '#fff',
     title: 'Are you sure?',
     text: 'Think twice before you delete!',
