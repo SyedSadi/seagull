@@ -30,7 +30,7 @@ const CourseList = () => {
 						<figure className="m-0 flex-grow">
 							<img
 								className="w-full h-48 object-cover"
-								src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+								src={course.image}
 								alt="Course"
 							/>
 						</figure>

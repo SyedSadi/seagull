@@ -5,19 +5,24 @@ import { addCourse } from "../../services/coursesApi";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
+import { ImageUploader } from "../../services/ImageUploader";
+
 
 const AddCoursesPage = () => {
   const navigate = useNavigate();
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploadedUrl, setUploadedUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [instructors, setInstructors] = useState([]);
   const [course, setCourse] = useState({
     title: "",
     description: "",
     duration: "",
     difficulty: "beginner",
     subject: "",
+    image: "",
     created_by: "",
   });
-
-  const [instructors, setInstructors] = useState([]);
 
   useEffect(() => {
     const fetchInstructors = async () => {
@@ -34,11 +39,44 @@ const AddCoursesPage = () => {
   const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleImageUpload = async () => {
+    if (!selectedImage) {
+      alert("Please select an image first!");
+      return null;
+    }
     try {
-      await addCourse(course);
+      const url = await ImageUploader(selectedImage);
+      setUploadedUrl(url);
+      alert("Image uploaded successfully!");
+      console.log("Uploaded Image URL:", url);
+      return url;
+    } catch (error) {
+      alert("Failed to upload image.");
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e) => {    
+    e.preventDefault();
+    setLoading(true);
+    const url = await handleImageUpload();
+
+    if (!url) {
+      setLoading(false);
+      return;
+    }
+    const updatedCourse = { ...course, image: url };   
+    console.log('updated', updatedCourse)
+
+    try {
+      await addCourse(updatedCourse);
       setTimeout(() => {
         navigate("/courses");
       }, 1500);
@@ -49,10 +87,15 @@ const AddCoursesPage = () => {
         duration: "",
         difficulty: "beginner",
         subject: "",
+        image: "",
         created_by: "",
       });
+      setSelectedImage(null);
+      setUploadedUrl("");
     } catch {
       toast.error("Something went wrong. Please try again.");
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -60,12 +103,12 @@ const AddCoursesPage = () => {
     <AdminLayout>
       <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add New Course</h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Title */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Title</label>
+            <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-700">Title</label>
             <input
+              id="title"
               type="text"
               name="title"
               value={course.title}
@@ -75,10 +118,10 @@ const AddCoursesPage = () => {
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Description</label>
+            <label htlmlFor="description" className="block mb-2 text-sm font-medium text-gray-700">Description</label>
             <textarea
+              id="description"
               name="description"
               value={course.description}
               onChange={handleChange}
@@ -88,10 +131,10 @@ const AddCoursesPage = () => {
             />
           </div>
 
-          {/* Duration */}
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Duration (Hours)</label>
+            <label htmlFor="duration" className="block mb-2 text-sm font-medium text-gray-700">Duration (Hours)</label>
             <input
+              id="duration"
               type="number"
               name="duration"
               value={course.duration}
@@ -101,10 +144,10 @@ const AddCoursesPage = () => {
             />
           </div>
 
-          {/* Difficulty */}
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Difficulty Level</label>
+            <label htmlFor="difficulty" className="block mb-2 text-sm font-medium text-gray-700">Difficulty Level</label>
             <select
+              id="difficulty"
               name="difficulty"
               value={course.difficulty}
               onChange={handleChange}
@@ -115,11 +158,11 @@ const AddCoursesPage = () => {
               <option value="advanced">Advanced</option>
             </select>
           </div>
-
-          {/* Subject */}
+          
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Subject</label>
+            <label htlmlFor="subject" className="block mb-2 text-sm font-medium text-gray-700">Subject</label>
             <input
+              id="subject"
               type="text"
               name="subject"
               value={course.subject}
@@ -128,12 +171,25 @@ const AddCoursesPage = () => {
               required
             />
           </div>
-
-          {/* Instructor */}
+          
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">Instructor</label>
+            <label htlmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="image"
+              name="image"
+              onChange={handleImageChange}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="created_by" className="block mb-2 text-sm font-medium text-gray-700">Instructor</label>
             <select
               name="created_by"
+              id="created_by"
               value={course.created_by}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -148,12 +204,16 @@ const AddCoursesPage = () => {
             </select>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            disabled={loading}
+            className="w-full flex justify-center items-center p-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-400"
           >
-            Add Course
+            {loading ? (
+              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Add Course"
+            )}
           </button>
         </form>
       </div>

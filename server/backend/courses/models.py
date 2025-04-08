@@ -18,6 +18,7 @@ class Course(models.Model):
     difficulty = models.CharField(max_length=20, choices=DIFFICULTY_LEVELS)
     subject = models.CharField(max_length=255)
     ratings = models.FloatField(default=0.0)
+    image = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title

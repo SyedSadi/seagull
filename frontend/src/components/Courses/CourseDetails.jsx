@@ -84,7 +84,7 @@ const CourseDetails = () => {
         </div>
         <div>
           <img
-            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+            src={course.image}
             alt="Course Preview"
             className="rounded-lg shadow-lg w-full max-w-md"
           />
