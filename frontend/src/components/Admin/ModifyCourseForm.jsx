@@ -98,7 +98,7 @@ const ModifyCourseForm = ({course, handleUpdate, handleChange, handleImageChange
 
       {/* choose another img */}
       <div>
-        <label htlmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Update Image</label>
+        <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Update Image</label>
         {loading ? <div>Uploading image, please wait...</div> : <input
           type="file"
           accept="image/*"
