@@ -137,6 +137,7 @@ const ManageQuiz = () => {
 							</div>
 							<div className="space-x-3">
 								<button
+									type="button"
 									onClick={() => handleCategorySelect(category.id)}
 									className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition duration-300"
 								>
