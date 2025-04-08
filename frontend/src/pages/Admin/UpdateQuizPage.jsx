@@ -50,7 +50,8 @@ const UpdateQuizPage = () => {
 		try {
 			setLoading(true);
 			await updateQuiz(categoryId, quiz);
-			alert("Quiz category updated successfully!");
+			// Import toast from your notification library
+			toast.success("Quiz category updated successfully!");
 			navigate("/manage-quiz");
 		} catch (err) {
 			setError(err.response?.data?.detail || "Failed to update quiz category");
