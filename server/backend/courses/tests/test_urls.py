@@ -17,7 +17,7 @@ from courses.views import (
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "name, kwargs, expected_view",
+    ("name", "kwargs", "expected_view"),
     [
         ("all_courses", {}, CourseViewSet),
         ("course_detail", {"pk": 1}, CourseDetailView),
