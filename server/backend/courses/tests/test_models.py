@@ -1,12 +1,13 @@
 import pytest
 from courses.models import Course, CourseContents, Enrollment, Rating
 from users.models import User, Instructor, Student
+from decouple import config
 
 @pytest.mark.django_db
 class TestCourseModel:
 
     def test_create_course(self):
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst1", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Test Course",
             description="Test Description",
@@ -20,7 +21,7 @@ class TestCourseModel:
 
     
     def test_create_course_content(self):
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst2", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst2", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Another Course",
             description="Another Description",
@@ -42,9 +43,9 @@ class TestCourseModel:
 
 
     def test_enrollment_unique_constraint(self):
-        user = User.objects.create_user(username="student1", password="testpass")
+        user = User.objects.create_user(username="student1", password=config("TEST_PASSWORD"))
         student = Student.objects.create(user=user)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst3", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst3", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Unique Course",
             description="Unique Desc",
@@ -59,9 +60,9 @@ class TestCourseModel:
             Enrollment.objects.create(course=course, student=student)
 
     def test_rating_only_enrolled_students(self):
-        user = User.objects.create_user(username="student2", password="testpass")
+        user = User.objects.create_user(username="student2", password=config("TEST_PASSWORD"))
         student = Student.objects.create(user=user)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst4", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst4", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Rating Course",
             description="Rate Desc",
@@ -84,11 +85,11 @@ class TestCourseModel:
 
 
     def test_update_avg_rating(self):
-        user1 = User.objects.create_user(username="student3", password="testpass")
-        user2 = User.objects.create_user(username="student4", password="testpass")
+        user1 = User.objects.create_user(username="student3", password=config("TEST_PASSWORD"))
+        user2 = User.objects.create_user(username="student4", password=config("TEST_PASSWORD"))
         student1 = Student.objects.create(user=user1)
         student2 = Student.objects.create(user=user2)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst5", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst5", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Avg Rating Course",
             description="Avg Desc",
@@ -105,4 +106,4 @@ class TestCourseModel:
         Rating.objects.create(course=course, user=user2, rating=5)
 
         course.refresh_from_db()
-        assert course.ratings == 4.0  # (3+5)/2 = 4
+        assert course.ratings == 4

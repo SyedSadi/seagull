@@ -3,14 +3,15 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from users.models import User, Instructor, Student
 from courses.models import Course, Enrollment, CourseContents
+from decouple import config
 
 @pytest.mark.django_db
 class TestCourseContentViews:
 
     def test_get_course_content(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        student_user = User.objects.create_user(username="student", password="studentpass")
-        instructor_user = User.objects.create_user(username="instructor", password="instructorpass")
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        student_user = User.objects.create_user(username="student", password=config("TEST_PASSWORD"))
+        instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
         course = Course.objects.create(
             title="Test Course",
@@ -38,9 +39,9 @@ class TestCourseContentViews:
 
 
     def test_get_course_content_not_enrolled(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        student_user = User.objects.create_user(username="student", password="studentpass")
-        instructor_user = User.objects.create_user(username="instructor", password="instructorpass")
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        student_user = User.objects.create_user(username="student", password=config("TEST_PASSWORD"))
+        instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
         student = Student.objects.create(user=student_user)
         course = Course.objects.create(
@@ -67,8 +68,8 @@ class TestCourseContentViews:
 
     
     def test_add_course_content(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        instructor_user = User.objects.create_user(username="instructor", password="password")
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
 
         course = Course.objects.create(
@@ -96,8 +97,8 @@ class TestCourseContentViews:
 
     
     def test_update_course_content(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        instructor_user = User.objects.create_user(username="instructor", password="password")
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
         course = Course.objects.create(
             title="Test Course",
@@ -131,8 +132,8 @@ class TestCourseContentViews:
 
     
     def test_delete_course_content(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        instructor_user = User.objects.create_user(username="instructor", password="password")
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
         course = Course.objects.create(
             title="Test Course",

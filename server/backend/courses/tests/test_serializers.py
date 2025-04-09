@@ -2,13 +2,14 @@ import pytest
 from courses.models import Course, CourseContents, Instructor, Student, Enrollment, Rating
 from users.models import User, Instructor as UserInstructor
 from courses.serializers import CourseSerializer, CourseContentsSerializer, EnrollmentSerializer, RatingSerializer
+from decouple import config
 
 @pytest.mark.django_db
 class TestCourseSerializer:
 
     def test_course_serializer_valid_data(self):
         # Create instructor
-        instructor = UserInstructor.objects.create(user=User.objects.create_user(username="inst1", password="testpass"))
+        instructor = UserInstructor.objects.create(user=User.objects.create_user(username="inst1", password=config("TEST_PASSWORD")))
         
         # Create course
         course = Course.objects.create(
@@ -58,9 +59,9 @@ class TestCourseContentsSerializer:
 class TestEnrollmentSerializer:
 
     def test_enrollment_serializer_valid(self):
-        user = User.objects.create_user(username="student1", password="testpass")
+        user = User.objects.create_user(username="student1", password=config("TEST_PASSWORD"))
         student = Student.objects.create(user=user)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst1", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Math 101",
             description="Basic Math",
@@ -82,9 +83,9 @@ class TestEnrollmentSerializer:
 class TestRatingSerializer:
 
     def test_rating_serializer_valid(self):
-        user = User.objects.create_user(username="student2", password="testpass")
+        user = User.objects.create_user(username="student2", password=config("TEST_PASSWORD"))
         student = Student.objects.create(user=user)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst2", password="testpass"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst2", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Science 101",
             description="Basic Science",

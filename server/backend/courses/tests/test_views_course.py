@@ -3,12 +3,13 @@ from rest_framework.test import APIClient
 from courses.models import Course
 from users.models import User, Instructor, Student
 from rest_framework import status
+from decouple import config
 
 @pytest.mark.django_db
 class TestCourseView:
 
     def test_get_courses(self):
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password="password"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
         Course.objects.create(
             title="Test Course 1",
             description="Test Course Description 1",
@@ -26,9 +27,9 @@ class TestCourseView:
 class TestCourseDetailView:
 
     def test_get_course_detail(self):
-        user = User.objects.create_user(username="student2", password="testpass")
+        user = User.objects.create_user(username="student2", password=config("TEST_PASSWORD"))
         student = Student.objects.create(user=user)
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password="password"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Test Course 1",
             description="Test Course Description 1",
@@ -52,8 +53,8 @@ class TestCourseDetailView:
 class TestAddCourseView:
 
     def test_add_course(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password="password"))
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
 
         course_data = {
             "title": "New Course",
@@ -75,8 +76,8 @@ class TestAddCourseView:
 class TestUpdateDeleteCourseView:
 
     def test_update_course(self):
-        admin_user = User.objects.create_superuser(username="admin", password="admin")
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password="password"))
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Test Course 1",
             description="Test Course Description 1",
@@ -101,8 +102,8 @@ class TestUpdateDeleteCourseView:
         assert response.data['title'] == "Updated Course Title"
 
     def test_delete_course(self):
-        admin_user = User.objects.create_superuser(username="admin", password="adminpass")
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password="password"))
+        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Test Course 1",
             description="Test Course Description 1",
