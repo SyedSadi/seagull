@@ -132,7 +132,6 @@ Dashboard.propTypes = {
     total_contents: PropTypes.number,
     total_quizzes: PropTypes.number
   }),
-  loading: PropTypes.bool
 };
 
 StatsGrid.propTypes = {

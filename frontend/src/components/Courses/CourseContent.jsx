@@ -126,16 +126,4 @@ PDFContent.propTypes = {
 	pdfUrl: PropTypes.string.isRequired,
 };
 
-CourseContent.propTypes = {
-	contents: PropTypes.arrayOf(
-	  PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-		content_type: PropTypes.string.isRequired,
-		text_content: PropTypes.string,
-		url: PropTypes.string,
-	  })
-	).isRequired,
-};
-
 export default CourseContent;

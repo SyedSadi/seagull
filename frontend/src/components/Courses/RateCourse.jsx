@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 const RateCourse = ({ courseId }) => {
   const [rating, setRating] = useState(0);
@@ -58,5 +59,9 @@ const RateCourse = ({ courseId }) => {
     </div>
   );
 };
+
+RateCourse.propTypes = {
+  courseId: PropTypes.string.isRequired, // or PropTypes.number if courseId is a number
+}
 
 export default RateCourse;

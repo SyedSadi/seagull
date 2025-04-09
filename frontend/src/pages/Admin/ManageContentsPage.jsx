@@ -26,9 +26,10 @@ const ContentFormFields = ({ content, index, handleChange, handleDelete }) => (
       </div>
     ))}
 
-    <label className="block font-semibold mt-4 mb-1">Text Content (optional)</label>
+    <label htmlFor='text_content' className="block font-semibold mt-4 mb-1">Text Content (optional)</label>
     <textarea
       name="text_content"
+      id="text_content"
       value={content.text_content || ''}
       onChange={(e) => handleChange(index, e)}
       className="p-2 border rounded w-full"
@@ -165,25 +166,5 @@ ContentFormFields.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
 };
-
-ManageContents.propTypes = {
-  courses: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      contents: PropTypes.array.isRequired,
-    })
-  ),
-  selectedCourseId: PropTypes.string,
-  contents: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string,
-      content_type: PropTypes.string,
-      url: PropTypes.string,
-      text_content: PropTypes.string,
-    })
-  ),
-}
 
 export default ManageContents;
