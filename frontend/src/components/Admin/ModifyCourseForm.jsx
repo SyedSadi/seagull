@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types';
+
 
 const ModifyCourseForm = ({course, handleUpdate, handleChange, handleImageChange, handleDelete, loading}) => {
   return (
@@ -127,5 +129,21 @@ const ModifyCourseForm = ({course, handleUpdate, handleChange, handleImageChange
     </form>
   )
 }
+
+ModifyCourseForm.propTypes = {
+  course: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    duration: PropTypes.number.isRequired,
+    difficulty: PropTypes.oneOf(['beginner', 'intermediate', 'advanced']),
+    subject: PropTypes.string.isRequired,
+    image: PropTypes.string,
+  }).isRequired,
+  handleUpdate: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleImageChange: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+};
 
 export default ModifyCourseForm

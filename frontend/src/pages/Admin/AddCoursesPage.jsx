@@ -11,7 +11,7 @@ import { ImageUploader } from "../../services/ImageUploader";
 const AddCoursesPage = () => {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [uploadedUrl, setUploadedUrl] = useState("");
+  const [, setUploadedUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [instructors, setInstructors] = useState([]);
   const [course, setCourse] = useState({
@@ -51,16 +51,11 @@ const AddCoursesPage = () => {
       toast.error("Please select an image first!");
       return null;
     }
-    try {
-      const url = await ImageUploader(selectedImage);
-      setUploadedUrl(url);
-      toast.success("Image uploaded successfully!");
-      console.log("Uploaded Image URL:", url);
-      return url;
-    } catch (error) {
-      toast.error("Failed to upload image.");
-      return null;
-    }
+    const url = await ImageUploader(selectedImage);
+    setUploadedUrl(url);
+    toast.success("Image uploaded successfully!");
+    console.log("Uploaded Image URL:", url);
+    return url;
   };
 
   const handleSubmit = async (e) => {    
@@ -162,7 +157,7 @@ const AddCoursesPage = () => {
           </div>
           
           <div>
-            <label htlmlFor="subject" className="block mb-2 text-sm font-medium text-gray-700">Subject</label>
+            <label htmlFor="subject" className="block mb-2 text-sm font-medium text-gray-700">Subject</label>
             <input
               id="subject"
               type="text"
@@ -175,7 +170,7 @@ const AddCoursesPage = () => {
           </div>
           
           <div>
-            <label htlmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Image</label>
+            <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Image</label>
             <input
               type="file"
               accept="image/*"

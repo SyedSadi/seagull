@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getCourseDetailsById } from "../../services/coursesApi";
 import RateCourse from "./RateCourse";
+import PropTypes from "prop-types";  // Import PropTypes
+
 
 // Helper components
 const VideoContent = ({ url }) => {
@@ -114,6 +116,26 @@ const getYouTubeId = (url) => {
 	const regExp = /(?:youtu\.be\/|youtube\.com\/(?:.*[?&]v=|embed\/|shorts\/))([\w-]{11})/;
 	const match = url.match(regExp);
 	return match ? match[1] : null;
+};
+
+VideoContent.propTypes = {
+	url: PropTypes.string.isRequired,
+};
+
+PDFContent.propTypes = {
+	pdfUrl: PropTypes.string.isRequired,
+};
+
+CourseContent.propTypes = {
+	contents: PropTypes.arrayOf(
+	  PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
+		content_type: PropTypes.string.isRequired,
+		text_content: PropTypes.string,
+		url: PropTypes.string,
+	  })
+	).isRequired,
 };
 
 export default CourseContent;

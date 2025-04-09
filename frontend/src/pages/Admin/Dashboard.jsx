@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
+import PropTypes from "prop-types";
+
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -118,5 +120,50 @@ const UserCard = ({ user }) => (
     </div>
   </div>
 );
+
+Dashboard.propTypes = {
+  stats: PropTypes.shape({
+    new_users_last_7_days: PropTypes.array.isRequired,
+    active_users_last_24_hours: PropTypes.array.isRequired,
+    total_users: PropTypes.number,
+    total_students: PropTypes.number,
+    total_instructors: PropTypes.number,
+    total_courses: PropTypes.number,
+    total_contents: PropTypes.number,
+    total_quizzes: PropTypes.number
+  }),
+  loading: PropTypes.bool
+};
+
+StatsGrid.propTypes = {
+  stats: PropTypes.shape({
+    total_users: PropTypes.number,
+    total_students: PropTypes.number,
+    total_instructors: PropTypes.number,
+    total_courses: PropTypes.number,
+    total_contents: PropTypes.number,
+    total_quizzes: PropTypes.number
+  }).isRequired
+};
+
+StatCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.number,
+  desc: PropTypes.string.isRequired
+};
+
+UserList.propTypes = {
+  title: PropTypes.string.isRequired,
+  users: PropTypes.array.isRequired
+};
+
+UserCard.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired
+  }).isRequired
+};
 
 export default Dashboard;

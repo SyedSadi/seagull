@@ -153,4 +153,37 @@ const ManageContents = () => {
   );
 };
 
+ContentFormFields.propTypes = {
+  content: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    content_type: PropTypes.string,
+    url: PropTypes.string,
+    text_content: PropTypes.string,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+};
+
+ManageContents.propTypes = {
+  courses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      contents: PropTypes.array.isRequired,
+    })
+  ),
+  selectedCourseId: PropTypes.string,
+  contents: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string,
+      content_type: PropTypes.string,
+      url: PropTypes.string,
+      text_content: PropTypes.string,
+    })
+  ),
+}
+
 export default ManageContents;

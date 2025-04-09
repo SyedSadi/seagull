@@ -28,7 +28,7 @@ class TestCourseDetailView:
 
     def test_get_course_detail(self):
         user = User.objects.create_user(username="student2", password=config("TEST_PASSWORD"))
-        student = Student.objects.create(user=user)
+        Student.objects.create(user=user)
         instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
         course = Course.objects.create(
             title="Test Course 1",
