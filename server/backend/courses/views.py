@@ -16,7 +16,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CourseDetailView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
@@ -53,6 +53,19 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CourseContentView(generics.ListAPIView):
+    serializer_class = CourseContentsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        course_id = self.kwargs['course_id']
+        course = get_object_or_404(Course, id=course_id)
+
+        if not Enrollment.objects.filter(course=course, student=user.student).exists():
+            return CourseContents.objects.none()
+
+        return CourseContents.objects.filter(course=course)
 
 class AddContentAPIView(AdminOnlyAPIView):
     def post(self, request):
@@ -67,8 +80,13 @@ class AddContentAPIView(AdminOnlyAPIView):
 class UpdateContentView(AdminOnlyAPIView):
     def put(self, request, id):
         content = get_object_or_404(CourseContents, id=id)
-        return self.handle_update(CourseContentsSerializer(content, data=request.data, partial=True))
-
+        serializer = CourseContentsSerializer(content, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteContentView(AdminOnlyAPIView):
     def delete(self, request, id):
@@ -100,21 +118,6 @@ class EnrolledCoursesView(generics.ListAPIView):
         return Course.objects.filter(enrollment__student=user.student) if hasattr(user, 'student') else Course.objects.none()
 
 
-class CourseContentView(generics.ListAPIView):
-    serializer_class = CourseContentsSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        course_id = self.kwargs['course_id']
-        course = get_object_or_404(Course, id=course_id)
-
-        if not Enrollment.objects.filter(course=course, student=user.student).exists():
-            return CourseContents.objects.none()
-
-        return CourseContents.objects.filter(course=course)
-
-
 class InstructorCoursesView(generics.ListAPIView):
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
@@ -125,8 +128,9 @@ class InstructorCoursesView(generics.ListAPIView):
             return Response({"error": "Only instructors can view this information."}, status=status.HTTP_403_FORBIDDEN)
 
         courses = Course.objects.filter(created_by=user.instructor)
-        message = {"message": "No courses found for this instructor."} if not courses.exists() else {"courses": courses}
-        return Response(message, status=status.HTTP_200_OK)
+        if courses.exists():
+            return Response({"courses": CourseSerializer(courses, many=True).data}, status=status.HTTP_200_OK)
+        return Response({"message": "No courses found for this instructor."}, status=status.HTTP_200_OK)
 
 
 class RateCourseView(APIView):
