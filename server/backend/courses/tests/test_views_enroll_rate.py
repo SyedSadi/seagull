@@ -56,7 +56,7 @@ class TestCourseViews:
         assert len(response.data) > 0
 
     def test_instructor_courses(self):
-        _, _, instructor_user, instructor, _, course = self.setup_user_and_course()
+        _, _, instructor_user, _, _, _ = self.setup_user_and_course()
         client = APIClient()
         client.force_authenticate(user=instructor_user)
         response = client.get('/courses/by-instructor/')
@@ -64,14 +64,14 @@ class TestCourseViews:
         assert 'courses' in response.data
 
     def test_instructor_no_courses(self):
-        _, _, instructor_user, instructor, _, _ = self.setup_user_and_course(instructor_username="new_instructor")
+        _, _, instructor_user, _, _, _ = self.setup_user_and_course(instructor_username="new_instructor")
         client = APIClient()
         client.force_authenticate(user=instructor_user)
         response = client.get('/courses/by-instructor/')
         assert response.status_code == status.HTTP_200_OK
 
     def test_rate_course(self):
-        _, student_user, instructor_user, instructor, student, course = self.setup_user_and_course()
+        _, student_user, _, _, student, course = self.setup_user_and_course()
         Enrollment.objects.create(course=course, student=student)
         client = APIClient()
         client.force_authenticate(user=student_user)

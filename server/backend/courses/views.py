@@ -152,7 +152,7 @@ class RateCourseView(APIView):
         except (ValueError, TypeError):
             return Response({"error": "Rating must be an integer between 1 and 5."}, status=status.HTTP_400_BAD_REQUEST)
 
-        rating, created = Rating.objects.update_or_create(course=course, user=request.user, defaults={'rating': rating_value})
+        _, created = Rating.objects.update_or_create(course=course, user=request.user, defaults={'rating': rating_value})
         return Response({"message": "Rating created successfully." if created else "Rating updated successfully.", "rating": rating_value}, status=status.HTTP_200_OK)
 
     def get(self, request, course_id):

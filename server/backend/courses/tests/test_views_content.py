@@ -9,7 +9,7 @@ from decouple import config
 class TestCourseContentViews:
 
     def test_get_course_content(self):
-        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
         student_user = User.objects.create_user(username="student", password=config("TEST_PASSWORD"))
         instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
@@ -23,7 +23,7 @@ class TestCourseContentViews:
         )
         student = Student.objects.create(user=student_user)
         Enrollment.objects.create(course=course, student=student)
-        content = CourseContents.objects.create(
+        CourseContents.objects.create(
             title="Test Content",
             content_type="video", 
             url="https://example.com/video", 
@@ -39,11 +39,11 @@ class TestCourseContentViews:
 
 
     def test_get_course_content_not_enrolled(self):
-        admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
+        User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
         student_user = User.objects.create_user(username="student", password=config("TEST_PASSWORD"))
         instructor_user = User.objects.create_user(username="instructor", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=instructor_user)
-        student = Student.objects.create(user=student_user)
+        Student.objects.create(user=student_user)
         course = Course.objects.create(
             title="Test Course",
             description="Test Description",
@@ -52,7 +52,7 @@ class TestCourseContentViews:
             difficulty="beginner",
             subject="Math"
         )
-        content = CourseContents.objects.create(
+        CourseContents.objects.create(
             title="Test Content",
             content_type="pdf",  
             url="https://example.com/pdf", 
