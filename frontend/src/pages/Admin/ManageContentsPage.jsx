@@ -4,6 +4,8 @@ import AdminLayout from '../../components/Admin/AdminLayout';
 import { deleteContentById, updateContentById } from '../../services/contentsApi';
 import { toast } from "react-toastify";
 import ShowConfirmation from '../../components/Shared/ShowConfirmation';
+import PropTypes from 'prop-types';
+
 
 // Small reusable component for content input fields
 const ContentFormFields = ({ content, index, handleChange, handleDelete }) => (

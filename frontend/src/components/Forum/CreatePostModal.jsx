@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import API from '../../services/api';
+import PropTypes from 'prop-types';
 import { AuthContext } from '../../context/AuthContext'; // Import AuthContext
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
@@ -88,8 +89,11 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
           />
           {/* Tag Selection */}
           <div className="mb-4">
-            <label className="block font-medium mb-2">Select Tags (1-3):</label>
+            <label htmlFor="tag-select" className="block font-medium mb-2">
+              Select Tags (1–3):
+            </label>
             <select
+              id="tag-select"
               onChange={handleTagSelect}
               className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               defaultValue=""
@@ -130,5 +134,11 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     </div>
   );
 };
+
+CreatePostModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  refreshPosts: PropTypes.func.isRequired
+};
+
 
 export default CreatePostModal;
