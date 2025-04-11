@@ -5,7 +5,6 @@ from users.models import Instructor, Student, User
 class TestUserModel:
     def test_user_creation(self):
         user = User.objects.create_user(username="testuser", password="password123", role="student")
-        print(f"Created user with id: {user}")
         assert user.username == "testuser"
         assert user.role == "student"
         assert user.check_password("password123")
@@ -20,7 +19,6 @@ class TestUserModel:
 class TestInstructorModel:
     def test_instructor_creation(self):
         user = User.objects.create_user(username="test_instructor", password="password123", role="instructor")
-        print(f"Created user with id: {user.id}")
         instructor = Instructor.objects.create(user=user, designation="Professor", university="MIT")
         
         assert instructor.user.username == "test_instructor"
