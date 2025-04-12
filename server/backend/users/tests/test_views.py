@@ -2,8 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-from users.models import Instructor, User
-
+from users.models import User
 @pytest.mark.django_db
 class TestAuthViews:
     client = APIClient()
