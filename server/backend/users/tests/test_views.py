@@ -78,11 +78,13 @@ class TestAuthViews:
 @pytest.mark.django_db
 class TestInstructorViewSet:
 
-    def test_instructor_viewset(self):
+    def test_instructor_viewset(self) -> None:
         user = User.objects.create_user(username='instructoruser', password='password123', email='instructor@example.com', role='instructor')
-        instructor = Instructor.objects.get(user=user)
+        # No need to store instructor reference if not used
 
         client = APIClient()
+        # Optional: Authenticate with the instructor
+        # client.force_authenticate(user=user)
         response = client.get('/instructors/', format='json')
 
         assert response.status_code == status.HTTP_200_OK
