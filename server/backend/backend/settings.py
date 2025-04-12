@@ -107,7 +107,7 @@ if os.getenv('GITHUB_WORKFLOW') or os.getenv('CI'):
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
             'HOST': 'localhost',
             'PORT': '5432',
-        }
+        },
     }
 else:
     DATABASES = {
