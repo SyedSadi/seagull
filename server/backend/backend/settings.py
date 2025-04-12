@@ -107,8 +107,6 @@ if os.getenv('GITHUB_WORKFLOW') or os.getenv('CI'):
             'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
             'HOST': 'localhost',
             'PORT': '5432',
-        },
-    }
 else:
     DATABASES = {
         'default': {
@@ -118,8 +116,6 @@ else:
             'PASSWORD': config('DB_PASSWORD'),
             'HOST': config('DB_HOST'),
             'PORT': config('DB_PORT', cast=int),
-        },
-    }
 
 
 # Password validation
