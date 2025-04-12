@@ -16,6 +16,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
 
 class QuizAPIView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, category_id):
         try:
             # Ensure category_id is valid

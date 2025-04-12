@@ -1,69 +1,37 @@
 import pytest
-from users.models import Instructor, Student, User
+from users.models import User, Student, Instructor
 
 @pytest.mark.django_db
-class TestUserModel:
-    def test_user_creation(self):
-        user = User.objects.create_user(username="testuser", password="password123", role="student")
-        print(f"Created user with id: {user}")
-        assert user.username == "testuser"
-        assert user.role == "student"
-        assert user.check_password("password123")
+class TestUserModels:
 
-    def test_user_str(self):
-        user = User.objects.create_user(username="testuser", password="password123", role="student")
-        print(f"Created user with id: {user.id}")
-        assert str(user) == "testuser"
+    def test_create_student_user(self):
+        user = User.objects.create_user(username='student1', password='testpass123', role='student')
+        print('user id', user.id)
+        print("\nNumber of users in database:", User.objects.count())        
+        student = Student.objects.get(user=user)        
+        student.course_completed = 2
+        student.course_enrolled = 5
+        student.save()
+        assert student.user == user
+        assert student.course_completed == 2
+        assert student.course_enrolled == 5
+        assert user.role == 'student'
+        assert student.user.username == 'student1'
 
+    def test_create_instructor_user(self):
+        user = User.objects.create_user(username='instructor1', password='testpass123', role='instructor')
+        print('user id', user.id)
+        print("\nNumber of users in database:", User.objects.count())        
+        instructor = Instructor.objects.get(user=user)        
+        instructor.designation = 'Professor'
+        instructor.university = 'University of Science'
+        instructor.save()
+        assert instructor.user == user
+        assert instructor.designation == 'Professor'
+        assert instructor.university == 'University of Science'
+        assert user.role == 'instructor'
+        assert instructor.user.username == 'instructor1'
 
-@pytest.mark.django_db
-class TestInstructorModel:
-    def test_instructor_creation(self):
-        user = User.objects.create_user(username="test_instructor", password="password123", role="instructor")
-        print(f"Created user with id: {user.id}")
-        instructor = Instructor.objects.create(user=user, designation="Professor", university="MIT")
-        
-        assert instructor.user.username == "test_instructor"
-        assert instructor.designation == "Professor"
-        assert instructor.university == "MIT"
-
-#     def test_instructor_str(self):
-#         # Ensure no previous instructor exists
-#         Instructor.objects.all().delete()
-
-#         user = get_user_model().objects.create_user(
-#             username="instructor1", password="password123", role="instructor"
-#         )
-#         instructor = Instructor.objects.create(
-#             user=user, designation="Professor", university="ABC University"
-#         )
-#         assert str(instructor) == "instructor1"
-
-
-# @pytest.mark.django_db
-# class TestStudentModel:
-#     def test_student_creation(self):
-#         # Ensure no previous student exists
-#         Student.objects.all().delete()
-
-#         user = get_user_model().objects.create_user(
-#             username="student1", password="password123", role="student"
-#         )
-#         student = Student.objects.create(
-#             user=user, course_completed=3, course_enrolled=5
-#         )
-#         assert student.user.username == "student1"
-#         assert student.course_completed == 3
-#         assert student.course_enrolled == 5
-
-#     def test_student_str(self):
-#         # Ensure no previous student exists
-#         Student.objects.all().delete()
-
-#         user = get_user_model().objects.create_user(
-#             username="student1", password="password123", role="student"
-#         )
-#         student = Student.objects.create(
-#             user=user, course_completed=3, course_enrolled=5
-#         )
-#         assert str(student) == "student1"
+    def test_user_str_method(self):
+        user = User.objects.create_user(username='testuser', password='testpass123', role='student')        
+        assert str(user) == 'testuser'

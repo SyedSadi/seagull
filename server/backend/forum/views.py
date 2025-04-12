@@ -9,8 +9,6 @@ from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
 
 
-
-
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at').prefetch_related('tags')
     serializer_class = PostSerializer

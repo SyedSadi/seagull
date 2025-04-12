@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Post, Comment, Vote,Tag
-from mptt.templatetags.mptt_tags import cache_tree_children
 
 
 class TagSerializer(serializers.ModelSerializer):
