@@ -3,10 +3,10 @@ name: SonarQube Analysis
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
   pull_request:
     branches:
-      - main  # or your default branch
+      - main
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'  # Change this to the version you are using
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -29,9 +29,8 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Run tests with coverage
-        working-directory: ./server
         run: |
-          pytest --cov=backend --cov-report=xml  # Ensure the coverage report is generated
+          pytest backend --cov=backend --cov-report=xml
           
       - name: Upload coverage report to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v1
