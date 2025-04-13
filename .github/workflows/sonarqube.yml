@@ -71,7 +71,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd server/backend/
-          pytest --cov=courses --cov=forum --cov=quiz --cov=users --cov-report=xml
+          pytest --cov=server.backend.courses --cov=server.backend.forum --cov=server.backend.quiz --cov=server.backend.users --cov-report=xml
 
       - name: Show first lines of coverage.xml
         run: head server/backend/coverage.xml
