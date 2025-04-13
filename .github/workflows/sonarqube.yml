@@ -72,7 +72,11 @@ jobs:
         run: |
           cd server/backend/
           pytest --cov=courses --cov=forum --cov=quiz --cov=users --cov-report=xml
-          
+
+      - name: Show first lines of coverage.xml
+        run: head server/backend/coverage.xml
+
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
