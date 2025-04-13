@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faBars } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
@@ -7,10 +7,23 @@ import { AuthContext } from "../../context/AuthContext";
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, logoutUser } = useContext(AuthContext);
+	const [scrolled, setScrolled] = useState(false);
+	const location = useLocation();
+	const insLandingPage = location.pathname === "/";
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
+
+	useEffect(() => {
+		const handleScroll = () => {
+			const offset = window.scrollY;
+			setScrolled(offset > 60);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, [insLandingPage]);
 
 	const navOptions = (
 		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-sm">
@@ -85,10 +98,25 @@ const Navbar = () => {
 	);
 
 	return (
-		<div className="navbar bg-[#323d5e]">
+		<div
+			className={`navbar top-0 z-50 w-full transition-colors duration-300 ${
+				insLandingPage && !scrolled && !isMenuOpen
+					? "bg-transparent sticky"
+					: "bg-[#323d5e] sticky "
+			}`}
+		>
+			{/* Logo */}
+			<div className="navbar-start w-full justify-center lg:w-1/4">
+				<NavLink
+					to={"/"}
+					className="text-white text-2xl font-bold cursor-pointer"
+				>
+					KUETx
+				</NavLink>
+			</div>
 			{/* Menu Button */}
 			<div
-				className="absolute left-4 lg:hidden text-white"
+				className="navbar justify-end absolute right-2 lg:hidden text-white"
 				onClick={toggleMenu}
 			>
 				<div className="text-2xl">
@@ -98,16 +126,6 @@ const Navbar = () => {
 						<FontAwesomeIcon icon={faBars} />
 					)}
 				</div>
-			</div>
-
-			{/* Logo */}
-			<div className="navbar-start w-full flex justify-center lg:w-1/4">
-				<NavLink
-					to={"/"}
-					className="text-white text-2xl font-bold cursor-pointer"
-				>
-					KUETx
-				</NavLink>
 			</div>
 
 			{/* Nav Options - Center */}
@@ -156,12 +174,12 @@ const Navbar = () => {
 
 			{/* Mobile Menu */}
 			<div
-				className={`absolute top-16 left-0 w-full bg-[#323d5e] text-white shadow-lg transform ${
+				className={`absolute top-16 left-0 pt-8 w-full bg-[#323d5e] text-white shadow-lg transform flex flex-col items-center${
 					isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
 				} overflow-hidden transition-all duration-300`}
 			>
-				<div className="p-6">{navOptions}</div>
-				<div className="p-4 flex flex-col items-center space-y-4">
+				{navOptions}
+				<div className="p-4 space-y-4">
 					<NavLink
 						to={"/login"}
 						className={({ isActive }) =>
@@ -175,7 +193,7 @@ const Navbar = () => {
 					</NavLink>
 					<NavLink
 						to={"/register"}
-						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+						className="btn ml-3 bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
 						onClick={() => setIsMenuOpen(false)}
 					>
 						Sign Up

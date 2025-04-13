@@ -12,24 +12,25 @@ const Hero = () => {
 	};
 
 	return (
-		<section className="relative md:h-[70vh] h-[50vh]">
+		<section className="h-screen top-0">
 			{/* Background image with overlay */}
-			<div className="absolute inset-0 z-0">
+			<div className="absolute inset-0">
 				<img
 					src={HeroImge}
 					alt="Learning background"
 					className="w-full h-full object-cover"
+					loading="eager"
 				/>
-				<div className="absolute inset-0 bg-black/50" /> {/* Dark overlay */}
+				<div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50" />
 			</div>
 
 			{/* Content */}
-			<div className="relative z-10 flex flex-col items-center justify-center min-h-96 px-4 text-center text-white">
-				<div className="max-w-3xl mx-auto">
-					<h1 className="text-4xl font-bold mb-4">
+			<div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center text-white">
+				<div className="max-w-4xl mx-auto">
+					<h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
 						Professional and Lifelong Learning
 					</h1>
-					<p className="text-lg mb-8">
+					<p className="text-lg md:text-2xl mb-12 opacity-90">
 						Discover thousands of courses from top instructors around the world
 					</p>
 
