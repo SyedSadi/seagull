@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../services/api';
+import { getTags, updatePost } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 
 
@@ -8,13 +8,13 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
   const [content, setContent] = useState(post.content);
   const [allTags, setAllTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState(post.tags || []);
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('access_token');
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await API.get('/forum/tags/');
-        setAllTags(response.data);
+        const data = await getTags();
+        setAllTags(data);
       } catch (error) {
         console.error('Error fetching tags:', error);
       }
@@ -42,17 +42,14 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
       }
     console.log("Attempting to update post:", post.id);
     try {
-      const response = await API.put(
-        `/forum/posts/${post.id}/`, 
-        { 
-          title,  // Ensure the updated title is sent
-          content,  // Ensure the updated content is sent
-          tag_ids: selectedTags.map(tag => tag.id)  // Send updated tag IDs
-        },  
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      console.log("Post updated successfully:", response.data);
-      refreshPost(response.data);  // Update the UI with the new post data
+      const updatedPost = await updatePost(post.id, {
+        title,
+        content,
+        tag_ids: selectedTags.map(tag => tag.id)
+      }, token);
+
+      console.log("Post updated successfully:", updatedPost);  // Log the updated post for debugging
+      refreshPost(updatedPost);  // Update the UI with the new post data
       onClose();  // Close the modal after saving
     } catch (error) {
       console.error("Error updating post:", error.response ? error.response.data : error.message);
