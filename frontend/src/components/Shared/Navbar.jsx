@@ -18,7 +18,7 @@ const Navbar = () => {
 	useEffect(() => {
 		const handleScroll = () => {
 			const offset = window.scrollY;
-			setScrolled(offset > 60);
+			setScrolled(offset > 50);
 		};
 
 		window.addEventListener("scroll", handleScroll);
@@ -79,24 +79,15 @@ const Navbar = () => {
 
 	return (
 		<div
-			className={`navbar top-0 z-50 w-full transition-colors duration-300 ${
+			className={`navbar top-0 z-50 w-full sticky transition-all duration-300 ease-in-out ${
 				insLandingPage && !scrolled && !isMenuOpen
-					? "bg-transparent sticky"
-					: "bg-[#323d5e] sticky "
+					? "bg-transparent"
+					: "bg-[#323d5e]"
 			}`}
 		>
-			{/* Logo */}
-			<div className="navbar-start w-full justify-center lg:w-1/4">
-				<NavLink
-					to={"/"}
-					className="text-white text-3xl font-bold cursor-pointer"
-				>
-					KUETx
-				</NavLink>
-			</div>
-			{/* Menu Button */}
+			{/* Menu Button- mobile */}
 			<div
-				className="navbar justify-end absolute right-2 lg:hidden text-white"
+				className="justify-end absolute right-4 lg:hidden text-white"
 				onClick={toggleMenu}
 			>
 				<div className="text-2xl">
@@ -107,13 +98,21 @@ const Navbar = () => {
 					)}
 				</div>
 			</div>
-
-			{/* Nav Options - Center */}
-			<div className="navbar-center hidden lg:flex lg:w-1/2 justify-center">
-				<ul className="flex flex-row space-x-20">{navOptions}</ul>
+			{/*Desktop left section- Logo */}
+			<div className="navbar-start w-full justify-center lg:w-1/4">
+				<NavLink
+					to={"/"}
+					className="text-white text-3xl font-bold cursor-pointer"
+				>
+					KUETx
+				</NavLink>
 			</div>
 
-			{/* Right section */}
+			{/*Desktop Nav Options - Center */}
+			<div className="navbar-center lg:flex hidden lg:w-1/2 justify-center">
+				{navOptions}
+			</div>
+
 			<div className="navbar-end hidden lg:flex lg:w-1/4 justify-end space-x-3">
 				{!user ? (
 					<>
@@ -150,26 +149,59 @@ const Navbar = () => {
 
 			{/* Mobile Menu */}
 			<div
-				className={`absolute top-16 left-0 pt-8 w-full bg-[#323d5e] text-white shadow-lg transform flex flex-col items-center${
-					isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-				} overflow-hidden transition-all duration-300`}
+				className={`fixed top-16 left-0 right-0 bg-[#323d5e] transform transition-all duration-300 ease-in-out justify-center ${
+					isMenuOpen
+						? "opacity-100 translate-y-0"
+						: "opacity-0 -translate-y-full pointer-events-none"
+				}`}
 			>
-				{navOptions}
-				<div className="p-4 space-y-4">
-					<NavLink
-						to={"/login"}
-						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-						onClick={() => setIsMenuOpen(false)}
-					>
-						Log in
-					</NavLink>
-					<NavLink
-						to={"/register"}
-						className="btn ml-3 bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
-						onClick={() => setIsMenuOpen(false)}
-					>
-						Sign Up
-					</NavLink>
+				<div
+					className={`flex flex-col p-8 space-y-4 transform transition-all duration-300 delay-150 ${
+						isMenuOpen
+							? "opacity-100 translate-x-0"
+							: "opacity-0 -translate-x-10"
+					}`}
+				>
+					<div className="w-full px-4">{navOptions}</div>
+					<div className="w-full px-4 pt-4 border-t border-gray-600">
+						{!user ? (
+							<div className="flex flex-col space-y-4">
+								<NavLink
+									to={"/login"}
+									className="text-white hover:text-blue-300 text-center transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Log in
+								</NavLink>
+								<NavLink
+									to={"/register"}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Sign Up
+								</NavLink>
+							</div>
+						) : (
+							<div className="flex flex-col space-y-4">
+								<NavLink
+									to={"/profile"}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Profile
+								</NavLink>
+								<button
+									onClick={() => {
+										logoutUser();
+										setIsMenuOpen(false);
+									}}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+								>
+									Log out
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>
