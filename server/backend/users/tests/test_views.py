@@ -12,7 +12,7 @@ class TestAuthViews:
         data = {
             'username': 'testuser',
             'email': 'testuser@example.com',
-            'password': 'password123',
+            'password': config("TEST_PASSWORD"),
             'role': 'student',
         }
         response = self.client.post('/register/', data, format='json')        
@@ -26,7 +26,7 @@ class TestAuthViews:
     def test_login_view(self):
         data = {
             'username': 'testuser',
-            'password': 'password123',
+            'password': config("TEST_PASSWORD"),
         }
         user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), email='testuser@example.com', role='student')
 

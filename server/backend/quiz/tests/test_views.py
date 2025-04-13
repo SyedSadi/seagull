@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from users.models import User
 from quiz.models import Category, Question, Option, QuizAttempt, UserAnswer
+from decouple import config
 
 @pytest.mark.django_db
 class TestQuizViews:
