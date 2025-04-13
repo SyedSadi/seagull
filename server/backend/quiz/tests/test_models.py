@@ -1,8 +1,7 @@
 import pytest
-from rest_framework.test import APIClient
-from rest_framework import status
 from django.contrib.auth import get_user_model
 from quiz.models import Category, Question, Option, QuizAttempt, UserAnswer
+from decouple import config
 
 @pytest.mark.django_db
 class TestQuizModels:
@@ -27,7 +26,7 @@ class TestQuizModels:
 
     def test_quiz_attempt_model(self):
         User = get_user_model()
-        user = User.objects.create_user(username="testuser", password="password123", email="testuser@example.com")
+        user = User.objects.create_user(username="testuser", password=config("TEST_PASSWORD"), email="testuser@example.com")
         category = Category.objects.create(name="Math", description="Math related questions")
         quiz_attempt = QuizAttempt.objects.create(user=user, category=category, score=80, completed=True)
         assert quiz_attempt.user == user
@@ -37,7 +36,7 @@ class TestQuizModels:
 
     def test_user_answer_model(self):
         User = get_user_model()
-        user = User.objects.create_user(username="testuser", password="password123", email="testuser@example.com")
+        user = User.objects.create_user(username="testuser", password=config("TEST_PASSWORD"), email="testuser@example.com")
         category = Category.objects.create(name="Math", description="Math related questions")
         question = Question.objects.create(category=category, text="What is 2+2?")
         option = Option.objects.create(question=question, text="4", is_correct=True)

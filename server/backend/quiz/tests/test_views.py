@@ -26,7 +26,7 @@ class TestQuizViews:
         assert len(response.data['questions']) == 2
 
     def test_add_quiz_view(self):
-        user = User.objects.create_superuser(username="testuser", password="password123")
+        user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))
         category_data = {"name": "Math", "description": "Math related questions"}
         self.client.force_authenticate(user=user)
         response = self.client.post('/quiz/add/', category_data, format='json')
@@ -34,7 +34,7 @@ class TestQuizViews:
         assert response.data['name'] == "Math"
 
     def test_add_question_view(self):
-        user = User.objects.create_superuser(username="testuser", password="password123")
+        user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))
         category = Category.objects.create(name="Math", description="Math related questions")
         payload = {
             "category": category.id,
@@ -52,7 +52,7 @@ class TestQuizViews:
         assert response.data['text'] == "What is the capital of France?"
 
     def test_delete_quiz_view(self):
-        user = User.objects.create_superuser(username="testuser", password="password123")
+        user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))
         category = Category.objects.create(name="Math", description="Math questions")
         self.client.force_authenticate(user=user)
         response = self.client.delete('/quiz/delete/', data={"category_ids": [category.id]}, format='json')
@@ -60,7 +60,7 @@ class TestQuizViews:
         assert "categories" in response.data["message"]
 
     def test_update_quiz_view(self):
-        user = User.objects.create_superuser(username="testuser", password="password123")
+        user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))
         category = Category.objects.create(name="Math", description="Math related questions")
         updated_data = {"name": "Advanced Math"}
         self.client.force_authenticate(user=user)
@@ -69,7 +69,7 @@ class TestQuizViews:
         assert response.data['name'] == "Advanced Math"
 
     def test_submit_quiz_view(self):
-        user = User.objects.create_user(username="testuser", password="password123")
+        user = User.objects.create_user(username="testuser", password=config("TEST_PASSWORD"))
         category = Category.objects.create(name="Math", description="Math related questions")
         question = Question.objects.create(category=category, text="What is 2+2?")
         option = Option.objects.create(question=question, text="4", is_correct=True)

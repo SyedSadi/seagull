@@ -1,11 +1,12 @@
 import pytest
 from users.models import User, Student, Instructor
+from decouple import config
 
 @pytest.mark.django_db
 class TestUserModels:
 
     def test_create_student_user(self):
-        user = User.objects.create_user(username='student1', password='testpass123', role='student')
+        user = User.objects.create_user(username='student1', password=config("TEST_PASSWORD"), role='student')
         print('user id', user.id)
         print("\nNumber of users in database:", User.objects.count())        
         student = Student.objects.get(user=user)        
@@ -19,7 +20,7 @@ class TestUserModels:
         assert student.user.username == 'student1'
 
     def test_create_instructor_user(self):
-        user = User.objects.create_user(username='instructor1', password='testpass123', role='instructor')
+        user = User.objects.create_user(username='instructor1', password=config("TEST_PASSWORD"), role='instructor')
         print('user id', user.id)
         print("\nNumber of users in database:", User.objects.count())        
         instructor = Instructor.objects.get(user=user)        
@@ -33,5 +34,5 @@ class TestUserModels:
         assert instructor.user.username == 'instructor1'
 
     def test_user_str_method(self):
-        user = User.objects.create_user(username='testuser', password='testpass123', role='student')        
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), role='student')        
         assert str(user) == 'testuser'

@@ -3,6 +3,8 @@ from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from users.models import User
+from decouple import config
+
 @pytest.mark.django_db
 class TestAuthViews:
     client = APIClient()
@@ -26,7 +28,7 @@ class TestAuthViews:
             'username': 'testuser',
             'password': 'password123',
         }
-        user = User.objects.create_user(username='testuser', password='password123', email='testuser@example.com', role='student')
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), email='testuser@example.com', role='student')
 
         response = self.client.post('/login/', data, format='json')
 
@@ -36,7 +38,7 @@ class TestAuthViews:
         assert 'user' in response.data
 
     def test_logout_view(self):
-        user = User.objects.create_user(username='testuser', password='password123', email='testuser@example.com', role='student')
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), email='testuser@example.com', role='student')
         
         # Generate refresh token
         refresh_token = str(RefreshToken.for_user(user))
@@ -52,7 +54,7 @@ class TestAuthViews:
         assert response.data.get("error") == "Refresh token is required"
 
     def test_dashboard_stats_view(self):
-        admin_user = User.objects.create_superuser(username='adminuser', password='password123', email='admin@example.com')        
+        admin_user = User.objects.create_superuser(username='adminuser', password=config("TEST_PASSWORD"), email='admin@example.com')        
         self.client.force_authenticate(user=admin_user)
 
         response = self.client.get('/dashboard/stats/', format='json')
@@ -65,7 +67,7 @@ class TestAuthViews:
         assert 'total_students' in response.data['data']
 
     def test_dashboard_stats_view_no_permission(self):
-        normal_user = User.objects.create_user(username='normaluser', password='password123', email='normal@example.com')
+        normal_user = User.objects.create_user(username='normaluser', password=config("TEST_PASSWORD"), email='normal@example.com')
         self.client.force_authenticate(user=normal_user)
 
         response = self.client.get('/dashboard/stats/', format='json')
@@ -78,7 +80,7 @@ class TestAuthViews:
 class TestInstructorViewSet:
 
     def test_instructor_viewset(self) -> None:
-        user = User.objects.create_user(username='instructoruser', password='password123', email='instructor@example.com', role='instructor')
+        user = User.objects.create_user(username='instructoruser', password=config("TEST_PASSWORD"), email='instructor@example.com', role='instructor')
         # No need to store instructor reference if not used
 
         client = APIClient()

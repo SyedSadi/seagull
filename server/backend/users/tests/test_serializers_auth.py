@@ -1,9 +1,8 @@
 import pytest
 from rest_framework.exceptions import ValidationError
-from rest_framework.test import APIClient
 from users.models import User, Instructor, Student
 from users.serializers import RegisterSerializer, LoginSerializer
-from django.contrib.auth import get_user_model
+from decouple import config
 
 @pytest.mark.django_db
 class TestUserSerializers:
@@ -12,7 +11,7 @@ class TestUserSerializers:
         user_data = {
             'username': 'testuser',
             'email': 'testuser@example.com',
-            'password': 'testpass123',
+            'password': config("TEST_PASSWORD"),
             'role': 'student',
             'bio': 'This is a test bio.',
         }
@@ -32,7 +31,7 @@ class TestUserSerializers:
         user_data = {
             'username': 'instructor1',
             'email': 'instructor1@example.com',
-            'password': 'testpass123',
+            'password': config("TEST_PASSWORD"),
             'role': 'instructor',
             'bio': 'This is an instructor bio.',
         }
@@ -52,7 +51,7 @@ class TestUserSerializers:
         user_data = {
             'username': 'invalidroleuser',
             'email': 'invalidroleuser@example.com',
-            'password': 'testpass123',
+            'password': config("TEST_PASSWORD"),
             'role': 'admin',
             'bio': 'This is an invalid role bio.',
         }
@@ -61,10 +60,10 @@ class TestUserSerializers:
         assert 'role' in serializer.errors
 
     def test_login_serializer_valid(self):
-        user = User.objects.create_user(username='testuser', password='testpass123', role='student', email='testuser@example.com')
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), role='student', email='testuser@example.com')
         login_data = {
             'username': 'testuser',
-            'password': 'testpass123',
+            'password': config("TEST_PASSWORD"),
         }
         serializer = LoginSerializer(data=login_data)
         assert serializer.is_valid()

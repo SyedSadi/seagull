@@ -2,13 +2,14 @@ import pytest
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from users.models import User
 from users.serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer
+from decouple import config
 
 @pytest.mark.django_db
 class TestCustomTokenSerializers:
 
     def test_custom_token_obtain_pair_serializer(self):
-        user = User.objects.create_user(username='testuser', password='testpass123', role='student', email='testuser@example.com')
-        serializer = CustomTokenObtainPairSerializer(data={'username': 'testuser', 'password': 'testpass123'})
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), role='student', email='testuser@example.com')
+        serializer = CustomTokenObtainPairSerializer(data={'username': 'testuser', 'password': config("TEST_PASSWORD")})
         assert serializer.is_valid()
         
         token = serializer.validated_data['access']
@@ -23,7 +24,7 @@ class TestCustomTokenSerializers:
         assert decoded_token['is_superuser'] == user.is_superuser
 
     def test_custom_token_refresh_serializer(self):
-        user = User.objects.create_user(username='testuser', password='testpass123', role='student', email='testuser@example.com')
+        user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), role='student', email='testuser@example.com')
         refresh = RefreshToken.for_user(user)
         data = {'refresh': str(refresh)}
         serializer = CustomTokenRefreshSerializer(data=data)
@@ -45,8 +46,8 @@ class TestCustomTokenSerializers:
 class TestDashboardStatsSerializer:
 
     def test_dashboard_stats_serializer(self):
-        user1 = User.objects.create_user(username='student1', password='testpass123', role='student', email='student1@example.com')
-        user2 = User.objects.create_user(username='instructor1', password='testpass123', role='instructor', email='instructor1@example.com')
+        user1 = User.objects.create_user(username='student1', password=config("TEST_PASSWORD"), role='student', email='student1@example.com')
+        user2 = User.objects.create_user(username='instructor1', password=config("TEST_PASSWORD"), role='instructor', email='instructor1@example.com')
         course_data = {
             'total_users': 2,
             'total_students': 1,
