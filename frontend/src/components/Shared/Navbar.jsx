@@ -103,6 +103,7 @@ const Navbar = () => {
 				<NavLink
 					to={"/"}
 					className="text-white text-3xl font-bold cursor-pointer"
+					onClick={() => setIsMenuOpen(false)}
 				>
 					KUETx
 				</NavLink>
@@ -119,12 +120,14 @@ const Navbar = () => {
 						<NavLink
 							to={"/login"}
 							className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Log in
 						</NavLink>
 						<NavLink
 							to={"/register"}
 							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Sign Up
 						</NavLink>
@@ -134,6 +137,7 @@ const Navbar = () => {
 						<NavLink
 							to={"/profile"}
 							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Profile
 						</NavLink>
