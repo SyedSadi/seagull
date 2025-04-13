@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { replyToComment, updateComment, deleteComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
+import { formatDistanceToNow } from 'date-fns';
+
+
 
 
 const Comment = ({ comment={}, postId, setComments }) => {
@@ -101,7 +104,7 @@ const removeCommentFromTree = (comments, commentId) => {
       <div className="flex items-center text-sm text-gray-600 mb-1">
         <span className="font-medium">{comment.user || "Unknown User"}</span>
         <span className="mx-2">•</span>
-        <span>{new Date(comment.created_at).toLocaleString()}</span>
+        <span>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</span>
       </div>
 
       {isEditing ? (
