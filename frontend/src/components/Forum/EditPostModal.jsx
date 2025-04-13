@@ -62,41 +62,79 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
   
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Edit Post</h2>
-        <input 
-          type="text" 
-          className="w-full p-2 border rounded mb-2" 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          className="w-full p-2 border rounded mb-2"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        {/* Tag Selection */}
-        <select onChange={handleTagSelect} className="w-full p-2 border rounded mb-2">
-          <option value="">Select a Tag</option>
-          {allTags.map(tag => (
-            <option key={tag.id} value={tag.id}>{tag.name}</option>
-          ))}
-        </select>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {selectedTags.map(tag => (
-            <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-              {tag.name} <button onClick={() => removeTag(tag.id)} className="text-red-600 ml-2">×</button>
-            </span>
-          ))}
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
-          <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-        </div>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Edit Post</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6">
+          <input
+            type="text"
+            placeholder="Enter your post title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+            required
+          />
+          <textarea
+            placeholder="Write your content here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+            rows="6"
+            required
+          />
+          {/* Tag Selection */}
+          <div>
+            <label htmlFor="tag-select" className="block font-medium text-gray-700 mb-2">
+              Select Tags (1–3):
+            </label>
+            <select
+              id="tag-select"
+              onChange={handleTagSelect}
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Choose a tag...
+              </option>
+              {allTags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+            {/* Display Selected Tags */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              {selectedTags.map((tag) => (
+                <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                  {tag.name}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag.id)}
+                    className="ml-2 text-red-500 hover:text-red-700"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
+          >
+            Save Changes
+          </button>
+          <button
+            onClick={onClose}
+            type="button"
+            className="w-full text-center text-gray-500 hover:underline pt-2"
+          >
+            Cancel
+          </button>
+        </form>
       </div>
     </div>
+   
   );
 };
 EditPostModal.propTypes = {
