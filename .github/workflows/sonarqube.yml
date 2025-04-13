@@ -67,7 +67,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest server/backend --cov=backend --cov-report=xml
+          pytest server/backend
           
       - name: Upload coverage report to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v1
