@@ -5,6 +5,8 @@ import CommentSection from './CommentSection';
 import {fetchComment, deletePost } from '../../services/forumApi';
 import EditPostModal from './EditPostModal';
 import PropTypes from 'prop-types';
+import { FiEdit2, FiTrash2 } from 'react-icons/fi';
+
 
 
 const Post = ({ post, onDelete }) => {
@@ -125,8 +127,9 @@ const Post = ({ post, onDelete }) => {
               type="button"
               onClick={openEditModal} 
               className="text-blue-600 hover:underline font-medium"
+              title="Edit"
             >
-              Edit
+              <FiEdit2 size={18} className="text-blue-600" />
             </button>
           )}
           {(isAuthor || isAdmin) && (
@@ -134,8 +137,9 @@ const Post = ({ post, onDelete }) => {
               type="button"
               onClick={handleDelete} 
               className="text-red-600 hover:underline font-medium"
+              title="Delete"
             >
-              Delete
+             <FiTrash2 size={18} className="text-red-600" />
             </button>
           )}
        </div>
