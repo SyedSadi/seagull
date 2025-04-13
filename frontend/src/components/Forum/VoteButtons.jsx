@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowUp, FaArrowDown, FaComment } from 'react-icons/fa';
-import API from '../../services/api';
+import { fetchUserVotes, postVote } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 
 
@@ -21,13 +21,8 @@ const VoteButtons = ({ postId, totalVotes =0 , onVote, toggleComments }) => {
       if (!token) return;
   
       try {
-        const response = await API.get(`/forum/votes/${postId}/user-vote/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        if (response.data) {
-          setVoteState(response.data.user_vote); // Corrected to match API response
-        }
+        const data = await fetchUserVotes(postId, token);
+        setVoteState(data.user_vote); // Corrected to match API response
       } catch (error) {
         console.error('Error fetching user vote:', error.response ? error.response.data : error.message);
       }
@@ -45,15 +40,10 @@ const VoteButtons = ({ postId, totalVotes =0 , onVote, toggleComments }) => {
     }
   
     try {
-      const response = await API.post(`/forum/votes/`, { post: postId, value }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      const { total_votes, user_vote } = response.data; // Read backend response
-  
-      setVoteState(user_vote); // Update vote state correctly
-      setVoteCount(total_votes); // Update total votes correctly
-      onVote(postId, total_votes); // Update parent state
+      const data = await postVote(postId, value, token);
+      setVoteState(data.user_vote); // Update vote state correctly
+      setVoteCount(data.total_votes); // Update total votes correctly
+      onVote(postId, data.total_votes); // Update parent state
     } catch (error) {
       console.error('Error voting:', error.response ? error.response.data : error.message);
     }

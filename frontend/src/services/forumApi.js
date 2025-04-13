@@ -68,7 +68,7 @@ export const replyToComment = async (data) => {
     return response.data;
   };
 
-  export const fetchUserVote = async (postId, token) => {
+  export const fetchUserVotes = async (postId, token) => {
     try {
       const response = await API.get(`/forum/votes/${postId}/user-vote/`, {
         headers: { Authorization: `Bearer ${token}` },
