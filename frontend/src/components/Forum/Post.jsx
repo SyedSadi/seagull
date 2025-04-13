@@ -22,6 +22,8 @@ const Post = ({ post, onDelete }) => {
   const token = localStorage.getItem('access_token');
 
   const isAuthor = Number(post.author) === Number(userId);
+  const isAdmin = user?.is_superuser === true;
+
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
  
@@ -117,25 +119,28 @@ const Post = ({ post, onDelete }) => {
         commentCount={updatedPost.comments?.length || 0}
       />
 
-      {/* Edit & Delete Buttons (Only for Author) */}
-      {isAuthor && (
-        <div className="flex gap-4">
-          <button 
-            type="button"
-            onClick={openEditModal} 
-            className="text-blue-600 hover:underline font-medium"
-          >
-            Edit
-          </button>
-          <button 
-            type="button"
-            onClick={handleDelete} 
-            className="text-red-600 hover:underline font-medium"
-          >
-            Delete
-          </button>
-        </div>
-      )}
+      {/* Edit & Delete Buttons (for Author) and delete button for admin */}
+      <div className="flex gap-4">
+          {isAuthor && (
+            <button 
+              type="button"
+              onClick={openEditModal} 
+              className="text-blue-600 hover:underline font-medium"
+            >
+              Edit
+            </button>
+          )}
+          {(isAuthor || isAdmin) && (
+            <button 
+              type="button"
+              onClick={handleDelete} 
+              className="text-red-600 hover:underline font-medium"
+            >
+              Delete
+            </button>
+          )}
+       </div>
+
     </div>
 
     {/* Comments Section */}
