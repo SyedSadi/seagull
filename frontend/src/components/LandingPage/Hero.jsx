@@ -12,13 +12,13 @@ const Hero = () => {
 	};
 
 	return (
-		<section className="h-screen top-0">
+		<section className="">
 			{/* Background image with overlay */}
 			<div className="absolute inset-0">
 				<img
 					src={HeroImge}
 					alt="Learning background"
-					className="w-full h-full object-cover"
+					className="w-full object-cover"
 					loading="eager"
 				/>
 				<div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50" />
@@ -26,8 +26,8 @@ const Hero = () => {
 
 			{/* Content */}
 			<div className="relative z-10 flex flex-col items-center justify-center h-full px-4 text-center text-white">
-				<div className="max-w-4xl mx-auto">
-					<h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+				<div className="max-w-3xl mx-auto">
+					<h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in">
 						Professional and Lifelong Learning
 					</h1>
 					<p className="text-lg md:text-2xl mb-12 opacity-90">

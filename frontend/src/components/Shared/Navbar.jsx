@@ -26,15 +26,11 @@ const Navbar = () => {
 	}, [insLandingPage]);
 
 	const navOptions = (
-		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-sm">
+		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-m">
 			<li>
 				<NavLink
 					to={"/courses"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Courses
@@ -43,11 +39,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/quiz"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Quiz
@@ -56,11 +48,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/forum"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Forum
@@ -69,11 +57,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/aboutus"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					About Us
@@ -83,11 +67,7 @@ const Navbar = () => {
 				<li>
 					<NavLink
 						to={"/admin/dashboard"}
-						className={({ isActive }) =>
-							isActive
-								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-						}
+						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 						onClick={() => setIsMenuOpen(false)}
 					>
 						Dashboard
@@ -109,7 +89,7 @@ const Navbar = () => {
 			<div className="navbar-start w-full justify-center lg:w-1/4">
 				<NavLink
 					to={"/"}
-					className="text-white text-2xl font-bold cursor-pointer"
+					className="text-white text-3xl font-bold cursor-pointer"
 				>
 					KUETx
 				</NavLink>
@@ -139,11 +119,7 @@ const Navbar = () => {
 					<>
 						<NavLink
 							to={"/login"}
-							className={({ isActive }) =>
-								isActive
-									? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-									: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-							}
+							className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 						>
 							Log in
 						</NavLink>
@@ -182,11 +158,7 @@ const Navbar = () => {
 				<div className="p-4 space-y-4">
 					<NavLink
 						to={"/login"}
-						className={({ isActive }) =>
-							isActive
-								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-						}
+						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 						onClick={() => setIsMenuOpen(false)}
 					>
 						Log in
