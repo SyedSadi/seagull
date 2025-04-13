@@ -67,3 +67,29 @@ export const replyToComment = async (data) => {
     );
     return response.data;
   };
+
+  export const fetchUserVote = async (postId, token) => {
+    try {
+      const response = await API.get(`/forum/votes/${postId}/user-vote/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user vote:', error.response ? error.response.data : error.message);
+      throw error;
+    }
+  };
+  
+  export const postVote = async (postId, value, token) => {
+    try {
+      const response = await API.post(
+        `/forum/votes/`,
+        { post: postId, value },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error posting vote:', error.response ? error.response.data : error.message);
+      throw error;
+    }
+  };
