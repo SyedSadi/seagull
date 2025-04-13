@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Comment from './Comment';
-import API from '../../services/api';
+import { replyToComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 
 const CommentSection = ({ postId, comments =[], setComments }) => {
@@ -15,11 +15,11 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
     const newCommentText = e.target.comment.value;
     
     try {
-      const response = await API.post('/forum/comments/', {
+      const newComment = await replyToComment({
         post: postId,
         content: newCommentText,
       });
-      setComments(prev => [...prev, response.data]);
+      setComments(prev => [...prev, newComment]);
       e.target.reset();
     } catch (error) {
       console.error('❌ Error submitting comment:', error);
