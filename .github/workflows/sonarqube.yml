@@ -65,6 +65,9 @@ jobs:
           } > .env
         shell: bash
 
+      - name: Set Django settings
+        run: export DJANGO_SETTINGS_MODULE=server.backend.backend.settings
+
       - name: Run tests with coverage
         run: |
           pytest --cov=courses --cov=forum --cov=quiz --cov=users --cov-report=xml
