@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { formatDistanceToNow } from "date-fns";
 import VoteButtons from './VoteButtons';
 import CommentSection from './CommentSection';
-import API from '../../services/api';
+import {fetchComment, deletePost } from '../../services/forumApi';
 import EditPostModal from './EditPostModal';
 import PropTypes from 'prop-types';
 
@@ -31,7 +31,7 @@ const Post = ({ post, onDelete }) => {
     setComments([]);  // Clear previous comments before fetching new ones
     setLoadingComments(true);
     try {
-      const response = await API.get(`/forum/comments/?post=${post.id}`);
+      const response = await  fetchComment(post.id);
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -40,6 +40,7 @@ const Post = ({ post, onDelete }) => {
     }
   };
   
+
   const toggleComments = () => {
     if (!showComments) fetchComments();
     setShowComments(!showComments);
@@ -58,10 +59,8 @@ const Post = ({ post, onDelete }) => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
-        await API.delete(`/forum/posts/${post.id}/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        onDelete(post.id); // Removes post without full page refresh
+        await deletePost(post.id, token);
+        onDelete(post.id);
       } catch (error) {
         console.error('Error deleting post:', error.response ? error.response.data : error.message);
       }

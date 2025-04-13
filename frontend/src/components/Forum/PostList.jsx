@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FaSearch, FaTimes } from 'react-icons/fa';
-import API from '../../services/api';
+import { fetchPost } from '../../services/forumApi';
 import Post from './Post';
 import CreatePostModal from './CreatePostModal';
 import { debounce } from 'lodash'; // Import debounce function
@@ -21,9 +21,7 @@ const PostList = () => {
   // Optimized fetchPosts function using useCallback
   const fetchPosts = useCallback(async () => {
     try {
-      let url = `/forum/posts/?filter=${filter}`;
-      if (searchTag.trim() !== '') url += `&tag=${searchTag.trim()}`;
-      const response = await API.get(url);
+      const response = await fetchPost(filter, searchTag);
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
