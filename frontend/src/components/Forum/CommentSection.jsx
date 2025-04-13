@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setNestedComments(comments.filter(comment => comment.post === postId));
@@ -13,6 +14,8 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newCommentText = e.target.comment.value;
+    setIsSubmitting(true); // Start loading state
+
     
     try {
       const newComment = await replyToComment({
@@ -24,6 +27,9 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
     } catch (error) {
       console.error('❌ Error submitting comment:', error);
     }
+     finally{
+      setIsSubmitting(false); // Stop loading state
+     }
   };
 
   return (
@@ -35,11 +41,12 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
           placeholder="Write a comment..." 
           rows="3" 
         />
-        <button 
+          <button 
           type="submit" 
-          className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className={`mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isSubmitting} // Disable button while submitting
         >
-          Post Comment
+          {isSubmitting ? 'Posting...' : 'Post Comment'}
         </button>
       </form>
 
