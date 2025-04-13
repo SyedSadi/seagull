@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import API from '../../services/api';
+import { fetchTag, createPost } from '../../services/forumApi'; // Import service API functions
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../context/AuthContext'; // Import AuthContext
 
@@ -14,8 +14,8 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await API.get('/forum/tags/');
-        setAllTags(response.data);
+        const tags = await fetchTag();
+        setAllTags(tags);
       } catch (error) {
         console.error('Error fetching tags:', error);
       }
@@ -57,7 +57,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       };
 
       console.log('Payload:', payload); // Log the payload for debugging
-      const response = await API.post('/forum/posts/', payload);
+      const response = await createPost(payload);
       console.log('Post created:', response.data);
       refreshPosts(); // Refresh the list after posting
       onClose(); // Close the modal

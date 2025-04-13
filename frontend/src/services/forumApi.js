@@ -33,3 +33,23 @@ export const replyToComment = async (data) => {
   export const deleteComment = async (id) => {
     await API.delete(`/forum/comments/${id}/`);
   };
+
+  export const fetchTag = async () => {
+    try {
+      const response = await API.get('/forum/tags/');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tags:', error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+  };
+  
+  export const createPost = async (payload) => {
+    try {
+      const response = await API.post('/forum/posts/', payload);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating post:', error.response?.data);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+  };
