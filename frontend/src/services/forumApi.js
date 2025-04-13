@@ -53,3 +53,17 @@ export const replyToComment = async (data) => {
       throw error; // Rethrow the error to be handled by the caller
     }
   };
+
+  export const getTags = async () => {
+    const response = await API.get('/forum/tags/');
+    return response.data;
+  };
+  
+  export const updatePost = async (postId, data, token) => {
+    const response = await API.put(
+      `/forum/posts/${postId}/`,
+      data,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+  };
