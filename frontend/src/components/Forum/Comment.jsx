@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import API from '../../services/api';
+import { replyToComment, updateComment, deleteComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 
 
@@ -13,19 +13,18 @@ const Comment = ({ comment={}, postId, setComments }) => {
   const user = userData ? JSON.parse(userData) : null;
   const userId = user ? user.id : null;
   const isOwner = comment.author === Number(userId);
+  const token = localStorage.getItem('access_token');
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
 
     try {
-        const response = await API.post('/forum/comments/', {
-            post: postId,
-            content: replyContent,
-            parent_id: comment.id // ✅ Ensure correct parent_id is sent
+        const newReply = await replyToComment({
+          post: postId,
+          content: replyContent,
+          parent_id: comment.id,
+          headers: { Authorization: `Bearer ${token}` } // ✅ Include token in request headers
         });
-
-        const newReply = response.data;
-
         // ✅ Ensure deeper replies update in real-time
         setComments(prevComments => insertReply(prevComments, comment.id, newReply));
 
@@ -48,13 +47,10 @@ const insertReply = (comments, parentId, newReply) => {
 
 const handleEdit = async () => {
   try {
-      const token = localStorage.getItem('access_token');
-      await API.put(
-          `/forum/comments/${comment.id}/`,
-          { content: editedContent },
-          { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      
+        await updateComment(comment.id, { content: editedContent }, {
+          headers: { Authorization: `Bearer ${token}` } // ✅ Include token in request headers
+        });
       // ✅ Update comment state deeply (works for children too)
       setComments(prevComments => updateCommentInTree(prevComments, comment.id, editedContent));
 
@@ -75,10 +71,11 @@ const updateCommentInTree = (comments, commentId, newContent) => {
 
 const handleDelete = async () => {
   try {
-      const token = localStorage.getItem('access_token');
-      await API.delete(`/forum/comments/${comment.id}/`, {
-          headers: { Authorization: `Bearer ${token}` }
-      });
+      
+    await deleteComment(comment.id, {
+      headers: { Authorization: `Bearer ${token}` } // ✅ Include token in request headers
+    });
+
 
       // ✅ Remove comment from nested state immediately
       setComments(prevComments => removeCommentFromTree(prevComments, comment.id));

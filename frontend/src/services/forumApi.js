@@ -18,3 +18,18 @@ export const deletePost = (postId, token) => {
 export const fetchComment = (postId) => {
   return API.get(`/forum/comments/?post=${postId}`);
 };
+
+
+export const replyToComment = async (data) => {
+    const res = await API.post('/forum/comments/', data);
+    return res.data;
+  };
+  
+  export const updateComment = async (id, data) => {
+    const res = await API.put(`/forum/comments/${id}/`, data);
+    return res.data;
+  };
+  
+  export const deleteComment = async (id) => {
+    await API.delete(`/forum/comments/${id}/`);
+  };
