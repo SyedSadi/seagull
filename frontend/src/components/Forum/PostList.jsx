@@ -70,82 +70,70 @@ const PostList = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      {/* Search & Actions Row */}
-      <div className="flex flex-col sm:flex-row sm:justify-between items-center mb-6 space-y-4 sm:space-y-0">
-        
-        {/* Search Bar */}
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      {/* Search & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        {/* Search */}
         <div className="relative w-full sm:w-2/3">
           <input
             type="text"
-            placeholder="Search posts by tag..."
+            placeholder="Search by tag..."
             value={searchTag}
             onChange={(e) => setSearchTag(e.target.value)}
-            className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full pl-10 pr-10 py-2.5 bg-white text-sm rounded-2xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
           {searchTag && (
-            <button 
-              onClick={() => setSearchTag('')} 
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            <button
+              onClick={() => setSearchTag('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
               <FaTimes />
             </button>
           )}
         </div>
 
-        {/* Icons: Filter & Create */}
-        <div className="flex items-center gap-4">
-          {/* Filter Button */}
+        {/* Filter + Create */}
+        <div className="flex items-center gap-3">
+          {/* Filter */}
           <div className="relative" ref={filterRef}>
             <button
-              className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
               onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              className="flex items-center gap-2 px-3 py-2 text-sm rounded-2xl border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
             >
-              <FiFilter className="text-gray-600" />
-              <span className="text-gray-600">Filter</span>
+              <FiFilter className="text-gray-500" />
+              <span>Filter</span>
             </button>
-            
-            {/* Dropdown */}
             {showFilterDropdown && (
-  <div className="absolute mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-    <ul className="py-2">
-      <li>
-        <button
-          className={`w-full text-left px-4 py-2 ${filter === 'recent' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-          onClick={() => handleFilterChange('recent')}
-        >
-          Recent Posts
-        </button>
-      </li>
-      <li>
-        <button
-          className={`w-full text-left px-4 py-2 ${filter === 'highest_voted' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-          onClick={() => handleFilterChange('highest_voted')}
-        >
-          Top Voted
-        </button>
-      </li>
-      <li>
-        <button
-          className={`w-full text-left px-4 py-2 ${filter === 'user_posts' ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
-          onClick={() => handleFilterChange('user_posts')}
-        >
-          My Posts
-        </button>
-      </li>
-    </ul>
-  </div>
-)}
-
+              <div className="absolute z-10 mt-2 right-0 w-44 bg-white rounded-xl border border-gray-200 shadow-lg">
+                <ul className="py-2 text-sm text-gray-700">
+                  {[
+                    { label: 'Recent Posts', value: 'recent' },
+                    { label: 'Top Voted', value: 'highest_voted' },
+                    { label: 'My Posts', value: 'user_posts' }
+                  ].map(option => (
+                    <li key={option.value}>
+                      <button
+                        onClick={() => handleFilterChange(option.value)}
+                        className={`w-full text-left px-4 py-2 rounded-lg ${
+                          filter === option.value ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
-          {/* Create Post Button */}
+          {/* Create Post */}
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md transition"
           >
-            <AiOutlineEdit className="mr-2" />
+            <AiOutlineEdit className="text-lg" />
             Create
           </button>
         </div>
@@ -153,13 +141,21 @@ const PostList = () => {
 
       {/* Post List */}
       {posts.length === 0 ? (
-        <p className="text-gray-500 text-center mt-6">No posts found.</p>
+        <div className="text-center text-gray-500 text-sm mt-10">No posts found.</div>
       ) : (
-        posts.map((post) => <Post key={post.id}  post={{ ...post, comments: post.comments || [] }} onDelete={handlePostDelete} />)
+        posts.map((post) => (
+          <Post
+            key={post.id}
+            post={{ ...post, comments: post.comments || [] }}
+            onDelete={handlePostDelete}
+          />
+        ))
       )}
 
-      {/* Create Post Modal */}
-      {showCreateModal && <CreatePostModal onClose={() => setShowCreateModal(false)} refreshPosts={fetchPosts} />}
+      {/* Modal */}
+      {showCreateModal && (
+        <CreatePostModal onClose={() => setShowCreateModal(false)} refreshPosts={fetchPosts} />
+      )}
     </div>
   );
 };
