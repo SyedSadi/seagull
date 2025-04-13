@@ -67,72 +67,83 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-60 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">Create New Post</h2>
-        <form onSubmit={handleSubmit} className="bg-gray-50 p-4 rounded-lg">
-          <input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
-          />
-          <textarea
-            placeholder="Content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            rows="5"
-            required
-          />
-          {/* Tag Selection */}
-          <div className="mb-4">
-            <label htmlFor="tag-select" className="block font-medium mb-2">
-              Select Tags (1–3):
-            </label>
-            <select
-              id="tag-select"
-              onChange={handleTagSelect}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Choose a tag...
-              </option>
-              {allTags.map((tag) => (
-                <option key={tag.id} value={tag.id}>
-                  {tag.name}
+    
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
+          <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Create a New Post</h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <input
+              type="text"
+              placeholder="Enter your post title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+              required
+            />
+            <textarea
+              placeholder="Write your content here..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+              rows="6"
+              required
+            />
+            {/* Tag Selection */}
+            <div>
+              <label htmlFor="tag-select" className="block font-medium text-gray-700 mb-2">
+                Select Tags (1–3):
+              </label>
+              <select
+                id="tag-select"
+                onChange={handleTagSelect}
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Choose a tag...
                 </option>
-              ))}
-            </select>
-            {/* Display Selected Tags */}
-            <div className="mt-2 flex flex-wrap">
-              {selectedTags.map((tag) => (
-                <span key={tag.id} className="bg-blue-200 text-blue-800 px-2 py-1 m-1 rounded-full flex items-center">
-                  {tag.name}
-                  <button
-                    type="button"
-                    onClick={() => handleTagRemove(tag.id)}
-                    className="ml-1 text-red-600 font-bold"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
+                {allTags.map((tag) => (
+                  <option key={tag.id} value={tag.id}>
+                    {tag.name}
+                  </option>
+                ))}
+              </select>
+              {/* Display Selected Tags */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedTags.map((tag) => (
+                  <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                    {tag.name}
+                    <button
+                      type="button"
+                      onClick={() => handleTagRemove(tag.id)}
+                      className="ml-2 text-red-500 hover:text-red-700"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-          <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">
-            Post
-          </button>
-        </form>
-        <button onClick={onClose} className="mt-4 w-full text-center text-gray-600 hover:underline">
-          Cancel
-        </button>
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
+            >
+              Post
+            </button>
+            <button
+              onClick={onClose}
+              type="button"
+              className="w-full text-center text-gray-500 hover:underline pt-2"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+    
+    
+  
 };
 
 CreatePostModal.propTypes = {
