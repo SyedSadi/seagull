@@ -20,6 +20,7 @@ const CourseDetails = () => {
 
         setCourse(courseData);
         const enrolledCourses = enrolledData.data || [];
+        console.log(courseData);
         setIsEnrolled(enrolledCourses.some((c) => c.id === parseInt(id)));
       } catch (error) {
         console.error("Error loading course or enrollment info:", error);
@@ -53,43 +54,64 @@ const CourseDetails = () => {
   const renderActionButton = () => {
     if (isEnrolled) {
       return (
-        <Link to={`/courseContents/${course.id}`} className="mt-8 btn btn-primary flex items-center gap-2">
-          Go to Course <FaArrowRight />
+        <Link
+          to={`/courseContents/${course.id}`}
+          className="mt-6 inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-md"
+        >
+          Go to Course <FaArrowRight className="ml-2" />
         </Link>
       );
     }
     return (
       <button
-        onClick={handleEnroll}
-        className="mt-8 btn btn-accent flex items-center gap-2"
-        disabled={loading}
-      >
-        {loading ? <FaSpinner className="animate-spin" /> : "Enroll Now"}
-      </button>
+      onClick={handleEnroll}
+      disabled={loading}
+      className="mt-6 inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-md disabled:opacity-50"
+    >
+      {loading ? <FaSpinner className="animate-spin mr-2" /> : "Enroll Now"}
+    </button>
     );
   };
 
   return (
-    <div className="py-8">
-      <section className="flex flex-col md:flex-row justify-between items-center gap-8">
-        <div className="max-w-xl">
-          <h1 className="text-5xl mb-6">{course.title}</h1>
-          <p className="text-lg text-gray-600 mb-2">{course.description}</p>
-          <p className="text-lg mb-2">Subject: {course.subject}</p>
-          <p className="text-lg mb-2">Instructor: {course.created_by}</p>
-          <p className="text-lg mb-2">Difficulty: {course.difficulty.toUpperCase()}</p>
-          <p className="text-lg mb-2">Duration: {course.duration} hours</p>
-          <p className="text-lg mb-2">Ratings: {course.ratings}/5</p>
+    <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10">
+        <img
+          src={course.image}
+          alt={course.title}
+          className="w-full h-64 object-cover rounded-xl mb-6"
+        />
+
+        <div>
+          <h1 className="text-4xl font-semibold text-gray-900 mb-6">
+            {course.title}
+          </h1>
+          <p className="text-lg text-gray-600 mb-4">
+            {course.description}
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
+            <p>
+              <span className="font-medium text-gray-900">Subject:</span> {course.subject}
+            </p>
+            <p>
+              <span className="font-medium text-gray-900">Instructor:</span> {course.created_by}
+            </p>
+            <p>
+              <span className="font-medium text-gray-900">Difficulty:</span> {course.difficulty.toUpperCase()}
+            </p>
+            <p>
+              <span className="font-medium text-gray-900">Duration:</span> {course.duration} hours
+            </p>
+            <p>
+              <span className="font-medium text-gray-900">Ratings:</span> {course.ratings}/5
+            </p>
+          </div>
+
           {renderActionButton()}
         </div>
-        <div>
-          <img
-            src={course.image}
-            alt="Course Preview"
-            className="rounded-lg shadow-lg w-full max-w-md"
-          />
-        </div>
-      </section>
+      </div>
+
       <ToastContainer />
     </div>
   );
