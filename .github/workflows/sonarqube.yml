@@ -72,14 +72,14 @@ jobs:
 
       - name: Remove existing coverage.xml
         run: |
-          rm -f server/backend/coverage.xml
+          rm -f coverage.xml
 
       - name: Run tests with coverage
         run: |
           pytest server/backend
 
       - name: Show first lines of coverage.xml
-        run: head server/backend/coverage.xml
+        run: head coverage.xml
 
 
       - name: SonarCloud Scan
