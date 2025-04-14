@@ -20,37 +20,33 @@ const CourseList = () => {
 	}, []);
 
 	return (
-		<div>
+		<div className="px-4 py-8 max-w-7xl mx-auto">
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 				{courses.map((course) => (
 					<div
 						key={course.id}
-						className="card bg-white shadow-xl rounded-lg h-full flex flex-col transition-all transform hover:shadow-2xl"
+						className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col overflow-hidden"
 					>
-						<figure className="m-0 flex-grow">
-							<img
-								className="w-full h-48 object-cover"
-								src={course.image}
-								alt="Course"
-							/>
-						</figure>
-						<div className="p-6 flex flex-col flex-grow">
-							<h3 className="text-sm text-gray-500 mb-2">#{course.subject}</h3>
-							<Link
-								to={`/courses/${course.id}`}
-								className="text-2xl font-semibold text-gray-800 hover:underline"
-							>
-								{course.title}
-							</Link>
-							<p className="text-gray-600 text-sm mt-2">{course.description}</p>
-							<p className="text-sm text-gray-500 mt-4">{course.difficulty}</p>
-							<div className="mt-auto">
+						<img
+							className="w-full h-40 object-cover rounded-t-2xl"
+							src={course.image}
+							alt={course.title}
+						/>
+						<div className="p-4 flex flex-col flex-grow">
+							<h2 className="text-lg font-semibold text-gray-800">{course.title}</h2>
+							<p className="text-sm text-gray-600 mt-1 line-clamp-3">{course.description}</p>
+
+							<span className="mt-3 inline-block bg-blue-100 text-blue-600 text-xs font-medium px-3 py-1 rounded-full self-start">
+								{course.subject}
+							</span>
+
+							<div className="mt-4 flex justify-end">
 								<Link
 									to={`/courses/${course.id}`}
-									className="btn btn-primary w-1/2 ml-auto flex items-center justify-center gap-2"
+									className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
 								>
 									<FaBookOpen className="text-white" />
-									Details
+									View Course
 								</Link>
 							</div>
 						</div>
