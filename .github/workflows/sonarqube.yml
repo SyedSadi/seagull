@@ -68,10 +68,14 @@ jobs:
       - name: Set Django settings
         run: export DJANGO_SETTINGS_MODULE=server.backend.backend.settings
 
+      - name: Remove existing coverage.xml
+        run: |
+          rm -f server/backend/coverage.xml
+
       - name: Run tests with coverage
         run: |
           cd server/backend/
-          pytest --cov=server.backend.courses --cov=server.backend.forum --cov=server.backend.quiz --cov=server.backend.users --cov-report=xml
+          pytest --cov=courses --cov=users --cov=quiz --cov=forum --cov-report=xml
 
       - name: Show first lines of coverage.xml
         run: head server/backend/coverage.xml
