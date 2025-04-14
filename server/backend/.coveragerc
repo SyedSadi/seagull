@@ -1,4 +1,6 @@
 [run]
+branch = True
+source = server.backend.courses, server.backend.forum, server.backend.quiz, server.backend.users
 relative_files = True
 
 [report]

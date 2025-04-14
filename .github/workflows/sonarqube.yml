@@ -76,8 +76,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          cd server/backend/
-          pytest --cov=courses --cov=forum --cov=quiz --cov=users --cov-report=xml
+          pytest server/backend
 
       - name: Show first lines of coverage.xml
         run: head server/backend/coverage.xml
@@ -89,6 +88,6 @@ jobs:
           projectBaseDir: .
           args: >
             -Dsonar.sources=server/backend
-            -Dsonar.python.coverage.reportPaths=server/backend/coverage.xml
+            -Dsonar.python.coverage.reportPaths=coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

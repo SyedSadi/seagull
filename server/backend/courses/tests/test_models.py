@@ -2,6 +2,7 @@ import pytest
 from courses.models import Course, CourseContents, Enrollment, Rating
 from users.models import User, Instructor, Student
 from decouple import config
+from courses.models import Course
 
 @pytest.mark.django_db
 class TestCourseModel:

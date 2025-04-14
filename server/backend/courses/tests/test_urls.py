@@ -14,6 +14,7 @@ from courses.views import (
     RateCourseView,
     AddContentAPIView,
 )
+from courses.models import Course
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
