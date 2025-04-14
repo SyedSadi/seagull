@@ -79,7 +79,7 @@ jobs:
           pytest server/backend
 
       - name: Show first lines of coverage.xml
-        run: head coverage.xml
+        run: head coverage.xml || true
 
 
       - name: SonarCloud Scan

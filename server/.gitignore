@@ -31,3 +31,8 @@ Thumbs.db
 
 # Pipenv
 Pipfile.lock
+
+# Ignore coverage reports
+coverage.xml
+htmlcov/
+.coverage
