@@ -39,6 +39,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -75,7 +77,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd server/backend/
-          pytest --cov=courses --cov=users --cov=quiz --cov=forum --cov-report=xml
+          pytest --cov=courses --cov=forum --cov=quiz --cov=users --cov-report=xml
 
       - name: Show first lines of coverage.xml
         run: head server/backend/coverage.xml
@@ -85,5 +87,8 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           projectBaseDir: .
+          args: >
+            -Dsonar.sources=server/backend
+            -Dsonar.python.coverage.reportPaths=server/backend/coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
