@@ -22,3 +22,14 @@ class DashboardStatsService:
         }
 
         return stats
+    
+class LandingPageStatsService:
+    @staticmethod
+    def get_landingpage_stats():
+        stats={
+            "total_students":User.objects.filter(role='student').count(),
+            "total_instructors":User.objects.filter(role='instructor').count(),
+            "total_courses":Course.objects.count(),
+            "total_quizzes":Category.objects.count(),
+        }
+        return stats
