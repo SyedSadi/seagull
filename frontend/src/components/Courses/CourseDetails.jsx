@@ -75,43 +75,59 @@ const CourseDetails = () => {
 
   return (
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
-    <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10">
-      {/* Grid for Image on right and Content on left */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Content Area */}
-        <div>
-          <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
-          <p className="text-lg text-gray-600 mb-6">{course.description}</p>
+  <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {/* Left Content Area */}
+      <div>
+        <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
+        <p className="text-lg text-gray-600 mb-6">{course.description}</p>
 
-          <div className="space-y-4 text-sm text-gray-700">
-            <p><span className="font-medium text-gray-900">Subject:</span> {course.subject}</p>
-            <div className="mt-4">
-              <p className="text-base font-semibold text-gray-800">{course.created_by?.name}</p>
-              <p className="text-sm text-gray-600 font-light">{course.created_by?.designation}</p>
-              <p className="text-sm text-gray-500">{course.created_by?.university}</p>
-            </div>
-            <p><span className="font-medium text-gray-900">Difficulty:</span> {course.difficulty.toUpperCase()}</p>
-            <p><span className="font-medium text-gray-900">Duration:</span> {course.duration} hours</p>
-            <p><span className="font-medium text-gray-900">Ratings:</span> {course.ratings}/5</p>
+        <div className="space-y-3 text-gray-700 text-sm">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-gray-900 font-medium">Subject:</span>
+            <span className="bg-sky-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">{course.subject}</span>
           </div>
 
-          {/* Action Button */}
-          {renderActionButton()}
+          <p>
+            <span className="text-gray-900 font-medium">Difficulty:</span> {course.difficulty.toUpperCase()}
+          </p>
+
+          <p>
+            <span className="text-gray-900 font-medium">Duration:</span> {course.duration} hours
+          </p>
+
+          <p>
+            <span className="text-gray-900 font-medium">Ratings:</span> {course.ratings}/5
+          </p>
+
+          {/* Instructor Info */}
+          <div className="pt-4 border-t mt-4">
+            <p><span className="text-gray-900 font-medium">Instructor Name:</span> {course.created_by?.name}</p>
+            <p><span className="text-gray-900 font-medium">Designation:</span> {course.created_by?.designation}</p>
+            <p><span className="text-gray-900 font-medium">University:</span> {course.created_by?.university}</p>
+          </div>
         </div>
 
-        {/* Right Image Area */}
-        <div className="flex justify-center items-start">
-          <img
-            src={course.image}
-            alt={course.title}
-            className="w-full h-auto max-w-md object-contain rounded-xl shadow-lg"
-          />
+        {/* Action Button */}
+        <div className="mt-6">
+          {renderActionButton()}
         </div>
       </div>
 
-      <ToastContainer />
+      {/* Right Image Area */}
+      <div className="flex justify-center items-start">
+        <img
+          src={course.image}
+          alt={course.title}
+          className="w-full h-auto max-w-md object-contain rounded-xl shadow-lg"
+        />
+      </div>
     </div>
+
+    <ToastContainer />
   </div>
+</div>
+
   );
 };
 
