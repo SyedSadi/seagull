@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer
-from .services import DashboardStatsService
+from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer, LandingPageStatsSerializer
+from .services import DashboardStatsService, LandingPageStatsService
 
 
 # -------------------- AUTHENTICATION ---------------------------------
@@ -97,6 +97,31 @@ class DashboardStatsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+# -------------------- LANDING PAGE STATS ---------------------------------
+class LandingPageStatsView(APIView):
+    permission_classes=[AllowAny]
+
+    def get(self, _request, *_args, **_kwargs):
+        try:
+            stats_data=LandingPageStatsService.get_landingpage_stats()
+            serializer=LandingPageStatsSerializer(stats_data)
+            return Response(
+                {
+                    "success":True,
+                    "message": "Landing page stats fetched successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Failed to fetch landing page stats",
+                    "error":str(e)
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
