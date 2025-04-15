@@ -3,6 +3,7 @@ import FeaturedCourses from "../components/LandingPage/FeaturedCourses";
 import WhyChooseUs from "../components/LandingPage/WhyChooseUs";
 import ForWhome from "../components/LandingPage/ForWhom";
 import Statistics from "../components/LandingPage/Statistics";
+import ForumPreview from "../components/LandingPage/ForumPreview";
 
 const Home = () => {
 	return (
@@ -12,6 +13,7 @@ const Home = () => {
 			<WhyChooseUs />
 			<ForWhome />
 			<Statistics />
+			<ForumPreview />
 		</div>
 	);
 };

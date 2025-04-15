@@ -8,16 +8,6 @@ import {
 const TargetAudience = () => {
 	const audiences = [
 		{
-			icon: faChalkboardTeacher,
-			title: "For Instructors",
-			benefits: [
-				"Create and manage course content",
-				"Track student progress",
-				"Engage with learners directly",
-				"Earn from your expertise",
-			],
-		},
-		{
 			icon: faUserGraduate,
 			title: "For Students",
 			benefits: [
@@ -25,6 +15,16 @@ const TargetAudience = () => {
 				"Learn at your own pace",
 				"Interactive learning experience",
 				"Track your progress",
+			],
+		},
+		{
+			icon: faChalkboardTeacher,
+			title: "For Instructors",
+			benefits: [
+				"Create and manage course content",
+				"Track student progress",
+				"Engage with learners directly",
+				"Earn from your expertise",
 			],
 		},
 		{
@@ -40,11 +40,11 @@ const TargetAudience = () => {
 	];
 
 	return (
-		<section className="py-20 bg-gradient-to-b from-white to-gray-50">
+		<section className="py-10 bg-gradient-to-b from-white to-gray-50">
 			<div className="container mx-auto px-4">
-				<div className="text-center mb-16">
+				<div className="text-center mb-6">
 					<h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-						For Whom It&apos;s <span className="text-blue-600">Built</span>
+						For <span className="text-blue-600">Whom</span> It&apos;s Built?
 					</h2>
 					<p className="text-gray-600 text-lg max-w-2xl mx-auto">
 						Tailored solutions for everyone in the education ecosystem

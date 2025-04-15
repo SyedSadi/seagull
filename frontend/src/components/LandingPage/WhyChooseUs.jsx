@@ -45,10 +45,10 @@ const WhyChooseUs = () => {
 	};
 
 	return (
-		<section className="py-20 bg-gray-50">
+		<section className="py-10 bg-gray-50">
 			<div className="container mx-auto px-4">
 				{/* Section Header */}
-				<div className="text-center max-w-2xl mx-auto mb-8">
+				<div className="text-center max-w-2xl mx-auto mb-6">
 					<h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
 						Why <span className="text-blue-600">Choose</span> KUETx?
 					</h2>

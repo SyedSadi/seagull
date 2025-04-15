@@ -3,6 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faBars } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
+import logo from "../../assets/logo.png";
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -99,13 +100,13 @@ const Navbar = () => {
 				</div>
 			</div>
 			{/*Desktop left section- Logo */}
-			<div className="navbar-start w-full justify-center lg:w-1/4">
-				<NavLink
-					to={"/"}
-					className="text-white text-3xl font-bold cursor-pointer"
-					onClick={() => setIsMenuOpen(false)}
-				>
-					KUETx
+			<div className="w-full justify-center lg:w-1/4">
+				<NavLink to={"/"} onClick={() => setIsMenuOpen(false)}>
+					<img
+						src={logo}
+						className="col-span-2 h-10 w-full object-contain transform hover:scale-110 transition-all duration-300 cursor-pointer lg:col-span-1"
+						alt="Learning background"
+					/>
 				</NavLink>
 			</div>
 

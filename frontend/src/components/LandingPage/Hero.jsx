@@ -27,7 +27,8 @@ const Hero = () => {
 			<div className="relative z-10 w-full h-full flex items-center justify-center">
 				<div className="max-w-3xl mx-auto px-4 text-center text-white">
 					<h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-						Unlock Your Learning Potential{" "}
+						Unlock Your <span className="text-blue-500">Learning</span>{" "}
+						Potential{" "}
 					</h1>
 					<p className="text-lg md:text-xl mb-6 text-gray-200">
 						Join our community of learners and discover world-class courses
