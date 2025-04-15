@@ -10,8 +10,8 @@ __pycache__/
 backend/db.sqlite3
 
 # Ignore Django migrations
-**/migrations/*
-!**/migrations/__init__.py
+# **/migrations/*
+# !**/migrations/__init__.py
 
 # Environment Variables
 .env
@@ -31,3 +31,8 @@ Thumbs.db
 
 # Pipenv
 Pipfile.lock
+
+# Ignore coverage reports
+coverage.xml
+htmlcov/
+.coverage
