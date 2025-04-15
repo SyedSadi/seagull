@@ -70,7 +70,7 @@ const Profile = () => {
 								</p>
 							)}
 						</div>
-						<Link to={`/courseContents/${course.id}`} className="btn btn-primary">
+						<Link to={`/CourseContents/${course.id}`} className="btn btn-primary">
 							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
 							<FaArrowRight />
 						</Link>
