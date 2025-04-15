@@ -9,30 +9,26 @@ import PropTypes from "prop-types";  // Import PropTypes
 const VideoContent = ({ url }) => {
 	const youtubeId = getYouTubeId(url);
 	return youtubeId ? (
-		<div className="rounded-xl overflow-hidden mb-4">
+		<div className="w-full mb-6">
 			<iframe
-				className="w-full h-64"
+				className="w-full h-[500px] rounded-lg"
 				src={`https://www.youtube.com/embed/${youtubeId}`}
 				title="Course Video"
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowFullScreen
 			/>
-			<a
-				className="mt-2 inline-block text-sm text-blue-600 hover:underline"
-				href={url}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				Watch on YouTube
-			</a>
 		</div>
 	) : null;
 };
 
 const PDFContent = ({ pdfUrl }) => (
-	<div className="my-4">
-		<iframe className="w-full h-[500px] rounded-xl" src={pdfUrl} title="PDF Viewer" />
-		<div className="mt-2 flex gap-3">
+	<div className="w-full">
+		<iframe
+			className="w-full h-[600px] rounded-xl shadow"
+			src={pdfUrl}
+			title="PDF Viewer"
+		/>
+		<div className="mt-2 flex gap-3 justify-end">
 			<a
 				href={pdfUrl}
 				download
@@ -77,28 +73,28 @@ const CourseContent = () => {
 	const dummyPdfUrl = "https://arxiv.org/pdf/1708.08021.pdf"; // Maybe dynamic later
 
 	return (
-		<div className="bg-gray-50 min-h-screen px-4 py-10 max-w-5xl mx-auto space-y-10">
-			{/* Course Header */}
-			<div className="bg-white p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center">
-				<div>
-					<h1 className="text-2xl font-semibold text-gray-800">{course.title}</h1>
-					<p className="text-gray-500 mt-1 text-sm">Subject: {course.subject}</p>
-				</div>
-				<div className="mt-4 md:mt-0">
+		<div className="bg-white min-h-screen px-4 py-10 max-w-5xl mx-auto space-y-10">
+			{/* Header */}
+			<div className="space-y-3">
+				<h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
+				<span className="mt-3 inline-block bg-blue-50 text-blue-600 text-sm font-medium px-3 py-1 rounded-full self-start">
+								{course.subject}
+				</span>
+				
+				 <p className="text-gray-600 text-sm leading-relaxed">{course.description}</p>
+				<div className="mt-1">
 					<RateCourse courseId={id} />
 				</div>
 			</div>
 
-			{/* Course Contents */}
-			<div className="space-y-8">
+			{/* Content List */}
+			<div className="space-y-14">
 				{contents.map((content) => (
-					<div key={content.id} className="bg-white p-6 rounded-xl shadow-sm border">
-						<h2 className="text-lg font-medium text-gray-800 mb-2">{content.title}</h2>
-						<p className="text-sm text-gray-500 mb-1">Type: {content.content_type}</p>
+					<div key={content.id} className="w-full space-y-5">
+						<h2 className="text-xl font-semibold text-gray-800">{content.title}</h2>
+
 						{content.text_content && (
-							<p className="text-gray-700 text-sm mb-4 leading-relaxed">
-								{content.text_content}
-							</p>
+							<p className="text-gray-700 text-sm leading-relaxed">{content.text_content}</p>
 						)}
 
 						{content.content_type === "video" && content.url && (
