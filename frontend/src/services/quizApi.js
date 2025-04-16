@@ -96,3 +96,5 @@ export const updateQuiz = async (categoryId, quizData) => {
 		throw error;
 	}
 };
+
+// ----------------------- UPDATE Quiz Category -----------------------------------

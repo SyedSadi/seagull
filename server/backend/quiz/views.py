@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from typing import ClassVar
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
-from .serializers import CategorySerializer, QuestionSerializer
+from .serializers import CategorySerializer, QuestionSerializer, QuizAttemptSerializer
 from rest_framework.request import Request
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -172,3 +172,16 @@ class SubmitQuizAPIView(APIView):
             'unanswered': unanswered,
             'questions': questions_data
         }, status=status.HTTP_200_OK)
+    
+class QuizAttemptsView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request):
+        #Get all attempts for current user
+        attempts=QuizAttempt.objects.filter(
+            user=request.user,
+            completed=True
+        ).order_by('-completed_at') #sorted by most recent
+
+        serializer=QuizAttemptSerializer(attempts, many=True)
+        return Response(serializer.data)
