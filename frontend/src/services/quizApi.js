@@ -97,4 +97,23 @@ export const updateQuiz = async (categoryId, quizData) => {
 	}
 };
 
-// ----------------------- UPDATE Quiz Category -----------------------------------
+// ----------------------- GET Quiz Attempts -----------------------------------
+export const getAllQuizAttempts = async () => {
+	try {
+		const token = localStorage.getItem("access_token");
+		if (!token) {
+			throw new Error("Authentication token is missing");
+		}
+
+		const response = await API.get("/quiz/attempts/", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+		return response;
+	} catch (error) {
+		console.error("Error fetching quiz attempts:", error);
+		throw error;
+	}
+};

@@ -1,10 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { getEnrolledCourses, getInstructorCourses } from "../services/coursesApi";
+import {
+	getEnrolledCourses,
+	getInstructorCourses,
+} from "../services/coursesApi";
 import { Link } from "react-router-dom";
-import { FaArrowRight, FaUserGraduate, FaChalkboardTeacher } from "react-icons/fa";
+import {
+	FaArrowRight,
+	FaUserGraduate,
+	FaChalkboardTeacher,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import QuizAttempt from "../../src/components/Quiz/QuizAttempt";
 
 const Profile = () => {
 	const { user } = useContext(AuthContext);
@@ -16,9 +24,10 @@ const Profile = () => {
 
 		const fetchCourses = async () => {
 			try {
-				const response = user.role === "student"
-					? await getEnrolledCourses()
-					: await getInstructorCourses();
+				const response =
+					user.role === "student"
+						? await getEnrolledCourses()
+						: await getInstructorCourses();
 				setCourses(response.data || []);
 			} catch (error) {
 				console.error(error);
@@ -70,7 +79,10 @@ const Profile = () => {
 								</p>
 							)}
 						</div>
-						<Link to={`/courseContents/${course.id}`} className="btn btn-primary">
+						<Link
+							to={`/courseContents/${course.id}`}
+							className="btn btn-primary"
+						>
 							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
 							<FaArrowRight />
 						</Link>
@@ -109,6 +121,15 @@ const Profile = () => {
 				</h2>
 				{renderCourses()}
 			</div>
+			{/* Quiz Results Section - Only show for students */}
+			{user.role === "student" && (
+				<div className="mt-8">
+					<h2 className="text-xl font-semibold mb-3 text-center">
+						Quiz History
+					</h2>
+					<QuizAttempt />
+				</div>
+			)}
 		</div>
 	);
 };
