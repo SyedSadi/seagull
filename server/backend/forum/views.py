@@ -7,6 +7,7 @@ from .models import Post, Comment, Vote,Tag
 from .serializers import PostSerializer, CommentSerializer, VoteSerializer,TagSerializer
 from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
+from hf_detector import detect_toxic_content
 
 
 
@@ -37,7 +38,20 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
+        # Check toxic content in the post body
+        post_content = serializer.validated_data['content']  # Assuming 'content' is the field for post text
+        toxic_response = detect_toxic_content(post_content)
+
+        # Check if the response indicates negative or toxic content
+        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
+            return Response(
+                {"error": "Your post violates our community guidelines."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # If not toxic, save the post
         serializer.save(author=self.request.user)
+    
    
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -51,7 +65,20 @@ class CommentViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(parent=None)  # ✅ Fetch only top-level comments
 
         return queryset
+
     def perform_create(self, serializer):
+        # Check toxic content in the comment body
+        comment_content = serializer.validated_data['content']  # Assuming 'content' is the field for comment text
+        toxic_response = detect_toxic_content(comment_content)
+
+        # Check if the response indicates negative or toxic content
+        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
+            return Response(
+                {"error": "Your comment violates our community guidelines."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # If not toxic, save the comment
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
