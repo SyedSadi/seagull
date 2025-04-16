@@ -9,7 +9,15 @@ from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
 from hf_detector import detect_toxic_content
 
-
+def block_if_toxic(content):
+    if content:
+        toxic_response = detect_toxic_content(content)
+        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
+            return Response(
+                {"error": "Your content violates our community guidelines."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    return None
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -37,20 +45,20 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    def perform_create(self, serializer):
-        # Check toxic content in the post body
-        post_content = serializer.validated_data['content']  # Assuming 'content' is the field for post text
-        toxic_response = detect_toxic_content(post_content)
-
-        # Check if the response indicates negative or toxic content
-        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
-            return Response(
-                {"error": "Your post violates our community guidelines."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # If not toxic, save the post
+     def perform_create(self, serializer):
+        content = serializer.validated_data.get('content')
+        response = block_if_toxic(content)
+        if response:
+            return response
         serializer.save(author=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        content = request.data.get('content')
+        response = block_if_toxic(content)
+        if response:
+            return response
+        return super().update(request, *args, **kwargs)
+
     
    
 
@@ -67,18 +75,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        # Check toxic content in the comment body
-        comment_content = serializer.validated_data['content']  # Assuming 'content' is the field for comment text
-        toxic_response = detect_toxic_content(comment_content)
-
-        # Check if the response indicates negative or toxic content
-        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
-            return Response(
-                {"error": "Your comment violates our community guidelines."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # If not toxic, save the comment
+        content = serializer.validated_data.get('content')
+        response = block_if_toxic(content)
+        if response:
+            return response
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
@@ -86,10 +86,12 @@ class CommentViewSet(viewsets.ModelViewSet):
         if instance.user != request.user:
             return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        content = request.data.get('content')
+        response = block_if_toxic(content)
+        if response:
+            return response
+
+        return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
