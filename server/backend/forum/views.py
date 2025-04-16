@@ -45,7 +45,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-     def perform_create(self, serializer):
+    def perform_create(self, serializer):
         content = serializer.validated_data.get('content')
         response = block_if_toxic(content)
         if response:
@@ -58,6 +58,13 @@ class PostViewSet(viewsets.ModelViewSet):
         if response:
             return response
         return super().update(request, *args, **kwargs)
+        
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.author != request.user:
+            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
    
