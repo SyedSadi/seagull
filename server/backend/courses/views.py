@@ -2,7 +2,7 @@ from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Course, CourseContents, Enrollment, Rating
-from .serializers import CourseSerializer, CourseContentsSerializer
+from .serializers import CourseSerializer, CourseContentserializer
 from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -53,8 +53,8 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CourseContentView(generics.ListAPIView):
-    serializer_class = CourseContentsSerializer
+class CourseContentsView(generics.ListAPIView):
+    serializer_class = CourseContentserializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -70,7 +70,7 @@ class CourseContentView(generics.ListAPIView):
 class AddContentAPIView(AdminOnlyAPIView):
     def post(self, request):
         course = self.get_course_or_404(request.data.get('course'))
-        serializer = CourseContentsSerializer(data=request.data)
+        serializer = CourseContentserializer(data=request.data)
         if serializer.is_valid():
             serializer.save(course=course)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -80,7 +80,7 @@ class AddContentAPIView(AdminOnlyAPIView):
 class UpdateContentView(AdminOnlyAPIView):
     def put(self, request, id):
         content = get_object_or_404(CourseContents, id=id)
-        serializer = CourseContentsSerializer(content, data=request.data, partial=True)
+        serializer = CourseContentserializer(content, data=request.data, partial=True)
         
         if serializer.is_valid():
             serializer.save()

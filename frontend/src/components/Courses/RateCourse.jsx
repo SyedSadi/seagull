@@ -34,29 +34,30 @@ const RateCourse = ({ courseId }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-2 my-6 p-4 bg-white rounded-xl shadow-md w-80 mx-auto">
-      <h3 className="text-2xl font-semibold text-gray-800">Rate this course</h3>
-      <div className="flex space-x-2">
-        {[...Array(5)].map((_, index) => {
-          const star = index + 1;
-          return (
-            <button
-              key={star}
-              disabled={loading}
-              onClick={() => submitRating(star)}
-              onMouseEnter={() => setHover(star)}
-              onMouseLeave={() => setHover(0)}
-              className={`text-4xl transition-transform transform hover:scale-125 ${
-                star <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
-              }`}
-            >
-              ★
-            </button>
-          );
-        })}
-      </div>
-      {loading && <p className="text-sm text-gray-500">Submitting...</p>}
+    <div className="flex items-center flex-wrap justify-center gap-2">
+    <h3 className="text-base font-medium text-gray-800">Rate this course:</h3>
+    <div className="flex space-x-1">
+      {[...Array(5)].map((_, index) => {
+        const star = index + 1;
+        return (
+          <button
+            key={star}
+            disabled={loading}
+            onClick={() => submitRating(star)}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(0)}
+            className={`text-2xl transition-transform transform hover:scale-125 ${
+              star <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
+            }`}
+          >
+            ★
+          </button>
+        );
+      })}
     </div>
+    {loading && <span className="text-sm text-gray-500 ml-2">Submitting...</span>}
+  </div>
+
   );
 };
 

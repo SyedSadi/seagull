@@ -6,7 +6,7 @@ from courses.models import Course, Enrollment, CourseContents
 from decouple import config
 
 @pytest.mark.django_db
-class TestCourseContentViews:
+class TestCourseContentsViews:
 
     def test_get_course_content(self):
         User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
