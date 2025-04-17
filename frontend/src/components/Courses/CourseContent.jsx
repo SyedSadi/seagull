@@ -14,7 +14,7 @@ const VideoContent = ({ url }) => {
 	return youtubeId ? (
 		<div className="mb-4">
 			<iframe
-				className="w-3/5 mx-auto h-60 rounded-lg"
+				className="w-full mx-auto h-60 rounded-lg"
 				src={`https://www.youtube.com/embed/${youtubeId}`}
 				title="Course Video"
 				allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -58,7 +58,6 @@ const CourseContent = () => {
 	const [contents, setContents] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [currentIndex, setCurrentIndex] = useState(0);
-	let course;
 
 	useEffect(() => {
 		const fetchCourse = async () => {
@@ -124,9 +123,9 @@ const CourseContent = () => {
 					
 			</div>
 
-			<hr className="my-8 border-0 h-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 rounded" />
+			<hr className="mt-8 border-0 h-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 rounded" />
 
-			<div className="space-y-8 text-center">	
+			{/* <div className="space-y-8 text-center">	
 				<div className="p-6">
 					<div className="text-gray-800 font-semibold text-3xl mb-2">
 						{content.order+1}. {content.title}
@@ -147,8 +146,50 @@ const CourseContent = () => {
 					)}
 				</div>
 							
-			</div>
+			</div> */}
 			
+			<div className="flex flex-col md:flex-row w-full gap-6 p-6">
+				{/* Left: Content Display */}
+				<div className="md:w-3/4 w-full bg-base-100 rounded-xl shadow-md p-6 space-y-4">
+					<div className="text-gray-800 font-semibold text-3xl">
+						{content.order + 1}. {content.title}
+					</div>
+					{/* <div className="text-gray-700 text-lg capitalize">
+						{content.content_type}
+					</div> */}
+
+					<div className="text-xl">
+						{content.text_content}
+					</div>
+
+					{content.content_type === 'video' && content.url && (
+						<VideoContent url={content.url} />
+					)}
+
+					{content.content_type === 'pdf' && content.url && (
+						<PDFContent pdfUrl={dummyPdfUrl} />
+					)}
+				</div>
+
+				{/* Right: Content List */}
+				<div className="md:w-1/4 w-full bg-base-200 rounded-xl shadow-inner p-4 space-y-2 max-h-[80vh] overflow-y-auto">
+					<h3 className="text-xl font-bold text-gray-700 my-2">All Contents</h3>
+					{contents.map((item, index) => (
+					<button
+						key={item.id}
+						onClick={() => setCurrentIndex(index)}
+						className={`block w-full text-left px-3 py-2 rounded-lg transition duration-200 ${
+						index === currentIndex
+							? 'bg-blue-100 text-blue-800 font-semibold'
+							: 'hover:bg-gray-100 text-gray-800'
+						}`}
+					>
+						{item.order + 1}. {item.title} - {item.content_type.toUpperCase()}
+					</button>
+					))}
+      			</div>
+    		</div>
+
 		</div>
 	);
 };
