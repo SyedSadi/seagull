@@ -115,8 +115,6 @@ const AddCoursesPage = () => {
 
           <div>
             <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-700">Description</label>
-            <label htmlFor="subject" className="block mb-2 text-sm font-medium text-gray-700">Subject</label>
-            <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-700">Image</label>
             <textarea
               id="description"
               name="description"

@@ -55,7 +55,7 @@ const PDFContent = ({ pdfUrl }) => (
 // Main component
 const CourseContent = () => {
 	const { id } = useParams();
-	const [contents, setContents] = useState(null);
+	const [contents, setContents] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -63,7 +63,8 @@ const CourseContent = () => {
 		const fetchCourse = async () => {
 			try {
 				const data = await getCourseDetailsById(id);
-				setContents(data?.contents);
+				if(data?.contents?.length !== 0) setContents(data?.contents)			  
+					
 			} catch (error) {
 				console.error("Error fetching course contents:", error);
 			}finally {
@@ -73,8 +74,11 @@ const CourseContent = () => {
 		fetchCourse();
 	}, [id]);
 
-	if (loading || !contents) {
+	if (loading) {
 		return <div>Loading...</div>;
+	}
+	if (contents.length == 0) {
+		return <div className="text-center text-2xl my-6">NO CONTENTS FOUND</div>;
 	}
 	const iconMap = {
 		video: <AiFillPlayCircle className="text-xl text-blue-500" />,
@@ -129,18 +133,18 @@ const CourseContent = () => {
 				{/* Left: Content Display */}
 				<div className="md:w-3/4 w-full bg-base-100 rounded-xl shadow-md p-6 space-y-4">
 					<div className="text-gray-800 font-semibold text-3xl">
-						{content.order + 1}. {content.title}
+						{content?.order + 1}. {content?.title}
 					</div>
 
 					<div className="text-xl">
-						{content.text_content}
+						{content?.text_content}
 					</div>
 
-					{content.content_type === 'video' && content.url && (
-						<VideoContent url={content.url} />
+					{content?.content_type === 'video' && content?.url && (
+						<VideoContent url={content?.url} />
 					)}
 
-					{content.content_type === 'pdf' && content.url && (
+					{content?.content_type === 'pdf' && content?.url && (
 						<PDFContent pdfUrl={dummyPdfUrl} />
 					)}
 				</div>
@@ -148,7 +152,7 @@ const CourseContent = () => {
 				{/* Right: Content List */}
 				<div className="md:w-1/4 w-full bg-base-200 rounded-xl shadow-inner p-4 space-y-2 max-h-[80vh] overflow-y-auto">
 					<h3 className="text-xl font-bold text-gray-700 my-2">All Contents</h3>
-					{contents.map((item, index) => (
+					{contents?.map((item, index) => (
 					<button
 						key={item.id}
 						onClick={() => setCurrentIndex(index)}
