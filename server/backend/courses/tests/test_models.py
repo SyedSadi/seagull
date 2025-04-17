@@ -20,28 +20,6 @@ class TestCourseModel:
         assert course.title == "Test Course"
         assert str(course) == "Test Course"
 
-    
-    def test_create_course_content(self):
-        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst2", password=config("TEST_PASSWORD")))
-        course = Course.objects.create(
-            title="Another Course",
-            description="Another Description",
-            created_by=instructor,
-            duration=8,
-            difficulty="intermediate",
-            subject="Physics"
-        )
-        content = CourseContents.objects.create(
-            course=course,
-            content_type='video',
-            title="Intro Video",
-            url="https://example.com/video.mp4",
-            text_content=""
-        )
-        assert content.title == "Intro Video"
-        assert content.content_type == "video"
-        assert str(content) == f"{content.title}/{content.content_type}"
-
 
     def test_enrollment_unique_constraint(self):
         user = User.objects.create_user(username="student1", password=config("TEST_PASSWORD"))
@@ -108,3 +86,87 @@ class TestCourseModel:
 
         course.refresh_from_db()
         assert course.ratings == 4
+
+import pytest
+from django.core.exceptions import ValidationError
+from courses.models import CourseContents
+from courses.models import Course
+
+@pytest.mark.django_db
+class TestCourseContentsModel:
+
+    @pytest.fixture
+    def course(self):
+        return Course.objects.create(title="Test Course", description="A sample course.")
+
+    def test_valid_video_content(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='video',
+            title='Intro Video',
+            url='https://example.com/video.mp4',
+            order=1
+        )
+        content.full_clean()  # Should not raise
+        content.save()
+        assert content.pk is not None
+
+    def test_invalid_video_content_without_url(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='video',
+            title='Missing Video URL',
+            url='',
+            order=1
+        )
+        with pytest.raises(ValidationError) as excinfo:
+            content.full_clean()
+        assert "Video content must have a URL." in str(excinfo.value)
+
+    def test_valid_pdf_content(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='pdf',
+            title='Lecture Notes',
+            url='https://example.com/notes.pdf',
+            order=2
+        )
+        content.full_clean()
+        content.save()
+        assert content.pk is not None
+
+    def test_invalid_pdf_content_without_url(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='pdf',
+            title='PDF without URL',
+            url='',
+            order=2
+        )
+        with pytest.raises(ValidationError) as excinfo:
+            content.full_clean()
+        assert "PDF content must include a url." in str(excinfo.value)
+
+    def test_valid_article_content(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='article',
+            title='Course Introduction',
+            text_content='Welcome to the course!',
+            order=3
+        )
+        content.full_clean()
+        content.save()
+        assert content.pk is not None
+
+    def test_invalid_article_without_text(self, course):
+        content = CourseContents(
+            course=course,
+            content_type='article',
+            title='Empty Article',
+            text_content='',
+            order=3
+        )
+        with pytest.raises(ValidationError) as excinfo:
+            content.full_clean()
+        assert "Article text contents cannot be empty." in str(excinfo.value)

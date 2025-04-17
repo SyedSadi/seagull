@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Course, CourseContents, Enrollment, Rating
 
-class CourseContentserializer(serializers.ModelSerializer):
+class CourseContentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseContents
         fields = '__all__'
@@ -21,14 +21,14 @@ class CourseContentserializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     ratings = serializers.FloatField(read_only=True)
     ratings_count = serializers.SerializerMethodField()
-    contents = CourseContentserializer(many=True, read_only=True) 
+    contents = CourseContentsSerializer(many=True, read_only=True) 
 
     class Meta:
         model = Course
         fields = ['id', 'title', 'description', 'created_by', 'duration', 'difficulty', 'subject', 'ratings', 'contents', 'ratings_count', "image"]
 
     def get_contents(self, obj):
-        return CourseContentserializer(obj.contents.all(), many=True).data
+        return CourseContentsSerializer(obj.contents.all(), many=True).data
     
     def get_ratings_count(self, obj):
         return obj.ratings_count

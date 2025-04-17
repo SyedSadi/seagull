@@ -124,29 +124,6 @@ const CourseContent = () => {
 			</div>
 
 			<hr className="mt-8 border-0 h-0.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 rounded" />
-
-			{/* <div className="space-y-8 text-center">	
-				<div className="p-6">
-					<div className="text-gray-800 font-semibold text-3xl mb-2">
-						{content.order+1}. {content.title}
-					</div>
-					<div className="text-gray-700 text-lg mb-2">
-						{content.content_type.toUpperCase()}
-					</div>
-					<div className="text-xl mt-16 mb-4">
-						{content.text_content}
-					</div>
-
-					{content.content_type === "video" && content.url && (
-						<VideoContent url={content.url} />
-					)}
-
-					{content.content_type === "pdf" && content.url && (
-						<PDFContent pdfUrl={dummyPdfUrl} />
-					)}
-				</div>
-							
-			</div> */}
 			
 			<div className="flex flex-col md:flex-row w-full gap-6 p-6">
 				{/* Left: Content Display */}
@@ -154,9 +131,6 @@ const CourseContent = () => {
 					<div className="text-gray-800 font-semibold text-3xl">
 						{content.order + 1}. {content.title}
 					</div>
-					{/* <div className="text-gray-700 text-lg capitalize">
-						{content.content_type}
-					</div> */}
 
 					<div className="text-xl">
 						{content.text_content}
