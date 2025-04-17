@@ -53,7 +53,7 @@ const CourseDetails = () => {
   const renderActionButton = () => {
     if (isEnrolled) {
       return (
-        <Link to={`/courseContents/${course.id}`} className="mt-8 btn btn-primary flex items-center gap-2">
+        <Link to={`/CourseContents/${course.id}`} className="mt-8 btn btn-primary flex items-center gap-2">
           Go to Course <FaArrowRight />
         </Link>
       );

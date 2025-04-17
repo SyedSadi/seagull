@@ -272,7 +272,7 @@
   }
 },
 {
-  "model": "courses.coursecontents",
+  "model": "courses.CourseContents",
   "pk": 6,
   "fields": {
     "content_type": "pdf",
@@ -286,7 +286,7 @@
   }
 },
 {
-  "model": "courses.coursecontents",
+  "model": "courses.CourseContents",
   "pk": 7,
   "fields": {
     "content_type": "video",
@@ -300,7 +300,7 @@
   }
 },
 {
-  "model": "courses.coursecontents",
+  "model": "courses.CourseContents",
   "pk": 8,
   "fields": {
     "content_type": "pdf",
@@ -314,7 +314,7 @@
   }
 },
 {
-  "model": "courses.coursecontents",
+  "model": "courses.CourseContents",
   "pk": 9,
   "fields": {
     "content_type": "pdf",
@@ -328,7 +328,7 @@
   }
 },
 {
-  "model": "courses.coursecontents",
+  "model": "courses.CourseContents",
   "pk": 10,
   "fields": {
     "content_type": "pdf",
@@ -1193,7 +1193,7 @@
   "fields": {
     "name": "Can add course contents",
     "content_type": 5,
-    "codename": "add_coursecontents"
+    "codename": "add_CourseContents"
   }
 },
 {
@@ -1202,7 +1202,7 @@
   "fields": {
     "name": "Can change course contents",
     "content_type": 5,
-    "codename": "change_coursecontents"
+    "codename": "change_CourseContents"
   }
 },
 {
@@ -1211,7 +1211,7 @@
   "fields": {
     "name": "Can delete course contents",
     "content_type": 5,
-    "codename": "delete_coursecontents"
+    "codename": "delete_CourseContents"
   }
 },
 {
@@ -1220,7 +1220,7 @@
   "fields": {
     "name": "Can view course contents",
     "content_type": 5,
-    "codename": "view_coursecontents"
+    "codename": "view_CourseContents"
   }
 },
 {
@@ -1512,7 +1512,7 @@
   "pk": 5,
   "fields": {
     "app_label": "courses",
-    "model": "coursecontents"
+    "model": "CourseContents"
   }
 },
 {

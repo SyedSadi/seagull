@@ -14,6 +14,7 @@ const ContentFormFields = ({ content, index, handleChange, handleDelete }) => (
       { label: 'Title', name: 'title', type: 'text' },
       { label: 'Content Type', name: 'content_type', type: 'text', disabled: true },
       { label: 'URL (optional)', name: 'url', type: 'url' },
+      { label: 'Order', name: 'order', type: 'order' },
     ].map(({ label, name, type, disabled = false }) => (
       <div key={name}>
         <label className="block font-semibold mt-4 mb-1">{label}</label>
@@ -89,6 +90,7 @@ const ManageContents = () => {
           updateContentById(content.id, {
             title: content.title,
             content_type: content.content_type,
+            order: content.order,
             url: content.url,
             text_content: content.text_content,
           })
