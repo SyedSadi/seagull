@@ -3,6 +3,7 @@ from courses.models import Course, CourseContents, Enrollment, Rating
 from users.models import User, Instructor, Student
 from decouple import config
 from courses.models import Course
+from django.core.exceptions import ValidationError
 
 @pytest.mark.django_db
 class TestCourseModel:
@@ -87,17 +88,17 @@ class TestCourseModel:
         course.refresh_from_db()
         assert course.ratings == 4
 
-import pytest
-from django.core.exceptions import ValidationError
-from courses.models import CourseContents
-from courses.models import Course
 
 @pytest.mark.django_db
 class TestCourseContentsModel:
 
     @pytest.fixture
     def course(self):
-        return Course.objects.create(title="Test Course", description="A sample course.")
+        return Course.objects.create(
+        title="Test Course",
+        description="A sample course.",
+        duration=60  # or any appropriate value
+    )
 
     def test_valid_video_content(self, course):
         content = CourseContents(
