@@ -24,17 +24,8 @@ const CourseList = () => {
 
 	return (
 		<div className="px-4 py-10 max-w-7xl mx-auto">
-  {/* Search Input */}
-  <div className="mb-8 max-w-md mx-auto relative">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Looking for something to learn?"
-        className="w-full px-4 py-2 pl-10 pr-4 border border-gray-300 rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-      <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-    </div>
+  
+  
 
   {/* Course Grid */}
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
