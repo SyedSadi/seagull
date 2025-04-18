@@ -101,3 +101,91 @@ class TestRatingSerializer:
 
         serializer = RatingSerializer(rating)
         assert serializer.data["rating"] == 5
+
+# Fixtures
+@pytest.fixture
+def create_user():
+    user = User.objects.create_user(username="user", password=config("TEST_PASSWORD"))
+    return user
+
+@pytest.fixture
+def create_student():
+    student = Student.objects.create(user=User.objects.create_user(username="std", password=config("TEST_PASSWORD")))
+    return student
+
+@pytest.fixture
+def create_instructor():
+    instructor = Instructor.objects.create(user=User.objects.create_user(username="inst", password=config("TEST_PASSWORD")))
+    return instructor
+
+@pytest.fixture
+def create_course(create_instructor):
+    instructor = create_instructor
+    course = Course.objects.create(
+        title="Test Course",
+        description="Test course description",
+        created_by=instructor,
+        duration=10,
+        difficulty="beginner",
+        subject="Math"
+    )
+    return course
+
+@pytest.fixture
+def create_enrollment(create_user, create_course):
+    user = create_user
+    course = create_course
+    enrollment = Enrollment.objects.create(course=course, student=user.student)
+    return enrollment
+
+@pytest.fixture
+def create_course_content(create_course):
+    content = CourseContents.objects.create(
+        title="Test Content",
+        content_type="video",
+        url="https://example.com/video",
+        course=create_course
+    )
+    return content
+
+@pytest.fixture
+def create_rating(create_course, create_user):
+    course = create_course
+    user = create_user
+    rating = Rating.objects.create(course=course, user=user, rating=4)
+    return rating
+
+# Testing CourseContentsSerializer
+@pytest.mark.django_db
+def test_course_contents_serializer_valid(create_course):
+    content = CourseContents.objects.create(
+        title="Valid Content",
+        content_type="video",
+        url="https://example.com/video",
+        course=create_course
+    )    
+    serializer = CourseContentsSerializer(content) 
+    assert serializer.data['title'] == "Valid Content"
+    assert serializer.data['content_type'] == "video"
+    assert serializer.data['url'] == "https://example.com/video"
+
+
+@pytest.mark.django_db
+def test_course_contents_serializer_invalid(create_course):
+    invalid_data = {}
+    serializer = CourseContentsSerializer(data=invalid_data)
+
+    assert not serializer.is_valid()
+    assert "title" in serializer.errors
+
+
+# Testing CourseSerializer
+@pytest.mark.django_db
+def test_course_serializer_valid(create_course, create_course_content):
+    course = create_course
+    content = create_course_content
+    serializer = CourseSerializer(course)
+    assert serializer.data['title'] == course.title
+    assert len(serializer.data['contents']) == 1
+    assert serializer.data['contents'][0]['title'] == content.title
+    assert 'ratings' in serializer.data

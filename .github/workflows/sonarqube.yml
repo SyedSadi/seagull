@@ -74,6 +74,16 @@ jobs:
         run: |
           rm -f coverage.xml
 
+      - name: Run migration check
+        working-directory: ./server/backend
+        run: |
+          python manage.py makemigrations --check --dry-run
+
+      - name: Run migrations
+        working-directory: ./server/backend
+        run: |
+          python manage.py migrate
+
       - name: Run tests with coverage
         run: |
           pytest server/backend

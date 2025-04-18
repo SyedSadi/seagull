@@ -25,11 +25,17 @@ const Profile = () => {
 
 		const fetchCourses = async () => {
 			try {
-				const response =
-					user.role === "student"
-						? await getEnrolledCourses()
-						: await getInstructorCourses();
-				setCourses(response.data || []);
+				let response;
+				if (user.role == "student") {
+					response = await getEnrolledCourses();
+					setCourses(response?.data);
+				} else if (user.role == "instructor") {
+					response = await getInstructorCourses();
+					setCourses(response?.data?.courses || []);
+				} else {
+					setCourses([]);
+				}
+				console.log(response);
 			} catch (error) {
 				console.error(error);
 				toast.error("Failed to fetch courses.");
@@ -56,30 +62,22 @@ const Profile = () => {
 			return <p className="text-center text-gray-500">Loading courses...</p>;
 		}
 
-		if (courses.length === 0) {
+		if (courses?.length === 0) {
 			return (
-				<div className="p-6 bg-gray-50 rounded-lg text-center">
-					<p className="text-gray-600">
-						{user.role === "student"
-							? "You are not enrolled in any courses yet."
-							: "You have not created any courses yet."}
-					</p>
-					<Link
-						to={user.role === "student" ? "/courses" : "/create-course"}
-						className="mt-4 inline-block text-blue-600 hover:text-blue-800 font-medium"
-					>
-						{user.role === "student"
-							? "Browse Courses"
-							: "Create Your First Course"}
-					</Link>
-				</div>
+				<p className="text-center text-gray-500">
+					{user.role === "student"
+						? "You are not enrolled in any courses."
+						: user.role === "instructor"
+						? "You have not created any courses yet."
+						: ""}
+				</p>
 			);
 		}
 
 		return (
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{courses.map((course) => (
-					<div
+			<ul className="space-y-3">
+				{courses?.map((course) => (
+					<li
 						key={course.id}
 						className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
 					>
@@ -108,9 +106,16 @@ const Profile = () => {
 								</Link>
 							</div>
 						</div>
-					</div>
+						<Link
+							to={`/CourseContents/${course.id}`}
+							className="btn btn-primary"
+						>
+							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
+							<FaArrowRight />
+						</Link>
+					</li>
 				))}
-			</div>
+			</ul>
 		);
 	};
 

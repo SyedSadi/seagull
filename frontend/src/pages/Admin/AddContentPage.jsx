@@ -11,6 +11,7 @@ const AddContentPage = () => {
     content_type: 'video',
     url: '',
     text_content: '',
+    order: 0,
   });
 
   useEffect(() => {
@@ -61,8 +62,8 @@ const AddContentPage = () => {
         text_content: '',
       }); // reset form
     } catch (error) {
-      console.error('Error adding content:', error);
-      toast.error('Failed to add content. Please try again.');
+      console.error('Error adding content:', error.response.data.non_field_errors[0]);
+      toast.error(`Failed to add content, ${error.response.data.non_field_errors[0]}`);
     }
   };
 
@@ -122,6 +123,18 @@ const AddContentPage = () => {
               type="url"
               name="url"
               value={contentData.url}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label htmlFor="order" className="block font-semibold mb-1">Order</label>
+            <input
+              id="order"
+              type="order"
+              name="order"
+              value={contentData.order}
               onChange={handleInputChange}
               className="p-2 border rounded w-full"
             />
