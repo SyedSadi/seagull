@@ -19,7 +19,6 @@ class QuizAPIView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, category_id):
         try:
-            # Ensure category_id is valid
             category_id = int(category_id)
         except (TypeError, ValueError):
             return Response(
