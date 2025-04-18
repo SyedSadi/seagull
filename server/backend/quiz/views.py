@@ -89,6 +89,17 @@ class UpdateQuizView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class UpdateQuestionView(APIView):
+    permission_classes=[IsAuthenticated, IsAdminUser]
+
+    def put(self, request: Request, question_id:int)->Response:
+        questions=get_object_or_404(Question, id=question_id)
+        serializer=QuestionSerializer(questions, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
