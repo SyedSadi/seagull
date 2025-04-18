@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getTags, updatePost } from '../../services/forumApi';
 import PropTypes from 'prop-types';
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
+
 
 
 const EditPostModal = ({ post, onClose, refreshPost }) => {
@@ -52,7 +55,21 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
       refreshPost(updatedPost);  // Update the UI with the new post data
       onClose();  // Close the modal after saving
     } catch (error) {
-      console.error("Error updating post:", error.response ? error.response.data : error.message);
+      const data = error.response?.data;
+
+  let errorMessage;
+
+  if (Array.isArray(data)) {
+    errorMessage = data[0]; // Show the first error message from the list
+  } else if (typeof data === 'object' && data !== null) {
+    // Look for .error field or grab first value
+    errorMessage = data.error || Object.values(data)[0];
+  } else {
+    errorMessage = error.message || 'An unknown error occurred.';
+  }
+
+  toast.error(errorMessage, { autoClose: 5000 });
+  console.error('Error creating post:', data);
     }
   };
   

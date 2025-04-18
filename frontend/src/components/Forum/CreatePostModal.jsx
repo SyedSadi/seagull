@@ -2,6 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { fetchTag, createPost } from '../../services/forumApi'; // Import service API functions
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../context/AuthContext'; // Import AuthContext
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
+
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
@@ -62,7 +65,21 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       refreshPosts(); // Refresh the list after posting
       onClose(); // Close the modal
     } catch (error) {
-      console.error('Error creating post:', error.response?.data);
+      const data = error.response?.data;
+
+      let errorMessage;
+    
+      if (Array.isArray(data)) {
+        errorMessage = data[0]; // Show the first error message from the list
+      } else if (typeof data === 'object' && data !== null) {
+        // Look for .error field or grab first value
+        errorMessage = data.error || Object.values(data)[0];
+      } else {
+        errorMessage = error.message || 'An unknown error occurred.';
+      }
+    
+      toast.error(errorMessage, { autoClose: 5000 });
+      console.error('Error creating post:', data);
     }
   };
 

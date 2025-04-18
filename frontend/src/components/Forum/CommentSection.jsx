@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Comment from './Comment';
 import { replyToComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
 
 const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
@@ -10,6 +12,21 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
   useEffect(() => {
     setNestedComments(comments.filter(comment => comment.post === postId));
   }, [comments, postId]);
+
+
+  const extractErrorMessage = (error) => {
+    const data = error.response?.data;
+  
+    if (Array.isArray(data)) {
+      return data[0]; // like ["Your content violates our community guidelines."]
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.values(data).flat()[0]; // Handles {'content': ['msg']}
+    } else if (typeof data === 'string') {
+      return data;
+    }
+    
+    return error.message || 'An unknown error occurred.';
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +42,8 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
       setComments(prev => [...prev, newComment]);
       e.target.reset();
     } catch (error) {
-      console.error('❌ Error submitting comment:', error);
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage, { autoClose: 5000 });
     }
      finally{
       setIsSubmitting(false); // Stop loading state

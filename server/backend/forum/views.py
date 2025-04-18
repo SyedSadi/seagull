@@ -7,17 +7,38 @@ from .models import Post, Comment, Vote,Tag
 from .serializers import PostSerializer, CommentSerializer, VoteSerializer,TagSerializer
 from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
-from hf_detector import detect_toxic_content
+from ai_utils.hf_detector import detect_toxic_content
+
+from rest_framework.exceptions import ValidationError
+
 
 def block_if_toxic(content):
+    print("Checking content for toxicity:", content)
     if content:
         toxic_response = detect_toxic_content(content)
-        if toxic_response and toxic_response[0][0]['label'] == 'NEGATIVE':
-            return Response(
-                {"error": "Your content violates our community guidelines."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-    return None
+        print("Model response:", toxic_response)  # DEBUG
+
+        # Flatten nested list if needed
+        if isinstance(toxic_response, list):
+            if isinstance(toxic_response[0], list):
+                toxic_response = toxic_response[0]
+
+            if isinstance(toxic_response[0], dict):
+                top_result = max(toxic_response, key=lambda x: x['score'])
+                label = top_result.get('label')
+                score = top_result.get('score', 0)
+                print(f"Top label: {label}, Score: {score}")  # DEBUG
+
+                if label == 'NEGATIVE' and score > 0.9:
+                    raise ValidationError("Your content violates our community guidelines.")
+            else:
+                print("Unexpected inner structure:", toxic_response[0])
+        else:
+            print("Unexpected response format:", toxic_response)
+
+
+
+
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -47,16 +68,12 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         content = serializer.validated_data.get('content')
-        response = block_if_toxic(content)
-        if response:
-            return response
+        block_if_toxic(content)  # ✅ Will raise exception if toxic
         serializer.save(author=self.request.user)
 
     def update(self, request, *args, **kwargs):
         content = request.data.get('content')
-        response = block_if_toxic(content)
-        if response:
-            return response
+        block_if_toxic(content)  # Now raises ValidationError if toxic
         return super().update(request, *args, **kwargs)
         
     def destroy(self, request, *args, **kwargs):
@@ -83,9 +100,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         content = serializer.validated_data.get('content')
-        response = block_if_toxic(content)
-        if response:
-            return response
+        block_if_toxic(content)  # ✅ Will raise exception if toxic
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
@@ -94,9 +109,7 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 
         content = request.data.get('content')
-        response = block_if_toxic(content)
-        if response:
-            return response
+        block_if_toxic(content)  # Will raise ValidationError if toxic
 
         return super().update(request, *args, **kwargs)
 

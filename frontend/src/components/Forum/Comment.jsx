@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { replyToComment, updateComment, deleteComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
 
 
 
@@ -17,6 +19,21 @@ const Comment = ({ comment={}, postId, setComments }) => {
   const userId = user ? user.id : null;
   const isOwner = comment.author === Number(userId);
   const token = localStorage.getItem('access_token');
+
+  const extractErrorMessage = (error) => {
+    const data = error.response?.data;
+  
+    if (Array.isArray(data)) {
+      return data[0]; // like ["Your content violates our community guidelines."]
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.values(data).flat()[0]; // Handles {'content': ['msg']}
+    } else if (typeof data === 'string') {
+      return data;
+    }
+    
+    return error.message || 'An unknown error occurred.';
+  };
+
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +51,8 @@ const Comment = ({ comment={}, postId, setComments }) => {
         setIsReplying(false);
         setReplyContent('');
     } catch (error) {
-        console.error('❌ Error submitting reply:', error.response?.data || error);
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage, { autoClose: 5000 });
     }
 };
 const insertReply = (comments, parentId, newReply) => {
@@ -59,7 +77,8 @@ const handleEdit = async () => {
 
       setIsEditing(false);
   } catch (error) {
-      console.error("❌ Error editing comment:", error.response?.data || error);
+    const errorMessage = extractErrorMessage(error);
+    toast.error(errorMessage, { autoClose: 5000 });
   }
 };
 const updateCommentInTree = (comments, commentId, newContent) => {
