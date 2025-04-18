@@ -31,19 +31,27 @@ class TestCourseViews:
 
     def test_enroll_in_course(self):
         _, student_user, _, _, student, course = self.setup_user_and_course()
-        Enrollment.objects.create(course=course, student=student)
         client = APIClient()
         client.force_authenticate(user=student_user)
+
+        # First-time enrollment (should succeed)
         response = client.post(f'/courses/enroll/{course.id}/')
         assert response.status_code == status.HTTP_200_OK
+        assert "Successfully enrolled" in response.data['message']
+
 
     def test_enroll_in_course_already_enrolled(self):
         _, student_user, _, _, student, course = self.setup_user_and_course()
+
+        # Pre-create the enrollment
         Enrollment.objects.create(course=course, student=student)
+
         client = APIClient()
         client.force_authenticate(user=student_user)
+
+        # Second attempt to enroll (should fail)
         response = client.post(f'/courses/enroll/{course.id}/')
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data['message'] == "Already enrolled"
 
     def test_enrolled_courses(self):

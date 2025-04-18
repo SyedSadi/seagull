@@ -16,10 +16,17 @@ const Profile = () => {
 
 		const fetchCourses = async () => {
 			try {
-				const response = user.role === "student"
-					? await getEnrolledCourses()
-					: await getInstructorCourses();
-				setCourses(response.data || []);
+				let response;
+				if(user.role == 'student'){
+					response = await getEnrolledCourses()
+					setCourses(response?.data)
+				}else if(user.role == "instructor"){
+					response = await getInstructorCourses();
+					setCourses(response?.data?.courses || []);
+				}else{
+					setCourses([])
+				}
+				console.log(response)
 			} catch (error) {
 				console.error(error);
 				toast.error("Failed to fetch courses.");
@@ -44,19 +51,22 @@ const Profile = () => {
 			return <p className="text-center text-gray-500">Loading courses...</p>;
 		}
 
-		if (courses.length === 0) {
+		if (courses?.length === 0) {
 			return (
 				<p className="text-center text-gray-500">
 					{user.role === "student"
 						? "You are not enrolled in any courses."
-						: "You have not created any courses yet."}
+						: user.role === "instructor"
+						? "You have not created any courses yet."
+						: ""
+					}
 				</p>
 			);
 		}
 
 		return (
 			<ul className="space-y-3">
-				{courses.map((course) => (
+				{courses?.map((course) => (
 					<li
 						key={course.id}
 						className="flex justify-between items-center p-3 border rounded-lg"
@@ -70,7 +80,7 @@ const Profile = () => {
 								</p>
 							)}
 						</div>
-						<Link to={`/courseContents/${course.id}`} className="btn btn-primary">
+						<Link to={`/CourseContents/${course.id}`} className="btn btn-primary">
 							{user.role === "student" ? "Go to Course" : "View Course"}{" "}
 							<FaArrowRight />
 						</Link>
@@ -105,7 +115,7 @@ const Profile = () => {
 			{/* Courses Section */}
 			<div className="mt-6">
 				<h2 className="text-xl font-semibold mb-3 text-center">
-					{user.role === "student" ? "Enrolled Courses" : "Courses Taught"}
+					{user.role === "student" ? "Enrolled Courses" : user.role === "instructor" ? "Courses Taught" : "Welcome Admin"}
 				</h2>
 				{renderCourses()}
 			</div>

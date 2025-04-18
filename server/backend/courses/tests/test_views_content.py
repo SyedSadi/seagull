@@ -6,7 +6,7 @@ from courses.models import Course, Enrollment, CourseContents
 from decouple import config
 
 @pytest.mark.django_db
-class TestCourseContentViews:
+class TestCourseContentsViews:
 
     def test_get_course_content(self):
         User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
@@ -111,13 +111,14 @@ class TestCourseContentViews:
         content = CourseContents.objects.create(
             title="Old Content",
             content_type="pdf", 
+            order=0,
             url="https://example.com/old-pdf", 
             text_content="Old content details",
             course=course
         )
         updated_data = {
             "title": "Updated Content",
-            "content_type": "text",  
+            "content_type": "article",  
             "url": "https://example.com/updated-text", 
             "text_content": "Updated content details"
         }
@@ -126,7 +127,7 @@ class TestCourseContentViews:
         response = client.put(f'/courses/content/update/{content.id}/', updated_data, format='json')
         assert response.status_code == status.HTTP_200_OK
         assert response.data['title'] == "Updated Content"
-        assert response.data['content_type'] == "text"
+        assert response.data['content_type'] == "article"
         assert response.data['url'] == "https://example.com/updated-text"
         assert response.data['text_content'] == "Updated content details"
 

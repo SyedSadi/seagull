@@ -36,18 +36,34 @@ class CourseContents(models.Model):
     CONTENT_TYPES = [
         ('video', 'Video'),
         ('pdf', 'PDF'),
-        ('text', 'Text'),
         ('article', 'Article'),
     ]
+
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='contents')
     content_type = models.CharField(max_length=20, choices=CONTENT_TYPES)
     title = models.CharField(max_length=255)
+    order = models.PositiveIntegerField(default=0)
     url = models.URLField(null=True, blank=True)
     text_content = models.TextField(blank=True)
+    # file = models.FileField(upload_to='course_files/', null=True, blank=True)
 
+    class Meta:
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.title}/{self.content_type}"
+
+    def clean(self):
+        if self.content_type == 'video' and not self.url:
+            raise ValidationError("Video content must have a URL.")
+        if self.content_type == 'article' and not self.text_content:
+            raise ValidationError("Article text contents cannot be empty.")
+        if self.content_type == 'pdf' and not self.url:
+            raise ValidationError("PDF content must include a url.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
     
 
 

@@ -53,7 +53,7 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CourseContentView(generics.ListAPIView):
+class CourseContentsView(generics.ListAPIView):
     serializer_class = CourseContentsSerializer
     permission_classes = [IsAuthenticated]
 
@@ -106,7 +106,7 @@ class EnrollCourseView(APIView):
         course = get_object_or_404(Course, id=course_id)
         _, created = Enrollment.objects.get_or_create(course=course, student=user.student)
 
-        return Response({"message": "Already enrolled" if not created else f"Successfully enrolled in {course.title}!"}, status=200 if not created else 400)
+        return Response({"message": "Already enrolled" if not created else f"Successfully enrolled in {course.title}!"}, status=200 if created else 400)
 
 
 class EnrolledCoursesView(generics.ListAPIView):
