@@ -111,7 +111,6 @@ const AddContentPage = () => {
             >
               <option value="video">Video</option>
               <option value="pdf">PDF</option>
-              <option value="text">Text</option>
               <option value="article">Article</option>
             </select>
           </div>

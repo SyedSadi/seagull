@@ -13,8 +13,8 @@ class CourseContentsSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Video content must have a URL.")
         if content_type == 'article' and not data.get('text_content'):
             raise serializers.ValidationError("For Articles Text content cannot be empty.")
-        if content_type == 'pdf' and not data.get('file'):
-            raise serializers.ValidationError("PDF content must include a file.")
+        if content_type == 'pdf' and not data.get('url'):
+            raise serializers.ValidationError("PDF content must include a url.")
         return data
 
 
