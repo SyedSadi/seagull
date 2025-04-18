@@ -104,3 +104,12 @@ class DashboardStatsSerializer(serializers.Serializer):
     total_quizzes = serializers.IntegerField()
     new_users_last_7_days = UserSerializer(many=True, read_only=True)
     active_users_last_24_hours = UserSerializer(many=True, read_only=True)
+
+
+
+# ------------------------- LANDING PAGE STATS --------------------------------
+class LandingPageStatsSerializer(serializers.Serializer):
+    total_students = serializers.IntegerField()
+    total_instructors = serializers.IntegerField()
+    total_courses = serializers.IntegerField()
+    total_quizzes=serializers.IntegerField()

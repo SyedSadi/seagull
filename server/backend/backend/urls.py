@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView
+from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView, LandingPageStatsView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -32,8 +32,12 @@ urlpatterns = [
     # Admin Panel
     path("dashboard/stats/", DashboardStatsView.as_view(), name="dashboard-stats"),
 
+    #Main Features
     path("courses/", include('courses.urls')),
     path("instructors/", include('users.urls')),
     path("forum/", include('forum.urls')),
     path("quiz/", include('quiz.urls')),
+
+    #Landing Page
+    path("landingpage/stats/", LandingPageStatsView.as_view(), name="landingpage-stats"),
 ]

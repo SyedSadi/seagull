@@ -1,27 +1,37 @@
-import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faBars } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
+import logo from "../../assets/logo.png";
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, logoutUser } = useContext(AuthContext);
+	const [scrolled, setScrolled] = useState(false);
+	const location = useLocation();
+	const insLandingPage = location.pathname === "/";
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
 
+	useEffect(() => {
+		const handleScroll = () => {
+			const offset = window.scrollY;
+			setScrolled(offset > 50);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, [insLandingPage]);
+
 	const navOptions = (
-		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-sm">
+		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-m">
 			<li>
 				<NavLink
 					to={"/courses"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Courses
@@ -30,11 +40,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/quiz"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Quiz
@@ -43,11 +49,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/forum"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					Forum
@@ -56,11 +58,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/aboutus"}
-					className={({ isActive }) =>
-						isActive
-							? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-							: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-					}
+					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
 					About Us
@@ -70,11 +68,7 @@ const Navbar = () => {
 				<li>
 					<NavLink
 						to={"/admin/dashboard"}
-						className={({ isActive }) =>
-							isActive
-								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-						}
+						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 						onClick={() => setIsMenuOpen(false)}
 					>
 						Dashboard
@@ -85,10 +79,16 @@ const Navbar = () => {
 	);
 
 	return (
-		<div className="navbar bg-[#323d5e]">
-			{/* Menu Button */}
+		<div
+			className={`navbar top-0 z-50 w-full sticky transition-all duration-300 ease-in-out ${
+				insLandingPage && !scrolled && !isMenuOpen
+					? "bg-transparent"
+					: "bg-[#323d5e]"
+			}`}
+		>
+			{/* Menu Button- mobile */}
 			<div
-				className="absolute left-4 lg:hidden text-white"
+				className="justify-end absolute right-4 lg:hidden text-white"
 				onClick={toggleMenu}
 			>
 				<div className="text-2xl">
@@ -99,39 +99,36 @@ const Navbar = () => {
 					)}
 				</div>
 			</div>
-
-			{/* Logo */}
-			<div className="navbar-start w-full flex justify-center lg:w-1/4">
-				<NavLink
-					to={"/"}
-					className="text-white text-2xl font-bold cursor-pointer"
-				>
-					KUETx
+			{/*Desktop left section- Logo */}
+			<div className="w-full justify-center lg:w-1/4">
+				<NavLink to={"/"} onClick={() => setIsMenuOpen(false)}>
+					<img
+						src={logo}
+						className="col-span-2 h-10 w-full object-contain transform hover:scale-110 transition-all duration-300 cursor-pointer lg:col-span-1"
+						alt="Learning background"
+					/>
 				</NavLink>
 			</div>
 
-			{/* Nav Options - Center */}
-			<div className="navbar-center hidden lg:flex lg:w-1/2 justify-center">
-				<ul className="flex flex-row space-x-20">{navOptions}</ul>
+			{/*Desktop Nav Options - Center */}
+			<div className="navbar-center lg:flex hidden lg:w-1/2 justify-center">
+				{navOptions}
 			</div>
 
-			{/* Right section */}
 			<div className="navbar-end hidden lg:flex lg:w-1/4 justify-end space-x-3">
 				{!user ? (
 					<>
 						<NavLink
 							to={"/login"}
-							className={({ isActive }) =>
-								isActive
-									? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-									: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-							}
+							className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Log in
 						</NavLink>
 						<NavLink
 							to={"/register"}
 							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Sign Up
 						</NavLink>
@@ -141,6 +138,7 @@ const Navbar = () => {
 						<NavLink
 							to={"/profile"}
 							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							onClick={() => setIsMenuOpen(false)}
 						>
 							Profile
 						</NavLink>
@@ -156,30 +154,59 @@ const Navbar = () => {
 
 			{/* Mobile Menu */}
 			<div
-				className={`absolute top-16 left-0 w-full bg-[#323d5e] text-white shadow-lg transform ${
-					isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-				} overflow-hidden transition-all duration-300`}
+				className={`fixed top-16 left-0 right-0 bg-[#323d5e] transform transition-all duration-300 ease-in-out justify-center ${
+					isMenuOpen
+						? "opacity-100 translate-y-0"
+						: "opacity-0 -translate-y-full pointer-events-none"
+				}`}
 			>
-				<div className="p-6">{navOptions}</div>
-				<div className="p-4 flex flex-col items-center space-y-4">
-					<NavLink
-						to={"/login"}
-						className={({ isActive }) =>
-							isActive
-								? "text-blue-400 font-bold relative after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-blue-400 after:left-0 after:bottom-[-4px]"
-								: "text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
-						}
-						onClick={() => setIsMenuOpen(false)}
-					>
-						Log in
-					</NavLink>
-					<NavLink
-						to={"/register"}
-						className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
-						onClick={() => setIsMenuOpen(false)}
-					>
-						Sign Up
-					</NavLink>
+				<div
+					className={`flex flex-col p-8 space-y-4 transform transition-all duration-300 delay-150 ${
+						isMenuOpen
+							? "opacity-100 translate-x-0"
+							: "opacity-0 -translate-x-10"
+					}`}
+				>
+					<div className="w-full px-4">{navOptions}</div>
+					<div className="w-full px-4 pt-4 border-t border-gray-600">
+						{!user ? (
+							<div className="flex flex-col space-y-4">
+								<NavLink
+									to={"/login"}
+									className="text-white hover:text-blue-300 text-center transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Log in
+								</NavLink>
+								<NavLink
+									to={"/register"}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Sign Up
+								</NavLink>
+							</div>
+						) : (
+							<div className="flex flex-col space-y-4">
+								<NavLink
+									to={"/profile"}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									onClick={() => setIsMenuOpen(false)}
+								>
+									Profile
+								</NavLink>
+								<button
+									onClick={() => {
+										logoutUser();
+										setIsMenuOpen(false);
+									}}
+									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+								>
+									Log out
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

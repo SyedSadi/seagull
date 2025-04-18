@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Course, CourseContents, Enrollment, Rating
@@ -7,12 +7,26 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
+from django.db.models import Q
 
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    filter_backends=[filters.SearchFilter]
+    search_fields=['title', 'description', 'subject', 'difficulty']
+    def get_queryset(self):
+        queryset = Course.objects.all()
+        search_query=self.request.query_params.get('search', None)
+        if search_query:
+            queryset=queryset.filter(
+                Q(title__icontains=search_query) | 
+                Q(description__icontains=search_query) |
+                Q(subject__icontains=search_query) |
+                Q(difficulty__icontains=search_query)
+            )
+        return queryset
+    
 
 
 class CourseDetailView(generics.RetrieveAPIView):
