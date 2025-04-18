@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from typing import ClassVar
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
-from .serializers import CategorySerializer, QuestionSerializer
+from .serializers import CategorySerializer, QuestionSerializer, QuizAttemptSerializer
 from rest_framework.request import Request
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,7 +19,6 @@ class QuizAPIView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, category_id):
         try:
-            # Ensure category_id is valid
             category_id = int(category_id)
         except (TypeError, ValueError):
             return Response(
@@ -84,6 +83,17 @@ class UpdateQuizView(APIView):
     def put(self, request: Request, category_id: int) -> Response:
         category = get_object_or_404(Category, id=category_id)
         serializer = CategorySerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateQuestionView(APIView):
+    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
+
+    def put(self, request: Request, question_id:int)->Response:
+        questions=get_object_or_404(Question, id=question_id)
+        serializer=QuestionSerializer(questions, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -172,3 +182,16 @@ class SubmitQuizAPIView(APIView):
             'unanswered': unanswered,
             'questions': questions_data
         }, status=status.HTTP_200_OK)
+    
+class QuizAttemptsView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request):
+        #Get all attempts for current user
+        attempts=QuizAttempt.objects.filter(
+            user=request.user,
+            completed=True
+        ).order_by('-completed_at') #sorted by most recent
+
+        serializer=QuizAttemptSerializer(attempts, many=True)
+        return Response(serializer.data)

@@ -96,3 +96,43 @@ export const updateQuiz = async (categoryId, quizData) => {
 		throw error;
 	}
 };
+
+// ----------------------- UPDATE Questions -----------------------------------
+export const updateQuestion = async (questionId, questionData) => {
+	const token = localStorage.getItem("access_token");
+	if (!token) {
+		throw new Error("Authentication token is missing");
+	}
+	const response = await API.put(
+		`/quiz/update-question/${questionId}/`,
+		questionData,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		}
+	);
+	return response.data;
+};
+
+// ----------------------- GET Quiz Attempts -----------------------------------
+export const getAllQuizAttempts = async () => {
+	try {
+		const token = localStorage.getItem("access_token");
+		if (!token) {
+			throw new Error("Authentication token is missing");
+		}
+
+		const response = await API.get("/quiz/attempts/", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+		});
+		return response;
+	} catch (error) {
+		console.error("Error fetching quiz attempts:", error);
+		throw error;
+	}
+};

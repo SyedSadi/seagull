@@ -143,7 +143,11 @@ const ManageQuiz = () => {
 								>
 									Update
 								</button>
-								<button className="px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition duration-300">
+								<button
+									type="button"
+									className="px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition duration-300"
+									onClick={() => navigate(`/update-questions/${category.id}`)}
+								>
 									Manage Questions
 								</button>
 							</div>

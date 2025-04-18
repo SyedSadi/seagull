@@ -2,13 +2,17 @@ import { useState } from "react";
 import HeroImage from "../../assets/herobg.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+	const navigate = useNavigate();
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const handleSearch = (e) => {
 		e.preventDefault();
-		console.log("Searching for:", searchQuery);
+		if (searchQuery.trim()) {
+			navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
+		}
 	};
 
 	return (
@@ -47,7 +51,6 @@ const Hero = () => {
 							/>
 							<button
 								type="submit"
-								aria-label="Search"
 								className="px-6 py-4 bg-blue-600 text-white hover:bg-blue-700 transition-colors focus:outline-none"
 							>
 								<FontAwesomeIcon icon={faMagnifyingGlass} />
