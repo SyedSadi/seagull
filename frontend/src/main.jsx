@@ -29,6 +29,7 @@ import AddQuizPage from "./pages/Admin/AddQuizPage.jsx";
 import ManageContentsPage from "./pages/Admin/ManageContentsPage.jsx";
 import ManageQuiz from "./pages/Admin/ManageQuiz.jsx";
 import UpdateQuizPage from "./pages/Admin/UpdateQuizPage.jsx";
+import UpdateQuestionsPage from "./pages/Admin/UpdateQuestionsPage.jsx";
 
 // Components
 import ProtectedRoute from "./components/Shared/ProtectedRoute.jsx";
@@ -133,6 +134,10 @@ const router = createBrowserRouter([
 							{
 								path: "/update-quiz/:categoryId",
 								element: <UpdateQuizPage />,
+							},
+							{
+								path: "/update-questions/:categoryId",
+								element: <UpdateQuestionsPage />,
 							},
 						],
 					},

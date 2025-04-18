@@ -90,7 +90,7 @@ class UpdateQuizView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateQuestionView(APIView):
-    permission_classes=[IsAuthenticated, IsAdminUser]
+    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
     def put(self, request: Request, question_id:int)->Response:
         questions=get_object_or_404(Question, id=question_id)
