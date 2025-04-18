@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getAllCourses } from "../../services/coursesApi";
+import PropTypes from "prop-types";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -224,6 +225,17 @@ const FeaturedCourses = () => {
 			)}
 		</section>
 	);
+};
+
+CourseCard.propTypes = {
+	course: PropTypes.shape({
+		title: PropTypes.string,
+		description: PropTypes.string,
+		image: PropTypes.string,
+		difficulty: PropTypes.string,
+		ratings: PropTypes.number,
+		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	}),
 };
 
 export default FeaturedCourses;
