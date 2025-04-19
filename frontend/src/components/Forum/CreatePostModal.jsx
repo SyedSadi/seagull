@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { fetchTag, createPost, createTag } from '../../services/forumApi'; // Add createTag
-import PropTypes from 'prop-types';
+import { fetchTag, createPost } from '../../services/forumApi'; 
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
@@ -13,7 +12,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const { user } = useContext(AuthContext);
 
-  // Fetch available tags
+  // Fetch tags from the API
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -26,7 +25,9 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     fetchTags();
   }, []);
 
+  // Handle tag change
   const handleTagChange = (selectedOptions) => {
+
     if (selectedOptions.length <= 3) {
       setSelectedTags(selectedOptions);
     } else {
@@ -34,6 +35,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     }
   };
 
+  // Handle creating new tags
   const handleCreateTag = async (inputValue) => {
     try {
       const newTag = await createTag({ name: inputValue });
@@ -46,8 +48,10 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submit clicked');
 
     if (selectedTags.length < 1) {
       toast.error('Please select at least one tag.');
@@ -67,7 +71,9 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
         author: user.id
       };
 
-      const response = await createPost(payload);
+      await createPost(payload);  // Create the post
+      console.log('Post created successfully!'); // Debugging lo
+      toast.success('Post created successfully!', { autoClose: 3000 });  // Success toast
       refreshPosts();
       onClose();
     } catch (error) {
@@ -81,10 +87,45 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
         errorMessage = error.message;
       }
 
-      toast.error(errorMessage, { autoClose: 5000 });
+      toast.error(errorMessage, { autoClose: 5000 });  // Error toast
       console.error('Error creating post:', data);
     }
   };
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      borderRadius: '0.75rem',
+      borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
+      boxShadow: state.isFocused ? '0 0 0 2px rgba(59,130,246,0.5)' : 'none',
+      padding: '2px',
+      fontSize: '0.875rem',
+      minHeight: '42px',
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: '#dbeafe',
+      color: '#1e40af',
+      borderRadius: '9999px',
+      padding: '2px 6px',
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: '#1e40af',
+      fontWeight: '500',
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: '#1e40af',
+      ':hover': {
+        backgroundColor: '#bfdbfe',
+        color: '#1e3a8a',
+      }
+    }),
+  };
+  
+
+  
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
@@ -118,6 +159,8 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
               onChange={handleTagChange}
               onCreateOption={handleCreateTag}
               placeholder="Search or create a tag..."
+              styles={customStyles}
+              closeMenuOnSelect={false}
             />
           </div>
 
@@ -135,14 +178,20 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
             Cancel
           </button>
         </form>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </div>
   );
-};
-
-CreatePostModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  refreshPosts: PropTypes.func.isRequired
 };
 
 export default CreatePostModal;
