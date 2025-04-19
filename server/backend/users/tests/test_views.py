@@ -86,7 +86,7 @@ class TestInstructorViewSet:
         client = APIClient()
         # Optional: Authenticate with the instructor
         # client.force_authenticate(user=user)
-        response = client.get('/instructors/', format='json')
+        response = client.get('/users/instructors/', format='json')
 
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) > 0

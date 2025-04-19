@@ -34,7 +34,7 @@ urlpatterns = [
 
     #Main Features
     path("courses/", include('courses.urls')),
-    path("instructors/", include('users.urls')),
+    path("users/", include('users.urls')),
     path("forum/", include('forum.urls')),
     path("quiz/", include('quiz.urls')),
 

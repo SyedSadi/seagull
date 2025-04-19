@@ -72,22 +72,7 @@ const StatsGrid = ({ stats }) => (
 );
 
 const StatCard = ({ title, value, desc }) => (
-  <div className="bg-red-200 p-4 rounded-lg shadow-md text-center">
-    <div className="flex justify-center mb-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        className="h-8 w-8 stroke-current text-secondary"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4M6 18a2 2 0 100-4m0 4a2 2 0 110-4M6 18v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-        />
-      </svg>
-    </div>
+  <div className="bg-gradient-to-b from-blue-50 to-indigo-100 p-4 rounded-lg shadow-md text-center">
     <div className="text-lg font-semibold">{title}</div>
     <div className="text-3xl font-bold mt-1">{value ?? 0}</div>
     <div className="text-sm text-gray-600 mt-2">{desc}</div>

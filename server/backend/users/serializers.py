@@ -13,10 +13,17 @@ class InstructorSerializer(serializers.ModelSerializer):
         model = Instructor
         fields = ['id', 'name', 'designation', 'university']
 
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id']
+
 class UserSerializer(serializers.ModelSerializer):
+    instructor = InstructorSerializer(required=False)
+    student = StudentSerializer(required=False)
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser']
+        fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser', 'instructor', 'student']
 
 # ------------------------- AUTHENTICATION --------------------------------
 

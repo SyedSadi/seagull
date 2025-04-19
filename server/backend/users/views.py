@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer
+from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer, UserSerializer
 from .models import Instructor
 from rest_framework.views import APIView
 from rest_framework import status
@@ -123,8 +123,31 @@ class LandingPageStatsView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
+# ------------------------------- USERS -----------------------------------------
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
+
+
+class ProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        user.bio = data.get('bio', user.bio)
+        user.save()
+        if user.role == 'instructor':
+            instructor, _ = Instructor.objects.get_or_create(user=user)
+            instructor_data = data.get('instructor', {})
+            instructor.designation = instructor_data.get('designation', instructor.designation)
+            instructor.university = instructor_data.get('university', instructor.university)
+            instructor.save()
+
+        return Response(UserSerializer(user).data)
