@@ -93,3 +93,9 @@ export const replyToComment = async (data) => {
       throw error;
     }
   };
+  
+  export const createTag = async (tagData) => {
+    const response = await API.post('/forum/tags/', tagData);
+    return response.data;
+  };
+  

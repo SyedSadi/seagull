@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getTags, updatePost } from '../../services/forumApi';
 import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
-import 'react-toastify/dist/ReactToastify.css';  // Import default styles
-
-
+import Select from 'react-select';
+import { getTags, updatePost } from '../../services/forumApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditPostModal = ({ post, onClose, refreshPost }) => {
   const [title, setTitle] = useState(post.title);
@@ -25,25 +24,12 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
     fetchTags();
   }, []);
 
-  const handleTagSelect = (e) => {
-    const tagId = parseInt(e.target.value);
-    const tag = allTags.find((t) => t.id === tagId);
-    if (tag && selectedTags.length < 3 && !selectedTags.some((t) => t.id === tagId)) {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  const removeTag = (tagId) => {
-    setSelectedTags(selectedTags.filter(tag => tag.id !== tagId));
-  };
-
   const handleSave = async () => {
-
     if (selectedTags.length === 0) {
-        alert("Please select at least one tag.");
-        return;
-      }
-    console.log("Attempting to update post:", post.id);
+      toast.error("Please select at least one tag.");
+      return;
+    }
+
     try {
       const updatedPost = await updatePost(post.id, {
         title,
@@ -51,29 +37,56 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
         tag_ids: selectedTags.map(tag => tag.id)
       }, token);
 
-      console.log("Post updated successfully:", updatedPost);  // Log the updated post for debugging
-      refreshPost(updatedPost);  // Update the UI with the new post data
-      onClose();  // Close the modal after saving
+      toast.success("Post updated successfully!");
+      refreshPost(updatedPost);
+      onClose();
     } catch (error) {
       const data = error.response?.data;
+      let errorMessage;
 
-  let errorMessage;
+      if (Array.isArray(data)) {
+        errorMessage = data[0];
+      } else if (typeof data === 'object' && data !== null) {
+        errorMessage = data.error || Object.values(data)[0];
+      } else {
+        errorMessage = error.message || 'An unknown error occurred.';
+      }
 
-  if (Array.isArray(data)) {
-    errorMessage = data[0]; // Show the first error message from the list
-  } else if (typeof data === 'object' && data !== null) {
-    // Look for .error field or grab first value
-    errorMessage = data.error || Object.values(data)[0];
-  } else {
-    errorMessage = error.message || 'An unknown error occurred.';
-  }
-
-  toast.error(errorMessage, { autoClose: 5000 });
-  console.error('Error creating post:', data);
+      toast.error(errorMessage, { autoClose: 5000 });
     }
   };
-  
-  
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      borderRadius: '0.75rem',
+      borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
+      boxShadow: state.isFocused ? '0 0 0 2px rgba(59,130,246,0.5)' : 'none',
+      padding: '2px',
+      fontSize: '0.875rem',
+      minHeight: '42px',
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: '#dbeafe',
+      color: '#1e40af',
+      borderRadius: '9999px',
+      padding: '2px 6px',
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: '#1e40af',
+      fontWeight: '500',
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: '#1e40af',
+      ':hover': {
+        backgroundColor: '#bfdbfe',
+        color: '#1e3a8a',
+      }
+    }),
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
@@ -96,42 +109,28 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
             rows="6"
             required
           />
-          {/* Tag Selection */}
+
+          {/* React Select for Tags */}
           <div>
-            <label htmlFor="tag-select" className="block font-medium text-gray-700 mb-2">
-              Select Tags (1–3):
-            </label>
-            <select
-              id="tag-select"
-              onChange={handleTagSelect}
-              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                Choose a tag...
-              </option>
-              {allTags.map((tag) => (
-                <option key={tag.id} value={tag.id}>
-                  {tag.name}
-                </option>
-              ))}
-            </select>
-            {/* Display Selected Tags */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              {selectedTags.map((tag) => (
-                <span key={tag.id} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
-                  {tag.name}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag.id)}
-                    className="ml-2 text-red-500 hover:text-red-700"
-                  >
-                    &times;
-                  </button>
-                </span>
-              ))}
-            </div>
+            <label className="block font-medium text-gray-700 mb-2">Select Tags (max 3):</label>
+            <Select
+              options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
+              value={selectedTags.map(tag => ({ value: tag.id, label: tag.name }))}
+              onChange={(selected) => {
+                const limited = selected.slice(0, 3);
+                setSelectedTags(limited.map(sel => ({
+                  id: sel.value,
+                  name: sel.label
+                })));
+              }}
+              isMulti
+              styles={customStyles}
+              placeholder="Choose up to 3 tags..."
+              closeMenuOnSelect={false}
+              className="text-sm"
+            />
           </div>
+
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
@@ -146,11 +145,12 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
             Cancel
           </button>
         </form>
+        <ToastContainer />
       </div>
     </div>
-   
   );
 };
+
 EditPostModal.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -166,6 +166,5 @@ EditPostModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   refreshPost: PropTypes.func.isRequired
 };
-
 
 export default EditPostModal;
