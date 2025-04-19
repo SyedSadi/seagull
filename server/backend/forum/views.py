@@ -12,29 +12,31 @@ from ai_utils.hf_detector import detect_toxic_content
 from rest_framework.exceptions import ValidationError
 
 
+
+
 def block_if_toxic(content):
-    print("Checking content for toxicity:", content)
-    if content:
-        toxic_response = detect_toxic_content(content)
-        print("Model response:", toxic_response)  # DEBUG
+    if not content:
+        return
 
-        # Flatten nested list if needed
-        if isinstance(toxic_response, list):
-            if isinstance(toxic_response[0], list):
-                toxic_response = toxic_response[0]
+    response = detect_toxic_content(content)
+    print("Toxicity response:", response)  # Optional debug
 
-            if isinstance(toxic_response[0], dict):
-                top_result = max(toxic_response, key=lambda x: x['score'])
-                label = top_result.get('label')
-                score = top_result.get('score', 0)
-                print(f"Top label: {label}, Score: {score}")  # DEBUG
+    # Flatten if nested (e.g., [[{label: ..., score: ...}]])
+    if isinstance(response, list) and len(response) == 1 and isinstance(response[0], list):
+        response = response[0]
 
-                if label == 'NEGATIVE' and score > 0.9:
-                    raise ValidationError("Your content violates our community guidelines.")
-            else:
-                print("Unexpected inner structure:", toxic_response[0])
-        else:
-            print("Unexpected response format:", toxic_response)
+    if isinstance(response, list) and all(isinstance(item, dict) for item in response):
+        top = max(response, key=lambda x: x.get('score', 0))
+        label = top.get('label')
+        score = top.get('score', 0)
+
+        print(f"Top label: {label}, Score: {score}")  # Optional debug
+
+        if label == 'NEGATIVE' and score > 0.9:
+            raise ValidationError("Your content violates our community guidelines.")
+    else:
+        print("⚠️ Unexpected response structure:", response)
+
 
 
 
@@ -172,3 +174,31 @@ class VoteViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def create(self, request, *args, **kwargs):
+        name = request.data.get('name', '').strip()
+
+        if not name:
+            return Response({'error': 'Tag name cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Prevent duplicates (case-insensitive)
+        tag = Tag.objects.filter(name__iexact=name).first()
+        if tag:
+            serializer = self.get_serializer(tag)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Otherwise create a new tag
+        serializer = self.get_serializer(data={'name': name})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        query = request.query_params.get('q', '').strip()
+        if not query:
+            return Response([], status=status.HTTP_200_OK)
+        
+        tags = Tag.objects.filter(name__icontains=query)[:10]  # return top 10 matches
+        serializer = self.get_serializer(tags, many=True)
+        return Response(serializer.data)
