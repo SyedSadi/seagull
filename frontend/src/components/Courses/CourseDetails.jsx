@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getEnrolledCourses, enroll, getCourseDetailsById } from "../../services/coursesApi";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
-import OtpModal from "./OTPModal";
+import OTPModal from "./OTPModal";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -90,7 +90,7 @@ const CourseDetails = () => {
           <p className="text-lg mb-2">Duration: {course.duration} hours</p>
           <p className="text-lg mb-2">Ratings: {course.ratings}/5</p>
           {renderActionButton()}
-          <OtpModal ref={otpRef} />
+          <OTPModal ref={otpRef} />
         </div>
         <div>
           <img

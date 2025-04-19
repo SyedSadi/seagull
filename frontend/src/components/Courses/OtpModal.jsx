@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const OtpModal = forwardRef((_, ref) => {
+const OTPModal = forwardRef((_, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState(null);
   const [inputOtp, setInputOtp] = useState("");
@@ -73,4 +73,4 @@ const OtpModal = forwardRef((_, ref) => {
   );
 });
 
-export default OtpModal;
+export default OTPModal;
