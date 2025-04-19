@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from "react";
 import API from "../services/api";
 import { jwtDecode } from "jwt-decode";
 import PropTypes from 'prop-types';
+import { toast } from "react-toastify";
 
 
 export const AuthContext = createContext();
@@ -30,8 +31,8 @@ export const AuthProvider = ({ children }) => {
       const response = await API.post("/register/", userData);
       return response;
     } catch (error) {
-      console.error("Registration failed:", error);
-      alert('Registration failed. Please try again.');
+      console.log(error.response.data.username[0]);
+      toast.error(error.response.data.username[0]);
     }
   };
 
@@ -49,7 +50,6 @@ export const AuthProvider = ({ children }) => {
       return response;
     } catch (error) {
       console.error("Login failed:", error);
-      alert('Login failed')
     }finally{
       setLoading(false)
     }

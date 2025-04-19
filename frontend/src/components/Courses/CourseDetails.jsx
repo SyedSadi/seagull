@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getEnrolledCourses, enroll, getCourseDetailsById } from "../../services/coursesApi";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
+import OtpModal from "./OTPModal";
 
 const CourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const otpRef = useRef();
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -30,13 +32,20 @@ const CourseDetails = () => {
   }, [id]);
 
   const handleEnroll = async () => {
+    const otpVerified = await otpRef.current.open();
+    if (!otpVerified) {
+      toast.error("Enrollment Failed.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await enroll(id);
       toast.success(response?.data?.message || "Enrolled successfully!");
       setIsEnrolled(true);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Enrollment failed");
+      toast.error(error.response?.data?.error || "Enrollment failed");
+      console.log(error)
     } finally {
       setLoading(false);
     }
@@ -81,6 +90,7 @@ const CourseDetails = () => {
           <p className="text-lg mb-2">Duration: {course.duration} hours</p>
           <p className="text-lg mb-2">Ratings: {course.ratings}/5</p>
           {renderActionButton()}
+          <OtpModal ref={otpRef} />
         </div>
         <div>
           <img
@@ -90,7 +100,8 @@ const CourseDetails = () => {
           />
         </div>
       </section>
-      <ToastContainer />
+      
+      <ToastContainer  position="bottom-right" />
     </div>
   );
 };

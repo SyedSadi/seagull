@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import {AuthContext} from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Register = () => {
         const res = await registerUser(formData);
         console.log(res)
         if(res.status === 201){
-            alert('Registration successful! Please log in.');
+            toast.success('Registration successful! Please log in.');
             navigate('/login')
         }
     };

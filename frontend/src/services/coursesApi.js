@@ -1,8 +1,11 @@
 import API from "./api";
 
 // Fetch all courses
-export const getAllCourses = async () => {
-	const response = await API.get("/courses/");
+export const getAllCourses = async (searchQuery = "") => {
+	const url = searchQuery
+		? `/courses/?search=${encodeURIComponent(searchQuery)}`
+		: "/courses/";
+	const response = await API.get(url);
 	return response.data;
 };
 
