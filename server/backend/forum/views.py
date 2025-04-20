@@ -12,6 +12,10 @@ from ai_utils.hf_detector import detect_toxic_content
 from rest_framework.exceptions import ValidationError
 
 
+from rest_framework.exceptions import ValidationError
+
+TOXIC_LABELS = {"toxic", "threat", "insult", "obscene", "severe_toxic", "identity_hate"}
+
 def block_if_toxic(content):
     print("Checking content for toxicity:", content)
     if not content:
@@ -22,34 +26,26 @@ def block_if_toxic(content):
 
     label, score = extract_top_label_and_score(toxic_response)
 
-    if label == 'NEGATIVE' and score > 0.9:
-        raise ValidationError("Your content violates our community guidelines.")
-
+    # Block if any of the concerning labels are found with high confidence
+    if label in TOXIC_LABELS and score > 0.8:
+        raise ValidationError(f"Your content was flagged as '{label}'  Please revise it.")
 
 def extract_top_label_and_score(response):
-    """
-    Extracts the top label and score from the response.
-    Handles potential nesting and unexpected formats.
-    """
     if not isinstance(response, list) or not response:
         print("Unexpected response format:", response)
         return None, 0
 
-    # Handle nested list structure
+    # Check for double nesting (some models wrap the output in another list)
     first = response[0]
-    if isinstance(first, list) and first:
+    if isinstance(first, list):
         response = first
-        first = response[0]
 
-    if isinstance(first, dict):
-        top = max(response, key=lambda x: x.get('score', 0))
-        label = top.get('label')
-        score = top.get('score', 0)
-        print(f"Top label: {label}, Score: {score}")  # DEBUG
-        return label, score
+    top = max(response, key=lambda x: x.get('score', 0))
+    label = top.get('label')
+    score = top.get('score', 0)
+    print(f"Top label: {label}, Score: {score}")  # DEBUG
+    return label, score
 
-    print("Unexpected inner structure:", first)
-    return None, 0
 
 
 

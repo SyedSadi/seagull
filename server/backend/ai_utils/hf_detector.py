@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english"
+API_URL = "https://api-inference.huggingface.co/models/unitary/toxic-bert?wait_for_model=true"
+
+
 
 
 
@@ -20,7 +22,7 @@ def detect_toxic_content(text):
 
     if response.status_code != 200:
         print("HuggingFace API error:", response.status_code, response.text)
-        return {"error": response.text}
+        return {"error": f"{response.status_code}: {response.text}"}
 
-    results = response.json()
-    return results
+    return response.json()
+

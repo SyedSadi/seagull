@@ -13,7 +13,7 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
     setNestedComments(comments.filter(comment => comment.post === postId));
   }, [comments, postId]);
 
-
+  
   const extractErrorMessage = (error) => {
     const data = error.response?.data;
   
@@ -27,7 +27,7 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
     
     return error.message || 'An unknown error occurred.';
   };
-
+  const token = localStorage.getItem('access_token');
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newCommentText = e.target.comment.value;
@@ -38,6 +38,7 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
       const newComment = await replyToComment({
         post: postId,
         content: newCommentText,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setComments(prev => [...prev, newComment]);
       e.target.reset();

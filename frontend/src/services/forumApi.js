@@ -20,11 +20,11 @@ export const fetchComment = (postId) => {
 };
 
 
-export const replyToComment = async (data) => {
-    const res = await API.post('/forum/comments/', data);
-    return res.data;
-  };
-  
+export const replyToComment = async ({ headers = {}, ...data }) => {
+  const res = await API.post('/forum/comments/', data, { headers });
+  return res.data;
+};
+
   export const updateComment = async (id, data) => {
     const res = await API.put(`/forum/comments/${id}/`, data);
     return res.data;
@@ -93,7 +93,7 @@ export const replyToComment = async (data) => {
       throw error;
     }
   };
-  
+
   export const createTag = async (tagData) => {
     const response = await API.post('/forum/tags/', tagData);
     return response.data;
