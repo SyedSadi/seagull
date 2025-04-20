@@ -62,13 +62,14 @@ const Statistics = () => {
 	return (
 		<section className="py-10 bg-gray-50">
 			<div className="container mx-auto px-4">
-				<div className="text-center mb-20">
+				<div className="text-center mb-12 md:mb-20">
 					<h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
 						Our <span className="text-blue-600">Growing</span> Community
 					</h2>
 				</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+				{/* Desktop Grid View */}
+				<div className="hidden lg:grid lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
 					{statItems.map((item, index) => (
 						<div
 							key={index}
@@ -88,6 +89,34 @@ const Statistics = () => {
 									)}
 								</div>
 								<p className="text-gray-600 font-medium">{item.label}</p>
+							</div>
+						</div>
+					))}
+				</div>
+
+				{/* Mobile List View */}
+				<div className="lg:hidden space-y-4 max-w-md mx-6">
+					{statItems.map((item, index) => (
+						<div
+							key={index}
+							className="flex items-center bg-white rounded-xl shadow-md p-4 transform hover:scale-102 transition-transform duration-300"
+						>
+							<div className="flex-grow">
+								<div className="font-bold text-2xl md:text-3xl text-gray-900">
+									{isLoading ? (
+										<div className="animate-pulse h-6 w-24 bg-gray-200 rounded"></div>
+									) : (
+										item.value.toLocaleString()
+									)}
+								</div>
+								<p className="text-gray-600 text-sm md:text-base">
+									{item.label}
+								</p>
+							</div>
+							<div
+								className={`${item.color} text-white p-4 rounded-xl shadow-md mr-4 flex-shrink-0`}
+							>
+								<FontAwesomeIcon icon={item.icon} size="1x" />
 							</div>
 						</div>
 					))}

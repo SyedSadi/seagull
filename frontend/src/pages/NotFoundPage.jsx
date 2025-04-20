@@ -1,8 +1,10 @@
 function NotFoundPage() {
-    return <div>
-        <h1>404 Not Found</h1>
-        <p>The page you're looking for doesn't exist!</p>
-    </div>
+	return (
+		<div>
+			<h1>404 Not Found</h1>
+			<p>The page you&apos;re looking for doesn&apos;t exist!</p>
+		</div>
+	);
 }
 
 export default NotFoundPage;

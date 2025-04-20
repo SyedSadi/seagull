@@ -1,17 +1,17 @@
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faGraduationCap,
 	faUsers,
 	faChartLine,
 	faClock,
-	faChevronLeft,
-	faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 const WhyChooseUs = () => {
-	const [currentSlide, setCurrentSlide] = useState(0);
-
 	const features = [
 		{
 			icon: faGraduationCap,
@@ -35,14 +35,6 @@ const WhyChooseUs = () => {
 			description: "Flexible learning schedule that fits your lifestyle",
 		},
 	];
-
-	const nextSlide = () => {
-		setCurrentSlide((prev) => (prev === features.length - 1 ? 0 : prev + 1));
-	};
-
-	const prevSlide = () => {
-		setCurrentSlide((prev) => (prev === 0 ? features.length - 1 : prev - 1));
-	};
 
 	return (
 		<section className="pb-10 bg-gray-50">
@@ -75,20 +67,20 @@ const WhyChooseUs = () => {
 					))}
 				</div>
 
-				{/* Mobile Slider */}
-				<div className="lg:hidden relative">
-					<div className="overflow-hidden">
-						<div
-							className="flex transition-transform duration-300 ease-out"
-							style={{
-								transform: `translateX(-${currentSlide * 100}%)`,
-							}}
-						>
-							{features.map((feature, index) => (
-								<div
-									key={index}
-									className="w-full flex-shrink-0 p-8 text-center bg-white rounded-lg shadow-sm"
-								>
+				{/* Mobile Swiper */}
+				<div className="lg:hidden">
+					<Swiper
+						modules={[Pagination, Navigation]}
+						spaceBetween={20}
+						slidesPerView={1.2}
+						centeredSlides={true}
+						pagination={{ clickable: true }}
+						navigation
+						className="pb-12"
+					>
+						{features.map((feature, index) => (
+							<SwiperSlide key={index}>
+								<div className="p-8 text-center bg-white rounded-lg shadow-sm">
 									<div className="inline-block p-4 rounded-full bg-blue-50 text-blue-600 mb-4">
 										<FontAwesomeIcon icon={feature.icon} size="2x" />
 									</div>
@@ -97,39 +89,9 @@ const WhyChooseUs = () => {
 									</h3>
 									<p className="text-gray-600">{feature.description}</p>
 								</div>
-							))}
-						</div>
-					</div>
-
-					{/* Navigation Arrows */}
-					<button
-						onClick={prevSlide}
-						className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white p-2 rounded-full shadow-md text-blue-600 hover:text-blue-700 transition-colors"
-						aria-label="Previous slide"
-					>
-						<FontAwesomeIcon icon={faChevronLeft} />
-					</button>
-					<button
-						onClick={nextSlide}
-						className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-white p-2 rounded-full shadow-md text-blue-600 hover:text-blue-700 transition-colors"
-						aria-label="Next slide"
-					>
-						<FontAwesomeIcon icon={faChevronRight} />
-					</button>
-
-					{/* Dots Indicator */}
-					<div className="flex justify-center mt-6 space-x-2">
-						{features.map((_, index) => (
-							<button
-								key={index}
-								onClick={() => setCurrentSlide(index)}
-								className={`w-2 h-2 rounded-full transition-all duration-300 ${
-									currentSlide === index ? "bg-blue-600 w-4" : "bg-gray-300"
-								}`}
-								aria-label={`Go to slide ${index + 1}`}
-							/>
+							</SwiperSlide>
 						))}
-					</div>
+					</Swiper>
 				</div>
 			</div>
 		</section>
