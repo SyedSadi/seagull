@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX, faBars } from "@fortawesome/free-solid-svg-icons";
+import { faX, faBars, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 
@@ -127,7 +127,7 @@ const Navbar = () => {
 						</NavLink>
 						<NavLink
 							to={"/register"}
-							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 							onClick={() => setIsMenuOpen(false)}
 						>
 							Sign Up
@@ -137,14 +137,14 @@ const Navbar = () => {
 					<>
 						<NavLink
 							to={"/profile"}
-							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							className="text-4xl text-gray-200 hover:text-blue-500 hover:transition-colors duration-500"
 							onClick={() => setIsMenuOpen(false)}
 						>
-							Profile
+							<FontAwesomeIcon icon={faCircleUser} />
 						</NavLink>
 						<button
 							onClick={logoutUser}
-							className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer"
+							className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 						>
 							Log out
 						</button>
