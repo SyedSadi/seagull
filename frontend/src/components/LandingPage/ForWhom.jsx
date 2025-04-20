@@ -4,6 +4,11 @@ import {
 	faUserGraduate,
 	faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 const TargetAudience = () => {
 	const audiences = [
@@ -51,7 +56,8 @@ const TargetAudience = () => {
 					</p>
 				</div>
 
-				<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+				{/* Desktop View */}
+				<div className="hidden md:grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
 					{audiences.map((audience, index) => (
 						<div
 							key={index}
@@ -77,6 +83,44 @@ const TargetAudience = () => {
 							</div>
 						</div>
 					))}
+				</div>
+
+				{/* Mobile Swiper */}
+				<div className="md:hidden">
+					<Swiper
+						modules={[Pagination, Navigation]}
+						spaceBetween={20}
+						slidesPerView={1.2}
+						centeredSlides={true}
+						pagination={{ clickable: true }}
+						navigation
+						className="pb-12"
+					>
+						{audiences.map((audience, index) => (
+							<SwiperSlide key={index}>
+								<div className="group bg-white p-8 rounded-lg shadow-sm">
+									<div className="flex flex-col items-center text-center">
+										<div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+											<FontAwesomeIcon
+												icon={audience.icon}
+												className="text-blue-600 text-4xl"
+											/>
+										</div>
+										<h3 className="text-xl font-semibold text-gray-900 mb-4">
+											{audience.title}
+										</h3>
+										<ul className="space-y-3">
+											{audience.benefits.map((benefit, idx) => (
+												<li key={idx} className="text-gray-600 text-sm">
+													{benefit}
+												</li>
+											))}
+										</ul>
+									</div>
+								</div>
+							</SwiperSlide>
+						))}
+					</Swiper>
 				</div>
 			</div>
 		</section>
