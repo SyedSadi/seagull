@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
-import { getTags, updatePost } from '../../services/forumApi';
+import CreatableSelect from 'react-select/creatable';
+import {createTag, getTags, updatePost } from '../../services/forumApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -113,22 +113,41 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
           {/* React Select for Tags */}
           <div>
             <label className="block font-medium text-gray-700 mb-2">Select Tags (max 3):</label>
-            <Select
-              options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
-              value={selectedTags.map(tag => ({ value: tag.id, label: tag.name }))}
-              onChange={(selected) => {
-                const limited = selected.slice(0, 3);
-                setSelectedTags(limited.map(sel => ({
-                  id: sel.value,
-                  name: sel.label
-                })));
-              }}
-              isMulti
-              styles={customStyles}
-              placeholder="Choose up to 3 tags..."
-              closeMenuOnSelect={false}
-              className="text-sm"
-            />
+            <CreatableSelect
+                options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
+                value={selectedTags.map(tag => ({ value: tag.id, label: tag.name }))}
+                onChange={(selected) => {
+                  const limited = selected.slice(0, 3);
+                  setSelectedTags(limited.map(sel => ({
+                    id: sel.value,
+                    name: sel.label
+                  })));
+                }}
+                onCreateOption={async (inputValue) => {
+                  try {
+                    const newTag = await createTag({ name: inputValue }, token); // make sure your API matches
+                    const newTagObj = { id: newTag.id, name: newTag.name };
+
+                    setAllTags(prev => [...prev, newTagObj]);
+
+                    setSelectedTags(prev => {
+                      const updated = [...prev, newTagObj].slice(0, 3);
+                      return updated;
+                    });
+
+                    // toast.success(`Tag "${newTag.name}" created`);
+                  } catch (error) {
+                    toast.error('Failed to create tag');
+                    console.error('Create tag error:', error);
+                  }
+                }}
+                isMulti
+                styles={customStyles}
+                placeholder="Choose up to 3 tags..."
+                closeMenuOnSelect={false}
+                className="text-sm"
+              />
+
           </div>
 
           <button

@@ -6,6 +6,8 @@ import {fetchComment, deletePost } from '../../services/forumApi';
 import EditPostModal from './EditPostModal';
 import PropTypes from 'prop-types';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 
@@ -59,15 +61,62 @@ const Post = ({ post, onDelete }) => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This post will be permanently deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl p-6',
+        title: 'text-xl font-semibold text-gray-800',
+        htmlContainer: 'text-sm text-gray-600',
+        confirmButton: 'bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 focus:outline-none',
+        cancelButton: 'bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 focus:outline-none',
+      },
+      buttonsStyling: false,
+      didOpen: () => {
+        const buttons = Swal.getActions();
+        if (buttons) {
+          buttons.classList.add('flex', 'justify-center', 'gap-3', 'mt-4');
+        }
+      }
+    });
+    
+  
+    if (result.isConfirmed) {
       try {
         await deletePost(post.id, token);
         onDelete(post.id);
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Deleted!',
+          text: 'Your post has been removed.',
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: {
+            popup: 'rounded-xl p-5',
+            title: 'text-lg font-medium text-gray-800',
+            htmlContainer: 'text-sm text-gray-600',
+          },
+        });
       } catch (error) {
-        console.error('Error deleting post:', error.response ? error.response.data : error.message);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.response?.data?.error || 'Failed to delete the post.',
+          customClass: {
+            popup: 'rounded-xl p-5',
+            title: 'text-lg font-medium text-red-700',
+            htmlContainer: 'text-sm text-gray-600',
+          },
+        });
       }
     }
   };
+  
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200 hover:shadow-lg transition duration-300">

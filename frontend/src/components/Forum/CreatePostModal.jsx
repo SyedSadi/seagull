@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { fetchTag, createPost } from '../../services/forumApi'; 
+import {createTag, fetchTag, createPost } from '../../services/forumApi'; 
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';

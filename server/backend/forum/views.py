@@ -12,31 +12,29 @@ from ai_utils.hf_detector import detect_toxic_content
 from rest_framework.exceptions import ValidationError
 
 
-
-
 def block_if_toxic(content):
-    if not content:
-        return
+    print("Checking content for toxicity:", content)
+    if content:
+        toxic_response = detect_toxic_content(content)
+        print("Model response:", toxic_response)  # DEBUG
 
-    response = detect_toxic_content(content)
-    print("Toxicity response:", response)  # Optional debug
+        # Flatten nested list if needed
+        if isinstance(toxic_response, list):
+            if isinstance(toxic_response[0], list):
+                toxic_response = toxic_response[0]
 
-    # Flatten if nested (e.g., [[{label: ..., score: ...}]])
-    if isinstance(response, list) and len(response) == 1 and isinstance(response[0], list):
-        response = response[0]
+            if isinstance(toxic_response[0], dict):
+                top_result = max(toxic_response, key=lambda x: x['score'])
+                label = top_result.get('label')
+                score = top_result.get('score', 0)
+                print(f"Top label: {label}, Score: {score}")  # DEBUG
 
-    if isinstance(response, list) and all(isinstance(item, dict) for item in response):
-        top = max(response, key=lambda x: x.get('score', 0))
-        label = top.get('label')
-        score = top.get('score', 0)
-
-        print(f"Top label: {label}, Score: {score}")  # Optional debug
-
-        if label == 'NEGATIVE' and score > 0.9:
-            raise ValidationError("Your content violates our community guidelines.")
-    else:
-        print("⚠️ Unexpected response structure:", response)
-
+                if label == 'NEGATIVE' and score > 0.9:
+                    raise ValidationError("Your content violates our community guidelines.")
+            else:
+                print("Unexpected inner structure:", toxic_response[0])
+        else:
+            print("Unexpected response format:", toxic_response)
 
 
 
