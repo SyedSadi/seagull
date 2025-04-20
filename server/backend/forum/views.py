@@ -7,6 +7,50 @@ from .models import Post, Comment, Vote,Tag
 from .serializers import PostSerializer, CommentSerializer, VoteSerializer,TagSerializer
 from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count, Sum, Case, When, IntegerField, F,Q
+from ai_utils.hf_detector import detect_toxic_content
+
+from rest_framework.exceptions import ValidationError
+
+
+def block_if_toxic(content):
+    print("Checking content for toxicity:", content)
+    if not content:
+        return
+
+    toxic_response = detect_toxic_content(content)
+    print("Model response:", toxic_response)  # DEBUG
+
+    label, score = extract_top_label_and_score(toxic_response)
+
+    if label == 'NEGATIVE' and score > 0.9:
+        raise ValidationError("Your content violates our community guidelines.")
+
+
+def extract_top_label_and_score(response):
+    """
+    Extracts the top label and score from the response.
+    Handles potential nesting and unexpected formats.
+    """
+    if not isinstance(response, list) or not response:
+        print("Unexpected response format:", response)
+        return None, 0
+
+    # Handle nested list structure
+    first = response[0]
+    if isinstance(first, list) and first:
+        response = first
+        first = response[0]
+
+    if isinstance(first, dict):
+        top = max(response, key=lambda x: x.get('score', 0))
+        label = top.get('label')
+        score = top.get('score', 0)
+        print(f"Top label: {label}, Score: {score}")  # DEBUG
+        return label, score
+
+    print("Unexpected inner structure:", first)
+    return None, 0
+
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -35,7 +79,23 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
+        content = serializer.validated_data.get('content')
+        block_if_toxic(content)  # ✅ Will raise exception if toxic
         serializer.save(author=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        content = request.data.get('content')
+        block_if_toxic(content)  # Now raises ValidationError if toxic
+        return super().update(request, *args, **kwargs)
+        
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.author != request.user:
+            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    
    
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -49,7 +109,10 @@ class CommentViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(parent=None)  # ✅ Fetch only top-level comments
 
         return queryset
+
     def perform_create(self, serializer):
+        content = serializer.validated_data.get('content')
+        block_if_toxic(content)  # ✅ Will raise exception if toxic
         serializer.save(user=self.request.user)
 
     def update(self, request, *args, **kwargs):
@@ -57,10 +120,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         if instance.user != request.user:
             return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
 
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        content = request.data.get('content')
+        block_if_toxic(content)  # Will raise ValidationError if toxic
+
+        return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -121,3 +184,31 @@ class VoteViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+    def create(self, request, *args, **kwargs):
+        name = request.data.get('name', '').strip()
+
+        if not name:
+            return Response({'error': 'Tag name cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Prevent duplicates (case-insensitive)
+        tag = Tag.objects.filter(name__iexact=name).first()
+        if tag:
+            serializer = self.get_serializer(tag)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        # Otherwise create a new tag
+        serializer = self.get_serializer(data={'name': name})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        query = request.query_params.get('q', '').strip()
+        if not query:
+            return Response([], status=status.HTTP_200_OK)
+        
+        tags = Tag.objects.filter(name__icontains=query)[:10]  # return top 10 matches
+        serializer = self.get_serializer(tags, many=True)
+        return Response(serializer.data)

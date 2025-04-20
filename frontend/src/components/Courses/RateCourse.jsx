@@ -34,9 +34,9 @@ const RateCourse = ({ courseId }) => {
   };
 
   return (
-    <div className="flex items-center flex-wrap justify-center gap-2">
-    <h3 className="text-base font-medium text-gray-800">Rate this course:</h3>
-    <div className="flex space-x-1">
+    <div className="flex flex-col space-y-1 my-6">
+    <h3 className="text-lg font-medium text-gray-800">Rate this course</h3>
+    <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, index) => {
         const star = index + 1;
         return (
@@ -46,7 +46,7 @@ const RateCourse = ({ courseId }) => {
             onClick={() => submitRating(star)}
             onMouseEnter={() => setHover(star)}
             onMouseLeave={() => setHover(0)}
-            className={`text-2xl transition-transform transform hover:scale-125 ${
+            className={`text-2xl transition-transform transform hover:scale-110 ${
               star <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
             }`}
           >
@@ -54,10 +54,10 @@ const RateCourse = ({ courseId }) => {
           </button>
         );
       })}
+      {loading && <span className="text-sm text-gray-500 ml-2">Submitting...</span>}
     </div>
-    {loading && <span className="text-sm text-gray-500 ml-2">Submitting...</span>}
   </div>
-
+  
   );
 };
 

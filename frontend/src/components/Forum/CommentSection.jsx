@@ -1,29 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import Comment from './Comment';
-import API from '../../services/api';
+import { replyToComment } from '../../services/forumApi';
 import PropTypes from 'prop-types';
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
 
 const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setNestedComments(comments.filter(comment => comment.post === postId));
   }, [comments, postId]);
 
+
+  const extractErrorMessage = (error) => {
+    const data = error.response?.data;
+  
+    if (Array.isArray(data)) {
+      return data[0]; // like ["Your content violates our community guidelines."]
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.values(data).flat()[0]; // Handles {'content': ['msg']}
+    } else if (typeof data === 'string') {
+      return data;
+    }
+    
+    return error.message || 'An unknown error occurred.';
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newCommentText = e.target.comment.value;
+    setIsSubmitting(true); // Start loading state
+
     
     try {
-      const response = await API.post('/forum/comments/', {
+      const newComment = await replyToComment({
         post: postId,
         content: newCommentText,
       });
-      setComments(prev => [...prev, response.data]);
+      setComments(prev => [...prev, newComment]);
       e.target.reset();
     } catch (error) {
-      console.error('❌ Error submitting comment:', error);
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage, { autoClose: 5000 });
     }
+     finally{
+      setIsSubmitting(false); // Stop loading state
+     }
   };
 
   return (
@@ -35,11 +59,12 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
           placeholder="Write a comment..." 
           rows="3" 
         />
-        <button 
+          <button 
           type="submit" 
-          className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className={`mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isSubmitting} // Disable button while submitting
         >
-          Post Comment
+          {isSubmitting ? 'Posting...' : 'Post Comment'}
         </button>
       </form>
 
