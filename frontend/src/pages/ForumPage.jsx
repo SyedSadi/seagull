@@ -1,5 +1,4 @@
-import React from "react";
-import PostList from  '../components/Forum/PostList'
+import PostList from "../components/Forum/PostList";
 const ForumPage = () => {
 	return (
 		<div className="min-h-screen bg-gray-100 py-8">

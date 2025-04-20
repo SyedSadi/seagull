@@ -19,9 +19,8 @@ export const fetchComment = (postId) => {
   return API.get(`/forum/comments/?post=${postId}`);
 };
 
-
-export const replyToComment = async ({ headers = {}, ...data }) => {
-  const res = await API.post('/forum/comments/', data, { headers });
+export const replyToComment = async (data, config) => {
+  const res = await API.post('/forum/comments/', data, config);
   return res.data;
 };
 

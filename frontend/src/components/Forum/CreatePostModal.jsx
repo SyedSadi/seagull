@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
 import 'react-toastify/dist/ReactToastify.css';
+import PropTypes from 'prop-types';
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
@@ -192,6 +193,11 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       </div>
     </div>
   );
+};
+
+CreatePostModal.propTypes = {
+	onClose: PropTypes.func.isRequired,
+	refreshPosts: PropTypes.func.isRequired,
 };
 
 export default CreatePostModal;

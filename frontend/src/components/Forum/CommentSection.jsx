@@ -9,9 +9,9 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
   const [nestedComments, setNestedComments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    setNestedComments(comments.filter(comment => comment.post === postId));
-  }, [comments, postId]);
+	useEffect(() => {
+		setNestedComments(comments.filter((comment) => comment.post === postId));
+	}, [comments, postId]);
 
   
   const extractErrorMessage = (error) => {
@@ -69,33 +69,31 @@ const CommentSection = ({ postId, comments =[], setComments }) => {
         </button>
       </form>
 
-      {nestedComments.map(comment => (
-        <Comment 
-          key={comment.id} 
-          comment={comment} 
-          postId={postId} 
-          setComments={setComments}
-        />
-      ))}
-    </div>
-  );
+			{nestedComments.map((comment) => (
+				<Comment
+					key={comment.id}
+					comment={comment}
+					postId={postId}
+					setComments={setComments}
+				/>
+			))}
+		</div>
+	);
 };
 CommentSection.propTypes = {
-  postId: PropTypes.number.isRequired,
-  comments: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      content: PropTypes.string.isRequired,
-      post: PropTypes.number.isRequired,
-      author: PropTypes.number,
-      user: PropTypes.string,
-      created_at: PropTypes.string,
-      children: PropTypes.arrayOf(PropTypes.object),
-    })
-  ).isRequired,
-  setComments: PropTypes.func.isRequired,
+	postId: PropTypes.number.isRequired,
+	comments: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			content: PropTypes.string.isRequired,
+			post: PropTypes.number.isRequired,
+			author: PropTypes.number,
+			user: PropTypes.string,
+			created_at: PropTypes.string,
+			children: PropTypes.arrayOf(PropTypes.object),
+		})
+	).isRequired,
+	setComments: PropTypes.func.isRequired,
 };
-
-
 
 export default CommentSection;

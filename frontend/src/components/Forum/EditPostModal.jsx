@@ -171,19 +171,19 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
 };
 
 EditPostModal.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    )
-  }).isRequired,
-  onClose: PropTypes.func.isRequired,
-  refreshPost: PropTypes.func.isRequired
+	post: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		title: PropTypes.string.isRequired,
+		content: PropTypes.string.isRequired,
+		tags: PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.number.isRequired,
+				name: PropTypes.string.isRequired,
+			})
+		),
+	}).isRequired,
+	onClose: PropTypes.func.isRequired,
+	refreshPost: PropTypes.func.isRequired,
 };
 
 export default EditPostModal;

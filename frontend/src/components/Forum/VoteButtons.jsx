@@ -4,16 +4,15 @@ import { fetchUserVotes, postVote } from '../../services/forumApi';
 import PropTypes from 'prop-types';
 
 
-const VoteButtons = ({ postId, totalVotes =0 , onVote, toggleComments }) => {
-  const [voteState, setVoteState] = useState(0); // 1 for upvote, -1 for downvote, 0 for no vote
-  const [voteCount, setVoteCount] = useState(totalVotes);
-  
-  
-  const token = localStorage.getItem('access_token');
+const VoteButtons = ({ postId, totalVotes = 0, onVote, toggleComments }) => {
+	const [voteState, setVoteState] = useState(0); // 1 for upvote, -1 for downvote, 0 for no vote
+	const [voteCount, setVoteCount] = useState(totalVotes);
 
-  useEffect(() => {
-    setVoteCount(totalVotes);
-  }, [totalVotes]);
+	const token = localStorage.getItem("access_token");
+
+	useEffect(() => {
+		setVoteCount(totalVotes);
+	}, [totalVotes]);
 
   // ✅ Fetch user's previous vote state
   useEffect(() => {
@@ -72,12 +71,10 @@ const VoteButtons = ({ postId, totalVotes =0 , onVote, toggleComments }) => {
 };
 
 VoteButtons.propTypes = {
-  postId: PropTypes.number.isRequired,
-  totalVotes: PropTypes.number,
-  onVote: PropTypes.func.isRequired,
-  toggleComments: PropTypes.func.isRequired,
+	postId: PropTypes.number.isRequired,
+	totalVotes: PropTypes.number,
+	onVote: PropTypes.func.isRequired,
+	toggleComments: PropTypes.func.isRequired,
 };
-
-
 
 export default VoteButtons;
