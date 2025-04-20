@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getAllCourses } from "../../services/coursesApi";
+import PropTypes from "prop-types";
+import _ from "lodash";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -66,7 +68,7 @@ const CourseCard = ({ course }) => (
 							: "bg-gray-100 text-gray-800" // Fallback
 					}`}
 				>
-					{course.difficulty || "N/A"}
+					{_.capitalize(course.difficulty) || "N/A"}
 				</span>
 				<span className="flex items-center text-gray-700">
 					<FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />
@@ -148,7 +150,7 @@ const FeaturedCourses = () => {
 		return (
 			<div className="max-w-full mb-20">
 				{" "}
-				<h2 className="text-3xl md:text-3xl font-bold text-center mb-6 md:mb-10 px-4">
+				<h2 className="text-3xl md:text-4xl font-bold text-center mb-6 md:mb-10 px-4">
 					{title}
 				</h2>
 				{/* Mobile Slider View (using Swiper)*/}
@@ -208,7 +210,7 @@ const FeaturedCourses = () => {
 	}
 
 	return (
-		<section className="py-12 bg-gradient-to-b from-white to-blue-50">
+		<section className="pt-12">
 			{" "}
 			{renderCourseList(
 				latestCourses,
@@ -224,6 +226,17 @@ const FeaturedCourses = () => {
 			)}
 		</section>
 	);
+};
+
+CourseCard.propTypes = {
+	course: PropTypes.shape({
+		title: PropTypes.string,
+		description: PropTypes.string,
+		image: PropTypes.string,
+		difficulty: PropTypes.string,
+		ratings: PropTypes.number,
+		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	}),
 };
 
 export default FeaturedCourses;
