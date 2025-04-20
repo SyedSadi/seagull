@@ -122,7 +122,7 @@ else:
     #     }
     # }
     DATABASES = {
-        'default': dj_database_url.config('DATABASE_URL')
+    'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
 
 
@@ -186,4 +186,4 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS").split()
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default="https://localhost").split()
