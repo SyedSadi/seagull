@@ -181,3 +181,9 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config()
+}
