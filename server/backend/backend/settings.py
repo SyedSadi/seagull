@@ -187,3 +187,5 @@ import dj_database_url
 DATABASES = {
     'default': dj_database_url.config('DATABASE_URL')
 }
+
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS").split()
