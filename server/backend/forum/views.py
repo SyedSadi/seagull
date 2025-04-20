@@ -14,28 +14,42 @@ from rest_framework.exceptions import ValidationError
 
 def block_if_toxic(content):
     print("Checking content for toxicity:", content)
-    if content:
-        toxic_response = detect_toxic_content(content)
-        print("Model response:", toxic_response)  # DEBUG
+    if not content:
+        return
 
-        # Flatten nested list if needed
-        if isinstance(toxic_response, list):
-            if isinstance(toxic_response[0], list):
-                toxic_response = toxic_response[0]
+    toxic_response = detect_toxic_content(content)
+    print("Model response:", toxic_response)  # DEBUG
 
-            if isinstance(toxic_response[0], dict):
-                top_result = max(toxic_response, key=lambda x: x['score'])
-                label = top_result.get('label')
-                score = top_result.get('score', 0)
-                print(f"Top label: {label}, Score: {score}")  # DEBUG
+    label, score = extract_top_label_and_score(toxic_response)
 
-                if label == 'NEGATIVE' and score > 0.9:
-                    raise ValidationError("Your content violates our community guidelines.")
-            else:
-                print("Unexpected inner structure:", toxic_response[0])
-        else:
-            print("Unexpected response format:", toxic_response)
+    if label == 'NEGATIVE' and score > 0.9:
+        raise ValidationError("Your content violates our community guidelines.")
 
+
+def extract_top_label_and_score(response):
+    """
+    Extracts the top label and score from the response.
+    Handles potential nesting and unexpected formats.
+    """
+    if not isinstance(response, list) or not response:
+        print("Unexpected response format:", response)
+        return None, 0
+
+    # Handle nested list structure
+    first = response[0]
+    if isinstance(first, list) and first:
+        response = first
+        first = response[0]
+
+    if isinstance(first, dict):
+        top = max(response, key=lambda x: x.get('score', 0))
+        label = top.get('label')
+        score = top.get('score', 0)
+        print(f"Top label: {label}, Score: {score}")  # DEBUG
+        return label, score
+
+    print("Unexpected inner structure:", first)
+    return None, 0
 
 
 
