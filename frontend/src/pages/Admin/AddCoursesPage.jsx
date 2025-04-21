@@ -71,7 +71,8 @@ const AddCoursesPage = () => {
     console.log('updated', updatedCourse)
 
     try {
-      await addCourse(updatedCourse);
+      const res = await addCourse(updatedCourse);
+      console.log(res)
       setTimeout(() => {
         navigate("/courses");
       }, 1500);

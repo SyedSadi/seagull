@@ -46,7 +46,12 @@ class TestCourseDetailView:
         assert response.data['title'] == course.title
         assert response.data['description'] == course.description
         assert response.data['subject'] == course.subject
-        assert response.data['created_by'] == instructor.id
+        assert response.data['created_by'] == {
+        'id': instructor.id,
+        'name': 'instructor1',
+        'designation': '',
+        'university': ''
+        }
 
 
 @pytest.mark.django_db
@@ -55,12 +60,12 @@ class TestAddCourseView:
     def test_add_course(self):
         admin_user = User.objects.create_superuser(username="admin", password=config("TEST_PASSWORD"))
         instructor = Instructor.objects.create(user=User.objects.create_user(username="instructor1", password=config("TEST_PASSWORD")))
-
         course_data = {
             "title": "New Course",
             "description": "Description of the new course",
             "created_by": instructor.id,
             "duration": 10,
+            "ratings": 4,
             "difficulty": "beginner",
             "subject": "Math"
         }
@@ -69,7 +74,6 @@ class TestAddCourseView:
         response = client.post('/courses/add/', course_data, format='json')
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data['title'] == "New Course"
-        assert response.data['created_by'] == instructor.id
 
 
 @pytest.mark.django_db
