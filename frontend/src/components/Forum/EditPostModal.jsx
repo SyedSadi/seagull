@@ -1,128 +1,175 @@
-import { useState, useEffect } from "react";
-import API from "../../services/api";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import CreatableSelect from 'react-select/creatable';
+import {createTag, getTags, updatePost } from '../../services/forumApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditPostModal = ({ post, onClose, refreshPost }) => {
-	const [title, setTitle] = useState(post.title);
-	const [content, setContent] = useState(post.content);
-	const [allTags, setAllTags] = useState([]);
-	const [selectedTags, setSelectedTags] = useState(post.tags || []);
-	const token = localStorage.getItem("token");
+  const [title, setTitle] = useState(post.title);
+  const [content, setContent] = useState(post.content);
+  const [allTags, setAllTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(post.tags || []);
+  const token = localStorage.getItem('access_token');
 
-	useEffect(() => {
-		const fetchTags = async () => {
-			try {
-				const response = await API.get("/forum/tags/");
-				setAllTags(response.data);
-			} catch (error) {
-				console.error("Error fetching tags:", error);
-			}
-		};
-		fetchTags();
-	}, []);
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const data = await getTags();
+        setAllTags(data);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+    fetchTags();
+  }, []);
 
-	const handleTagSelect = (e) => {
-		const tagId = parseInt(e.target.value);
-		const tag = allTags.find((t) => t.id === tagId);
-		if (
-			tag &&
-			selectedTags.length < 3 &&
-			!selectedTags.some((t) => t.id === tagId)
-		) {
-			setSelectedTags([...selectedTags, tag]);
-		}
-	};
+  const handleSave = async () => {
+    if (selectedTags.length === 0) {
+      toast.error("Please select at least one tag.");
+      return;
+    }
 
-	const removeTag = (tagId) => {
-		setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
-	};
+    try {
+      const updatedPost = await updatePost(post.id, {
+        title,
+        content,
+        tag_ids: selectedTags.map(tag => tag.id)
+      }, token);
 
-	const handleSave = async () => {
-		if (selectedTags.length === 0) {
-			alert("Please select at least one tag.");
-			return;
-		}
-		console.log("Attempting to update post:", post.id);
-		try {
-			const response = await API.put(
-				`/forum/posts/${post.id}/`,
-				{
-					title, // Ensure the updated title is sent
-					content, // Ensure the updated content is sent
-					tag_ids: selectedTags.map((tag) => tag.id), // Send updated tag IDs
-				},
-				{ headers: { Authorization: `Bearer ${token}` } }
-			);
-			console.log("Post updated successfully:", response.data);
-			refreshPost(response.data); // Update the UI with the new post data
-			onClose(); // Close the modal after saving
-		} catch (error) {
-			console.error(
-				"Error updating post:",
-				error.response ? error.response.data : error.message
-			);
-		}
-	};
+      toast.success("Post updated successfully!");
+      refreshPost(updatedPost);
+      onClose();
+    } catch (error) {
+      const data = error.response?.data;
+      let errorMessage;
 
-	return (
-		<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-			<div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-				<h2 className="text-xl font-bold mb-4">Edit Post</h2>
-				<input
-					type="text"
-					className="w-full p-2 border rounded mb-2"
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-				/>
-				<textarea
-					className="w-full p-2 border rounded mb-2"
-					value={content}
-					onChange={(e) => setContent(e.target.value)}
-				/>
-				{/* Tag Selection */}
-				<select
-					onChange={handleTagSelect}
-					className="w-full p-2 border rounded mb-2"
-				>
-					<option value="">Select a Tag</option>
-					{allTags.map((tag) => (
-						<option key={tag.id} value={tag.id}>
-							{tag.name}
-						</option>
-					))}
-				</select>
-				<div className="flex flex-wrap gap-2 mb-4">
-					{selectedTags.map((tag) => (
-						<span
-							key={tag.id}
-							className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-						>
-							{tag.name}{" "}
-							<button
-								onClick={() => removeTag(tag.id)}
-								className="text-red-600 ml-2"
-							>
-								×
-							</button>
-						</span>
-					))}
-				</div>
+      if (Array.isArray(data)) {
+        errorMessage = data[0];
+      } else if (typeof data === 'object' && data !== null) {
+        errorMessage = data.error || Object.values(data)[0];
+      } else {
+        errorMessage = error.message || 'An unknown error occurred.';
+      }
 
-				<div className="flex justify-end gap-2">
-					<button
-						onClick={handleSave}
-						className="bg-blue-500 text-white px-4 py-2 rounded"
-					>
-						Save
-					</button>
-					<button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">
-						Cancel
-					</button>
-				</div>
-			</div>
-		</div>
-	);
+      toast.error(errorMessage, { autoClose: 5000 });
+    }
+  };
+
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      borderRadius: '0.75rem',
+      borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
+      boxShadow: state.isFocused ? '0 0 0 2px rgba(59,130,246,0.5)' : 'none',
+      padding: '2px',
+      fontSize: '0.875rem',
+      minHeight: '42px',
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: '#dbeafe',
+      color: '#1e40af',
+      borderRadius: '9999px',
+      padding: '2px 6px',
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: '#1e40af',
+      fontWeight: '500',
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: '#1e40af',
+      ':hover': {
+        backgroundColor: '#bfdbfe',
+        color: '#1e3a8a',
+      }
+    }),
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
+        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Edit Post</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6">
+          <input
+            type="text"
+            placeholder="Enter your post title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+            required
+          />
+          <textarea
+            placeholder="Write your content here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+            rows="6"
+            required
+          />
+
+          {/* React Select for Tags */}
+          <div>
+            <label className="block font-medium text-gray-700 mb-2">Select Tags (max 3):</label>
+            <CreatableSelect
+                options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
+                value={selectedTags.map(tag => ({ value: tag.id, label: tag.name }))}
+                onChange={(selected) => {
+                  const limited = selected.slice(0, 3);
+                  setSelectedTags(limited.map(sel => ({
+                    id: sel.value,
+                    name: sel.label
+                  })));
+                }}
+                onCreateOption={async (inputValue) => {
+                  try {
+                    const newTag = await createTag({ name: inputValue }, token); // make sure your API matches
+                    const newTagObj = { id: newTag.id, name: newTag.name };
+
+                    setAllTags(prev => [...prev, newTagObj]);
+
+                    setSelectedTags(prev => {
+                      const updated = [...prev, newTagObj].slice(0, 3);
+                      return updated;
+                    });
+
+                    // toast.success(`Tag "${newTag.name}" created`);
+                  } catch (error) {
+                    toast.error('Failed to create tag');
+                    console.error('Create tag error:', error);
+                  }
+                }}
+                isMulti
+                styles={customStyles}
+                placeholder="Choose up to 3 tags..."
+                closeMenuOnSelect={false}
+                className="text-sm"
+              />
+
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
+          >
+            Save Changes
+          </button>
+          <button
+            onClick={onClose}
+            type="button"
+            className="w-full text-center text-gray-500 hover:underline pt-2"
+          >
+            Cancel
+          </button>
+        </form>
+        <ToastContainer />
+      </div>
+    </div>
+  );
 };
+
 EditPostModal.propTypes = {
 	post: PropTypes.shape({
 		id: PropTypes.number.isRequired,

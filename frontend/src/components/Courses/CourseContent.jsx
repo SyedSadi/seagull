@@ -12,12 +12,12 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 const VideoContent = ({ url }) => {
 	const youtubeId = getYouTubeId(url);
 	return youtubeId ? (
-		<div className="mb-4">
+		<div className="w-full mb-6">
 			<iframe
 				className="w-full mx-auto h-60 rounded-lg"
 				src={`https://www.youtube.com/embed/${youtubeId}`}
 				title="Course Video"
-				allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 				allowFullScreen
 			/>
 			<a
@@ -33,18 +33,18 @@ const VideoContent = ({ url }) => {
 };
 
 const PDFContent = ({ pdfUrl }) => (
-	<div className="my-4">
+	<div className="w-full">
 		<iframe
-			className="w-full h-[600px] rounded-lg shadow-md"
+			className="w-full h-[600px] rounded-xl shadow"
 			src={pdfUrl}
-			title="Course PDF"
+			title="PDF Viewer"
 		/>
 		<div className="mt-2 flex space-x-4">
 			<a
 				href={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
-				className="bg-indigo-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-indigo-400 transition"
 				target="_blank"
 				rel="noopener noreferrer"
+				className="text-sm bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-lg"
 			>
 				Open in New Tab
 			</a>

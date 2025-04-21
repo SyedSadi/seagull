@@ -4,6 +4,7 @@ import { getAllCourses } from "../../services/coursesApi";
 import { FaBookOpen, FaSearch } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FiSearch } from "react-icons/fi"; 
 
 const CourseList = () => {
 	const [courses, setCourses] = useState([]);

@@ -11,4 +11,4 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
         owner = getattr(obj, 'author', None) or getattr(obj, 'user', None)
         
         # Allow modification only if the logged-in user is the owner
-        return owner == request.user
+        return owner == request.user or request.user.is_superuser

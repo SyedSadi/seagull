@@ -1,6 +1,12 @@
-import { useState } from "react";
-import API from "../../services/api";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import { replyToComment, updateComment, deleteComment } from '../../services/forumApi';
+import PropTypes from 'prop-types';
+import { formatDistanceToNow } from 'date-fns';
+import { ToastContainer, toast } from 'react-toastify';  // Import react-toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import default styles
+
+
+
 
 const Comment = ({ comment = {}, postId, setComments }) => {
 	const [isReplying, setIsReplying] = useState(false);
@@ -8,93 +14,95 @@ const Comment = ({ comment = {}, postId, setComments }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedContent, setEditedContent] = useState(comment.content);
 
-	const userData = localStorage.getItem("user");
-	const user = userData ? JSON.parse(userData) : null;
-	const userId = user ? user.id : null;
-	const isOwner = comment.author === Number(userId);
+  const userData = localStorage.getItem('user');
+  const user = userData ? JSON.parse(userData) : null;
+  const userId = user ? user.id : null;
+  const isOwner = comment.author === Number(userId);
+  const token = localStorage.getItem('access_token');
+
+  const extractErrorMessage = (error) => {
+    const data = error.response?.data;
+  
+    if (Array.isArray(data)) {
+      return data[0]; // like ["Your content violates our community guidelines."]
+    } else if (typeof data === 'object' && data !== null) {
+      return Object.values(data).flat()[0]; // Handles {'content': ['msg']}
+    } else if (typeof data === 'string') {
+      return data;
+    }
+    
+    return error.message || 'An unknown error occurred.';
+  };
+
 
 	const handleReplySubmit = async (e) => {
 		e.preventDefault();
 
-		try {
-			const response = await API.post("/forum/comments/", {
-				post: postId,
-				content: replyContent,
-				parent_id: comment.id, // ✅ Ensure correct parent_id is sent
-			});
+    try {
+        const newReply = await replyToComment(
+          {
+            post: postId,
+            content: replyContent,
+            parent_id: comment.id
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        // ✅ Ensure deeper replies update in real-time
+        setComments(prevComments => insertReply(prevComments, comment.id, newReply));
 
-			const newReply = response.data;
+        setIsReplying(false);
+        setReplyContent('');
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error);
+      toast.error(errorMessage, { autoClose: 5000 });
+    }
+};
+const insertReply = (comments, parentId, newReply) => {
+  return comments.map(comment => {
+      if (comment.id === parentId) {
+          return { ...comment, children: [...(comment.children || []), newReply] };
+      }
+      return { ...comment, children: insertReply(comment.children || [], parentId, newReply) };
+  });
+};
 
-			// ✅ Ensure deeper replies update in real-time
-			setComments((prevComments) =>
-				insertReply(prevComments, comment.id, newReply)
-			);
 
-			setIsReplying(false);
-			setReplyContent("");
-		} catch (error) {
-			console.error(
-				"❌ Error submitting reply:",
-				error.response?.data || error
-			);
-		}
-	};
-	const insertReply = (comments, parentId, newReply) => {
-		return comments.map((comment) => {
-			if (comment.id === parentId) {
-				return {
-					...comment,
-					children: [...(comment.children || []), newReply],
-				};
-			}
-			return {
-				...comment,
-				children: insertReply(comment.children || [], parentId, newReply),
-			};
-		});
-	};
 
-	const handleEdit = async () => {
-		try {
-			const token = localStorage.getItem("access_token");
-			await API.put(
-				`/forum/comments/${comment.id}/`,
-				{ content: editedContent },
-				{ headers: { Authorization: `Bearer ${token}` } }
-			);
+const handleEdit = async () => {
+  try {
+      
+        await updateComment(comment.id, { content: editedContent }, {
+          headers: { Authorization: `Bearer ${token}` } // ✅ Include token in request headers
+        });
+      // ✅ Update comment state deeply (works for children too)
+      setComments(prevComments => updateCommentInTree(prevComments, comment.id, editedContent));
 
-			// ✅ Update comment state deeply (works for children too)
-			setComments((prevComments) =>
-				updateCommentInTree(prevComments, comment.id, editedContent)
-			);
+      setIsEditing(false);
+  } catch (error) {
+    const errorMessage = extractErrorMessage(error);
+    toast.error(errorMessage, { autoClose: 5000 });
+  }
+};
+const updateCommentInTree = (comments, commentId, newContent) => {
+  return comments.map(comment => {
+      if (comment.id === commentId) {
+          return { ...comment, content: newContent };
+      }
+      return { ...comment, children: updateCommentInTree(comment.children || [], commentId, newContent) };
+  });
+};
 
-			setIsEditing(false);
-		} catch (error) {
-			console.error("❌ Error editing comment:", error.response?.data || error);
-		}
-	};
-	const updateCommentInTree = (comments, commentId, newContent) => {
-		return comments.map((comment) => {
-			if (comment.id === commentId) {
-				return { ...comment, content: newContent };
-			}
-			return {
-				...comment,
-				children: updateCommentInTree(
-					comment.children || [],
-					commentId,
-					newContent
-				),
-			};
-		});
-	};
 
-	const handleDelete = async () => {
-		try {
-			const token = localStorage.getItem("access_token");
-			await API.delete(`/forum/comments/${comment.id}/`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
+const handleDelete = async () => {
+  try {
+      
+    await deleteComment(comment.id, {
+      headers: { Authorization: `Bearer ${token}` } // ✅ Include token in request headers
+    });
+
 
 			// ✅ Remove comment from nested state immediately
 			setComments((prevComments) =>
@@ -116,13 +124,13 @@ const Comment = ({ comment = {}, postId, setComments }) => {
 			}));
 	};
 
-	return (
-		<div className="ml-4 border-l-2 pl-4 mb-4">
-			<div className="flex items-center text-sm text-gray-600 mb-1">
-				<span className="font-medium">{comment.user || "Unknown User"}</span>
-				<span className="mx-2">•</span>
-				<span>{new Date(comment.created_at).toLocaleString()}</span>
-			</div>
+  return (
+    <div className="ml-4 border-l-2 pl-4 mb-4">
+      <div className="flex items-center text-sm text-gray-600 mb-1">
+        <span className="font-medium">{comment.user || "Unknown User"}</span>
+        <span className="mx-2">•</span>
+        <span>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</span>
+      </div>
 
 			{isEditing ? (
 				<textarea
