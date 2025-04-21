@@ -32,7 +32,13 @@ SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 STATIC_URL = "static/"
 
+# This is for when you deploy your app. Make sure to set this to your desired directory.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# If using collectstatic, you can add this:
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Application definition
 
@@ -58,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -111,19 +118,19 @@ if os.getenv('GITHUB_WORKFLOW') or os.getenv('CI'):
         }
     }
 else:
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.postgresql',
-    #         'NAME': config('DB_NAME'),
-    #         'USER': config('DB_USER'),
-    #         'PASSWORD': config('DB_PASSWORD'),
-    #         'HOST': config('DB_HOST'),
-    #         'PORT': config('DB_PORT', cast=int),
-    #     }
-    # }
     DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'))
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT', cast=int),
+        }
     }
+    # DATABASES = {
+    # 'default': dj_database_url.config(default=config('DATABASE_URL'))
+    # }
 
 
 # Password validation
