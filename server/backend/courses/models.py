@@ -45,7 +45,6 @@ class CourseContents(models.Model):
     order = models.PositiveIntegerField(default=0)
     url = models.URLField(null=True, blank=True)
     text_content = models.TextField(blank=True)
-    # file = models.FileField(upload_to='course_files/', null=True, blank=True)
 
     class Meta:
         ordering = ['order']

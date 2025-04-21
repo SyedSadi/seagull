@@ -33,6 +33,6 @@ Thumbs.db
 Pipfile.lock
 
 # Ignore coverage reports
-coverage.xml
-htmlcov/
-.coverage
+**/coverage.xml
+**/htmlcov/
+**/.coverage

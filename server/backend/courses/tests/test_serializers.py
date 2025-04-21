@@ -189,3 +189,85 @@ def test_course_serializer_valid(create_course, create_course_content):
     assert len(serializer.data['contents']) == 1
     assert serializer.data['contents'][0]['title'] == content.title
     assert 'ratings' in serializer.data
+
+
+@pytest.mark.django_db
+class TestCourseContentsSerializerValidation:
+
+    @pytest.fixture
+    def course(self):
+        instructor = Instructor.objects.create(user=User.objects.create_user(username="inst", password=config("TEST_PASSWORD")))
+        return Course.objects.create(
+            title="Validation Course",
+            description="Course for testing",
+            created_by=instructor,
+            duration=5,
+            difficulty="beginner",
+            subject="Science"
+        )
+
+    def test_valid_video_content(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "video",
+            "title": "Valid Video",
+            "url": "https://example.com/video.mp4"
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert serializer.is_valid()
+
+    def test_invalid_video_missing_url(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "video",
+            "title": "Invalid Video",
+            "url": ""  # Missing URL
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert not serializer.is_valid()
+        assert "non_field_errors" in serializer.errors
+        assert "Video content must have a URL." in str(serializer.errors["non_field_errors"])
+
+    def test_valid_article_content(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "article",
+            "title": "Valid Article",
+            "text_content": "Some useful article text"
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert serializer.is_valid()
+
+    def test_invalid_article_missing_text(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "article",
+            "title": "Invalid Article",
+            "text_content": ""  # Missing text
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert not serializer.is_valid()
+        assert "non_field_errors" in serializer.errors
+        assert "For Articles Text content cannot be empty." in str(serializer.errors["non_field_errors"])
+
+    def test_valid_pdf_content(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "pdf",
+            "title": "Valid PDF",
+            "url": "https://example.com/sample.pdf"
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert serializer.is_valid()
+
+    def test_invalid_pdf_missing_url(self, course):
+        data = {
+            "course": course.id,
+            "content_type": "pdf",
+            "title": "Invalid PDF",
+            "url": ""
+        }
+        serializer = CourseContentsSerializer(data=data)
+        assert not serializer.is_valid()
+        assert "non_field_errors" in serializer.errors
+        assert "PDF content must include a url." in str(serializer.errors["non_field_errors"])

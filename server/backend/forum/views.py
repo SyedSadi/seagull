@@ -16,6 +16,8 @@ from rest_framework.exceptions import ValidationError
 
 TOXIC_LABELS = {"toxic", "threat", "insult", "obscene", "severe_toxic", "identity_hate"}
 
+PERMISSION_DENIED_MESSAGE = "Permission Denied"
+
 def block_if_toxic(content):
     print("Checking content for toxicity:", content)
     if not content:
@@ -87,7 +89,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.author != request.user:
-            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": PERMISSION_DENIED_MESSAGE}, status=status.HTTP_403_FORBIDDEN)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -114,7 +116,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.user != request.user:
-            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": PERMISSION_DENIED_MESSAGE}, status=status.HTTP_403_FORBIDDEN)
 
         content = request.data.get('content')
         block_if_toxic(content)  # Will raise ValidationError if toxic
@@ -124,7 +126,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.user != request.user:
-            return Response({"error": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": PERMISSION_DENIED_MESSAGE}, status=status.HTTP_403_FORBIDDEN)
 
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
