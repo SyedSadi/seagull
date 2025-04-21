@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
 import PropTypes from "prop-types";
+import { FaSpinner } from "react-icons/fa";
 
 
 const Dashboard = () => {
@@ -52,7 +53,9 @@ const Dashboard = () => {
 // Loading Spinner Component
 const Loading = () => (
   <AdminLayout>
-    <div className="p-6 text-center">Loading...</div>
+    <div className="flex justify-center items-center h-screen">
+    <FaSpinner className="animate-spin text-4xl" />
+    </div>  
   </AdminLayout>
 );
 

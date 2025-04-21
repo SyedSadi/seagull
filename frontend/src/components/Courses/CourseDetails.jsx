@@ -84,36 +84,36 @@ const CourseDetails = () => {
 
   return (
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
-  <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-10">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+  <div className="max-w-7xl mx-auto  p-6 md:p-10">
+    <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left Content Area */}
       <div>
-        <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
+        <h1 className="text-5xl font-semibold text-gray-900 mb-4">{course.title}</h1>
         <p className="text-lg text-gray-600 mb-6">{course.description}</p>
 
         <div className="space-y-3 text-gray-700 text-sm">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-gray-900 font-medium">Subject:</span>
-            <span className="bg-sky-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">{course.subject}</span>
+            <span className="text-gray-900 text-lg font-bold">Subject:</span>
+            <span className="bg-sky-100 text-blue-600 px-3 py-1 rounded-full text-md font-semibold">{course.subject}</span>
           </div>
 
-          <p>
-            <span className="text-gray-900 font-medium">Difficulty:</span> {course.difficulty.toUpperCase()}
+          <p className="text-gray-900 text-lg">
+            <span className="font-bold">Difficulty:</span> {course.difficulty.toUpperCase()}
           </p>
 
-          <p>
-            <span className="text-gray-900 font-medium">Duration:</span> {course.duration} hours
+          <p className="text-gray-900 text-lg">
+            <span className="font-bold" >Duration:</span> {course.duration} hours
           </p>
 
-          <p>
-            <span className="text-gray-900 font-medium">Ratings:</span> {course.ratings}/5
+          <p className="text-gray-900 text-lg">
+            <span className="font-bold" >Ratings:</span> {course.ratings}/5
           </p>
 
           {/* Instructor Info */}
           <div className="pt-4 border-t mt-4">
-            <p><span className="text-gray-900 font-medium">Instructor Name:</span> {course.created_by?.name}</p>
-            <p><span className="text-gray-900 font-medium">Designation:</span> {course.created_by?.designation}</p>
-            <p><span className="text-gray-900 font-medium">University:</span> {course.created_by?.university}</p>
+            <p><span className="text-gray-900 text-lg font-bold">Instructor Name:</span> {course.created_by?.name}</p>
+            <p><span className="text-gray-900 text-lg font-bold">Designation:</span> {course.created_by?.designation}</p>
+            <p><span className="text-gray-900 text-lg font-bold">University:</span> {course.created_by?.university}</p>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAllCourses } from "../../services/coursesApi";
-import { FaBookOpen, FaSearch } from "react-icons/fa";
+import { FaBookOpen, FaSearch, FaSpinner } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FiSearch } from "react-icons/fi"; 
@@ -9,18 +9,22 @@ import { FiSearch } from "react-icons/fi";
 const CourseList = () => {
 	const [courses, setCourses] = useState([]);
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [loading, setLoading] = useState(false);
 	const [localSearch, setLocalSearch] = useState(
 		searchParams.get("search") || ""
 	);
 
 	useEffect(() => {
 		const fetchCourses = async () => {
+			setLoading(true)
 			try {
 				const searchQuery = searchParams.get("search") || "";
 				const data = await getAllCourses(searchQuery);
 				setCourses(data);
 			} catch (error) {
 				console.error("Error fetching courses:", error);
+			}finally{
+				setLoading(false)
 			}
 		};
 
@@ -32,10 +36,18 @@ const CourseList = () => {
 		setSearchParams(localSearch ? { search: localSearch } : {});
 	};
 
+	if(loading) {
+		return (
+			  <div className="flex justify-center items-center h-screen">
+				<FaSpinner className="animate-spin text-4xl" />
+			  </div>
+			);
+	}
+
 	return (
-		<div>
+		<div className="px-6 pb-12">
 			{/* Search Bar */}
-			<div className="mb-8">
+			<div className="my-8">
 				<form onSubmit={handleLocalSearch} className="max-w-2xl mx-auto">
 					<div className="flex gap-2">
 						<div className="relative flex-1">
@@ -59,39 +71,8 @@ const CourseList = () => {
 			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 				{courses?.map((course) => (
-					// <div
-					// 	key={course.id}
-					// 	className="card bg-white shadow-xl rounded-lg h-full flex flex-col transition-all transform hover:shadow-2xl"
-					// >
-					// 	<figure className="m-0 flex-grow">
-					// 		<img
-					// 			className="w-full h-48 object-cover"
-					// 			src={course.image}
-					// 			alt="Course"
-					// 		/>
-					// 	</figure>
-					// 	<div className="p-6 flex flex-col flex-grow">
-					// 		<h3 className="text-sm text-gray-500 mb-2">#{course.subject}</h3>
-					// 		<Link
-					// 			to={`/courses/${course.id}`}
-					// 			className="text-2xl font-semibold text-gray-800 hover:underline"
-					// 		>
-					// 			{course.title}
-					// 		</Link>
-					// 		<p className="text-gray-600 text-sm mt-2">{course.description}</p>
-					// 		<p className="text-sm text-gray-500 mt-4">{course.difficulty}</p>
-					// 		<div className="mt-auto">
-					// 			<Link
-					// 				to={`/courses/${course.id}`}
-					// 				className="btn btn-primary w-1/2 ml-auto flex items-center justify-center gap-2"
-					// 			>
-					// 				<FaBookOpen className="text-white" />
-					// 				Details
-					// 			</Link>
-					// 		</div>
-					// 	</div>
-					// </div>
-					<div className="bg-white rounded-lg shadow-md transition duration-300 flex flex-col h-full overflow-hidden">
+					<Link key={course.id} to={`/courses/${course.id}`}>
+						<div className="bg-white rounded-lg shadow-md transition duration-300 flex flex-col h-full overflow-hidden">
 							{/* Course Image */}
 							<div className="relative h-40 w-full flex-shrink-0">
 								{" "}
@@ -147,7 +128,9 @@ const CourseList = () => {
 									View Course
 								</Link>
 							</div>
-						</div>
+					</div>
+					</Link>
+					
 				))}
 			</div>
 		</div>

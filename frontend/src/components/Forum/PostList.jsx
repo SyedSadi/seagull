@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { FiFilter } from 'react-icons/fi';
 import { AiOutlineEdit } from 'react-icons/ai';
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaSpinner, FaTimes } from 'react-icons/fa';
 import { fetchPost } from '../../services/forumApi';
 import Post from './Post';
 import CreatePostModal from './CreatePostModal';
@@ -13,6 +13,7 @@ const PostList = () => {
   const [searchTag, setSearchTag] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
   const filterRef = useRef(null);
   
 
@@ -21,10 +22,13 @@ const PostList = () => {
   // Optimized fetchPosts function using useCallback
   const fetchPosts = useCallback(async () => {
     try {
+      setLoading(true)
       const response = await fetchPost(filter, searchTag);
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
+    }finally{
+      setLoading(false)
     }
   }, [filter, searchTag]);
 
@@ -71,6 +75,14 @@ const PostList = () => {
 			prevPosts.filter((post) => post.id !== deletedPostId)
 		);
 	};
+
+  if(loading) {
+      return (
+          <div className="flex justify-center items-center h-screen">
+            <FaSpinner className="animate-spin text-4xl" />
+          </div>
+        );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">

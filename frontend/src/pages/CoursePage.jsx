@@ -2,8 +2,7 @@ import CourseList from "../components/Courses/CourseList";
 
 const CoursePage = () => {
 	return (
-		<div>
-			
+		<div>	
 			<CourseList />
 		</div>
 	);
