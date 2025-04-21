@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
-from users.models import User
+from users.models import User, Instructor
 from decouple import config
 
 @pytest.mark.django_db
@@ -93,3 +93,70 @@ class TestInstructorViewSet:
         assert 'id' in response.data[0]
         assert 'name' in response.data[0]
         assert response.data[0]['name'] == user.username
+
+
+@pytest.mark.django_db
+class TestProfileView:
+
+    def setup_method(self):
+        self.client = APIClient()
+        self.password = config("TEST_PASSWORD")
+
+    def test_get_profile(self):
+        user = User.objects.create_user(username="testuser", password=self.password, bio="Hello there!", role="student")
+        self.client.force_authenticate(user=user)
+
+        response = self.client.get("/users/")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["username"] == "testuser"
+        assert response.data["bio"] == "Hello there!"
+
+    def test_put_profile_student(self):
+        user = User.objects.create_user(username="student1", password=self.password, bio="Old bio", role="student")
+        self.client.force_authenticate(user=user)
+
+        updated_data = {
+            "bio": "New bio"
+        }
+
+        response = self.client.put("/users/", updated_data, format="json")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["bio"] == "New bio"
+
+    def test_put_profile_instructor(self):
+        user = User.objects.create_user(username="instructor1", password=self.password, role="instructor")
+        self.client.force_authenticate(user=user)
+
+        updated_data = {
+            "bio": "Instructor bio update",
+            "instructor": {
+                "designation": "Senior Lecturer",
+                "university": "MIT"
+            }
+        }
+
+        response = self.client.put("/users/", updated_data, format="json")
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["bio"] == "Instructor bio update"
+
+        instructor = Instructor.objects.get(user=user)
+        assert instructor.designation == "Senior Lecturer"
+        assert instructor.university == "MIT"
+
+@pytest.mark.django_db
+def test_landing_page_stats_view():
+    client = APIClient()
+
+    response = client.get("/landingpage/stats/")  # Update this path if your actual URL is different
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["success"] is True
+    assert "data" in response.data
+    assert "message" in response.data
+    assert isinstance(response.data["data"], dict)
+    assert "total_courses" in response.data["data"]
+    assert "total_students" in response.data["data"]
+    assert "total_instructors" in response.data["data"]
