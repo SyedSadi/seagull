@@ -80,6 +80,10 @@ jobs:
         run: |
           python manage.py makemigrations --check --dry-run
 
+      - name: Fake Migrate
+        run: |
+          python manage.py migrate --fake
+      
       - name: Run migrations
         working-directory: ./server/backend
         run: |
