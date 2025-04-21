@@ -81,6 +81,7 @@ jobs:
           python manage.py makemigrations --check --dry-run
 
       - name: Fake Migrate
+        working-directory: ./server/backend
         run: |
           python manage.py migrate --fake
       
