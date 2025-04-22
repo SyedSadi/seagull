@@ -164,7 +164,7 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
             Cancel
           </button>
         </form>
-        <ToastContainer />
+        <ToastContainer position='bottom-right' />
       </div>
     </div>
   );

@@ -45,10 +45,11 @@ const CourseList = () => {
 	}
 
 	return (
-		<div className="px-6 pb-12">
+		<div className="px-10 pb-12">
 			{/* Search Bar */}
-			<div className="my-8">
-				<form onSubmit={handleLocalSearch} className="max-w-2xl mx-auto">
+			<div className="my-8 flex justify-between items-center">
+				<h1 className="text-3xl font-bold">Courses</h1>
+				<form onSubmit={handleLocalSearch} className="max-w-2xl ml-auto">
 					<div className="flex gap-2">
 						<div className="relative flex-1">
 							<input
@@ -62,14 +63,14 @@ const CourseList = () => {
 						</div>
 						<button
 							type="submit"
-							className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+							className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
 						>
-							Search
+							<FaSearch/>
 						</button>
 					</div>
 				</form>
 			</div>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 				{courses?.map((course) => (
 					<Link key={course.id} to={`/courses/${course.id}`}>
 						<div className="bg-white rounded-lg shadow-md transition duration-300 flex flex-col h-full overflow-hidden">

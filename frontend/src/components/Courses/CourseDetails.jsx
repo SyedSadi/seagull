@@ -136,7 +136,7 @@ const CourseDetails = () => {
       </div>
     </div>
 
-    <ToastContainer />
+    <ToastContainer position="bottom-right" />
   </div>
 </div>
 
