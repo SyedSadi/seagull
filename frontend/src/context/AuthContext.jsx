@@ -39,13 +39,16 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async (credentials, navigate, location) => {
     try {
       const response = await API.post("/login/", credentials);
-      localStorage.setItem("access_token", response.data.access);
-      localStorage.setItem("refresh_token", response.data.refresh);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      console.log(response)
+      if(response?.data?.user){
+        localStorage.setItem("access_token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUser(response.data.user);
+        navigate(location.state?.from?.pathname, { replace: true });
+      }      
       console.log('new token after lgoin', response.data.access)
       console.log('new decoded token after login ', jwtDecode(response.data.access))
-      setUser(response.data.user);
-      navigate(location.state?.from?.pathname, { replace: true });
 
       return response;
     } catch (error) {

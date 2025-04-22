@@ -4,6 +4,8 @@ import { getEnrolledCourses, enroll, getCourseDetailsById } from "../../services
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
 import OTPModal from "./OTPModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -88,7 +90,7 @@ const CourseDetails = () => {
     <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-10">
       {/* Left Content Area */}
       <div>
-        <h1 className="text-5xl font-semibold text-gray-900 mb-4">{course.title}</h1>
+        <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
         <p className="text-lg text-gray-600 mb-6">{course.description}</p>
 
         <div className="space-y-3 text-gray-700 text-sm">
@@ -106,14 +108,14 @@ const CourseDetails = () => {
           </p>
 
           <p className="text-gray-900 text-lg">
-            <span className="font-bold" >Ratings:</span> {course.ratings}/5
+            <span className="font-bold" >Ratings:</span> {course.ratings} <FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />{course.ratings_count ?  <span className="text-gray-500">ratings</span>:<span className="text-gray-500">(No ratings yet)</span> }
           </p>
 
           {/* Instructor Info */}
           <div className="pt-4 border-t mt-4">
-            <p><span className="text-gray-900 text-lg font-bold">Instructor Name:</span> {course.created_by?.name}</p>
-            <p><span className="text-gray-900 text-lg font-bold">Designation:</span> {course.created_by?.designation}</p>
-            <p><span className="text-gray-900 text-lg font-bold">University:</span> {course.created_by?.university}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold">Instructor Name:</span> {course.created_by_details?.name}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold">Designation:</span> {course.created_by_details?.designation || "Not Provided"}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold">University:</span> {course.created_by_details?.university || "Not Provided"}</p>
           </div>
         </div>
 

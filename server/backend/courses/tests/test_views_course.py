@@ -46,7 +46,7 @@ class TestCourseDetailView:
         assert response.data['title'] == course.title
         assert response.data['description'] == course.description
         assert response.data['subject'] == course.subject
-        assert response.data['created_by'] == {
+        assert response.data['created_by_details'] == {
         'id': instructor.id,
         'name': 'instructor1',
         'designation': '',

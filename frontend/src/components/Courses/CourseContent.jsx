@@ -145,7 +145,7 @@ const CourseContent = () => {
 					)}
 
 					{content?.content_type === 'pdf' && content?.url && (
-						<PDFContent pdfUrl={dummyPdfUrl} />
+						<PDFContent pdfUrl={content?.url} />
 					)}
 				</div>
 
