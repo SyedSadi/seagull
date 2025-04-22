@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "forum",
     "courses",
     "quiz",
+    'drf_spectacular',
 ]
 
 
@@ -118,16 +119,16 @@ if os.getenv('GITHUB_WORKFLOW') or os.getenv('CI'):
         }
     }
 else:
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.postgresql',
-    #         'NAME': config('DB_NAME'),
-    #         'USER': config('DB_USER'),
-    #         'PASSWORD': config('DB_PASSWORD'),
-    #         'HOST': config('DB_HOST'),
-    #         'PORT': config('DB_PORT', cast=int),
-    #     }
-    # }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT', cast=int),
+        }
+    }
     DATABASES = {
     'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=1800)
     }
@@ -181,6 +182,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'KUETx API',
+    'DESCRIPTION': 'API of a modern Learning Management System built to revolutionize online education. Our API includes Authentication, Users, Courses, Course Content, Quiz and Forum',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }
 
 from datetime import timedelta

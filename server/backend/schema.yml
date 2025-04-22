@@ -1,0 +1,1717 @@
+openapi: 3.0.3
+info:
+  title: KUETx API
+  version: 1.0.0
+  description:
+    API of a modern Learning Management System built to revolutionize online
+    education. Our API includes Authentication, Users, Courses, Course Content, Quiz
+    and Forum
+paths:
+  /courses/:
+    get:
+      operationId: courses_list
+      parameters:
+        - name: search
+          required: false
+          in: query
+          description: A search term.
+          schema:
+            type: string
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+          description: ""
+  /courses/{course_id}/rate/:
+    get:
+      operationId: courses_rate_retrieve
+      description: Mixin to handle student enrollment validation.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+    post:
+      operationId: courses_rate_create
+      description: Mixin to handle student enrollment validation.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /courses/{id}/:
+    get:
+      operationId: courses_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+          description: ""
+  /courses/add/:
+    post:
+      operationId: courses_add_create
+      description: Base class for admin-only operations.
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /courses/by-instructor/:
+    get:
+      operationId: courses_by_instructor_list
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+          description: ""
+  /courses/content/{course_id}/:
+    get:
+      operationId: courses_content_list
+      description: Mixin to handle student enrollment validation.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourseContents"
+          description: ""
+  /courses/content/add/:
+    post:
+      operationId: courses_content_add_create
+      description: Base class for admin-only operations.
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /courses/content/delete/{id}/:
+    delete:
+      operationId: courses_content_delete_destroy
+      description: Base class for admin-only operations.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /courses/content/update/{id}/:
+    put:
+      operationId: courses_content_update_update
+      description: Base class for admin-only operations.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /courses/enroll/{course_id}/:
+    post:
+      operationId: courses_enroll_create
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /courses/enrolled/:
+    get:
+      operationId: courses_enrolled_list
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+          description: ""
+  /courses/update-delete/{course_id}/:
+    put:
+      operationId: courses_update_delete_update
+      description: Base class for admin-only operations.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+    delete:
+      operationId: courses_update_delete_destroy
+      description: Base class for admin-only operations.
+      parameters:
+        - in: path
+          name: course_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - courses
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /dashboard/stats/:
+    get:
+      operationId: dashboard_stats_retrieve
+      tags:
+        - dashboard
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /forum/comments/:
+    get:
+      operationId: forum_comments_list
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+          description: ""
+    post:
+      operationId: forum_comments_create
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Comment"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Comment"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+          description: ""
+  /forum/comments/{id}/:
+    get:
+      operationId: forum_comments_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+          description: ""
+    put:
+      operationId: forum_comments_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Comment"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Comment"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+          description: ""
+    patch:
+      operationId: forum_comments_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedComment"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedComment"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedComment"
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+          description: ""
+    delete:
+      operationId: forum_comments_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this comment.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /forum/posts/:
+    get:
+      operationId: forum_posts_list
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+          description: ""
+    post:
+      operationId: forum_posts_create
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Post"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Post"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+          description: ""
+  /forum/posts/{id}/:
+    get:
+      operationId: forum_posts_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this post.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+          description: ""
+    put:
+      operationId: forum_posts_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this post.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Post"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Post"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+          description: ""
+    patch:
+      operationId: forum_posts_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this post.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedPost"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedPost"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedPost"
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+          description: ""
+    delete:
+      operationId: forum_posts_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this post.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /forum/tags/:
+    get:
+      operationId: forum_tags_list
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tag"
+          description: ""
+    post:
+      operationId: forum_tags_create
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Tag"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: ""
+  /forum/tags/{id}/:
+    get:
+      operationId: forum_tags_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this tag.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: ""
+    put:
+      operationId: forum_tags_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this tag.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Tag"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: ""
+    patch:
+      operationId: forum_tags_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this tag.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedTag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedTag"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedTag"
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: ""
+    delete:
+      operationId: forum_tags_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this tag.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /forum/tags/search/:
+    get:
+      operationId: forum_tags_search_retrieve
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: ""
+  /forum/votes/:
+    get:
+      operationId: forum_votes_list
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vote"
+          description: ""
+    post:
+      operationId: forum_votes_create
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vote"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Vote"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Vote"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote"
+          description: ""
+  /forum/votes/{id}/:
+    get:
+      operationId: forum_votes_retrieve
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this vote.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote"
+          description: ""
+    put:
+      operationId: forum_votes_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this vote.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vote"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Vote"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Vote"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote"
+          description: ""
+    patch:
+      operationId: forum_votes_partial_update
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this vote.
+          required: true
+      tags:
+        - forum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchedVote"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PatchedVote"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PatchedVote"
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote"
+          description: ""
+    delete:
+      operationId: forum_votes_destroy
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: A unique integer value identifying this vote.
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /forum/votes/{post_id}/user-vote/:
+    get:
+      operationId: forum_votes_user_vote_retrieve
+      description: Allow only authenticated users to see their own vote on a post.
+      parameters:
+        - in: path
+          name: post_id
+          schema:
+            type: string
+            pattern: ^\d+$
+          required: true
+      tags:
+        - forum
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vote"
+          description: ""
+  /landingpage/stats/:
+    get:
+      operationId: landingpage_stats_retrieve
+      tags:
+        - landingpage
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          description: No response body
+  /login/:
+    post:
+      operationId: login_create
+      tags:
+        - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Login"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Login"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Login"
+          description: ""
+  /logout/:
+    post:
+      operationId: logout_create
+      tags:
+        - logout
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          description: No response body
+  /quiz/:
+    get:
+      operationId: quiz_list
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+          description: ""
+  /quiz/{category_id}/:
+    get:
+      operationId: quiz_retrieve
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          description: No response body
+  /quiz/add/:
+    post:
+      operationId: quiz_add_create
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /quiz/add-question/:
+    post:
+      operationId: quiz_add_question_create
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /quiz/attempts/:
+    get:
+      operationId: quiz_attempts_retrieve
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /quiz/delete/:
+    delete:
+      operationId: quiz_delete_destroy
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "204":
+          description: No response body
+  /quiz/submit-quiz/:
+    post:
+      operationId: quiz_submit_quiz_create
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /quiz/update-questions/{question_id}/:
+    put:
+      operationId: quiz_update_questions_update
+      parameters:
+        - in: path
+          name: question_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /quiz/update/{category_id}/:
+    put:
+      operationId: quiz_update_update
+      parameters:
+        - in: path
+          name: category_id
+          schema:
+            type: integer
+          required: true
+      tags:
+        - quiz
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /register/:
+    post:
+      operationId: register_create
+      tags:
+        - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Register"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Register"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Register"
+        required: true
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Register"
+          description: ""
+  /token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+        - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomTokenObtainPair"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CustomTokenObtainPair"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CustomTokenObtainPair"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomTokenObtainPair"
+          description: ""
+  /token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+        - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomTokenRefresh"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CustomTokenRefresh"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CustomTokenRefresh"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomTokenRefresh"
+          description: ""
+  /users/:
+    get:
+      operationId: users_retrieve
+      tags:
+        - users
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+    put:
+      operationId: users_update
+      tags:
+        - users
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /users/instructors/:
+    get:
+      operationId: users_instructors_list
+      tags:
+        - users
+      security:
+        - jwtAuth: []
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Instructor"
+          description: ""
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        question_count:
+          type: integer
+          readOnly: true
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+          readOnly: true
+      required:
+        - created_at
+        - description
+        - id
+        - name
+        - question_count
+        - questions
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        post:
+          type: integer
+        parent_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        parent:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+        depth:
+          type: string
+          readOnly: true
+        children:
+          type: string
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+      required:
+        - author
+        - children
+        - content
+        - created_at
+        - depth
+        - id
+        - is_owner
+        - parent
+        - post
+        - updated_at
+        - user
+    ContentTypeEnum:
+      enum:
+        - video
+        - pdf
+        - article
+      type: string
+      description: |-
+        * `video` - Video
+        * `pdf` - PDF
+        * `article` - Article
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        created_by:
+          type: integer
+          writeOnly: true
+        created_by_details:
+          allOf:
+            - $ref: "#/components/schemas/Instructor"
+          readOnly: true
+        duration:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        difficulty:
+          $ref: "#/components/schemas/DifficultyEnum"
+        subject:
+          type: string
+          maxLength: 255
+        ratings:
+          type: number
+          format: double
+          readOnly: true
+        contents:
+          type: array
+          items:
+            $ref: "#/components/schemas/CourseContents"
+          readOnly: true
+        ratings_count:
+          type: string
+          readOnly: true
+        image:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+      required:
+        - contents
+        - created_by
+        - created_by_details
+        - description
+        - difficulty
+        - duration
+        - id
+        - ratings
+        - ratings_count
+        - subject
+        - title
+    CourseContents:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content_type:
+          $ref: "#/components/schemas/ContentTypeEnum"
+        title:
+          type: string
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 200
+        text_content:
+          type: string
+        course:
+          type: integer
+      required:
+        - content_type
+        - course
+        - id
+        - title
+    CustomTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+        - password
+        - username
+    CustomTokenRefresh:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+          readOnly: true
+      required:
+        - access
+        - refresh
+    DifficultyEnum:
+      enum:
+        - beginner
+        - intermediate
+        - advanced
+      type: string
+      description: |-
+        * `beginner` - Beginner
+        * `intermediate` - Intermediate
+        * `advanced` - Advanced
+    Instructor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        designation:
+          type: string
+          maxLength: 100
+        university:
+          type: string
+          maxLength: 100
+      required:
+        - designation
+        - id
+        - name
+        - university
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+        - password
+        - username
+    Option:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          maxLength: 255
+        is_correct:
+          type: boolean
+      required:
+        - id
+        - text
+    PatchedComment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        post:
+          type: integer
+        parent_id:
+          type: integer
+          writeOnly: true
+          nullable: true
+        parent:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+        depth:
+          type: string
+          readOnly: true
+        children:
+          type: string
+          readOnly: true
+        is_owner:
+          type: string
+          readOnly: true
+    PatchedPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+        author_name:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        total_votes:
+          type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+          readOnly: true
+        tag_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+    PatchedTag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+    PatchedVote:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        post:
+          type: integer
+        value:
+          allOf:
+            - $ref: "#/components/schemas/ValueEnum"
+          minimum: -32768
+          maximum: 32767
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: integer
+          readOnly: true
+        author_name:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        total_votes:
+          type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+          readOnly: true
+        tag_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+      required:
+        - author
+        - author_name
+        - content
+        - created_at
+        - id
+        - tag_ids
+        - tags
+        - title
+        - total_votes
+        - updated_at
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        category:
+          type: integer
+        text:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/Option"
+      required:
+        - category
+        - id
+        - options
+        - text
+    Register:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description:
+            Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        role:
+          $ref: "#/components/schemas/RoleEnum"
+        bio:
+          type: string
+          nullable: true
+      required:
+        - id
+        - password
+        - role
+        - username
+    RoleEnum:
+      enum:
+        - student
+        - instructor
+      type: string
+      description: |-
+        * `student` - Student
+        * `instructor` - Instructor
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+        - id
+        - name
+    ValueEnum:
+      enum:
+        - 1
+        - -1
+      type: integer
+      description: |-
+        * `1` - Upvote
+        * `-1` - Downvote
+    Vote:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        post:
+          type: integer
+        value:
+          allOf:
+            - $ref: "#/components/schemas/ValueEnum"
+          minimum: -32768
+          maximum: 32767
+      required:
+        - id
+        - post
+        - user
+        - value
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
