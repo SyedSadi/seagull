@@ -66,6 +66,11 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_total_votes(self, obj):
         return obj.votes.filter(value=1).count() - obj.votes.filter(value=-1).count()
+    def validate_tag_ids(self, value):
+    if len(value) > 3:
+        raise serializers.ValidationError("You can assign a maximum of 3 tags.")
+    return value
+
 
 
 class VoteSerializer(serializers.ModelSerializer):
