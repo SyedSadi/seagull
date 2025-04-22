@@ -38,7 +38,7 @@ class QuizAttempt(models.Model):
     completed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.category.name} - {self.score}/{self.category.question_count()}"
+        return f"{self.user.username} - {self.category.name} - {self.score}/{self.category.question_count}"
 
 class UserAnswer(models.Model):
     attempt = models.ForeignKey(QuizAttempt, related_name='answers', on_delete=models.CASCADE)
