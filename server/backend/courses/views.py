@@ -94,7 +94,7 @@ class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
 
 class AddContentAPIView(AdminOnlyAPIView):
     def post(self, request):
-        course = self.get_course_or_404(request.data.get('course'))
+        self.get_course_or_404(request.data.get('course'))
         serializer = CourseContentsSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
