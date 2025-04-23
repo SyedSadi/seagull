@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseViewSet, CourseDetailView, AddCourseView, UpdateContentView, UpdateDeleteCourseView, EnrollCourseView, EnrolledCoursesView, CourseContentsView, InstructorCoursesView, RateCourseView, AddContentAPIView, DeleteContentView
+from .views import CourseViewSet, CourseDetailView, AddCourseView, UpdateContentView, UpdateDeleteCourseView, EnrollCourseView, EnrolledCoursesView, CourseContentsView, InstructorCoursesView, RateCourseView, AddContentAPIView, DeleteContentView, InvoiceDownloadView
 
 urlpatterns = [
     path('', CourseViewSet.as_view({'get': 'list'}), name='all_courses'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path("by-instructor/", InstructorCoursesView.as_view(), name="instructor-courses"),
     path('<int:course_id>/rate/', RateCourseView.as_view(), name='course-rating'),
     path('content/add/', AddContentAPIView.as_view(), name='add-content'),
+    path('invoice/<int:course_id>/', InvoiceDownloadView.as_view(), name='generate_invoice')
 ]

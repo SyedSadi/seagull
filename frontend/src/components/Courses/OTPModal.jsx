@@ -2,13 +2,14 @@ import React, { useState, forwardRef, useImperativeHandle } from "react";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { generateInvoice } from "../../services/coursesApi";
 
-const OTPModal = forwardRef((_, ref) => {
+const OTPModal = forwardRef(({courseId}, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState(null);
   const [inputOtp, setInputOtp] = useState("");
   const [resolver, setResolver] = useState(null);
-
+  console.log(courseId)
   useImperativeHandle(ref, () => ({
     open: () => {
       setInputOtp("");
@@ -24,13 +25,35 @@ const OTPModal = forwardRef((_, ref) => {
     toast.success(`OTP Generated: ${otp}`, { autoClose: 5000, position: "top-center" });
   };
 
-  const verifyOtp = () => {
+  const verifyOtp = async () => {
     if (inputOtp === generatedOtp) {
-      Swal.fire("Verified, OTP matched");
+      Swal.fire({
+        title: "Verified",
+        text: "OTP matched",
+        icon: "success", // shows green tick
+        confirmButtonText: "OK"
+      });
+      
       resolver(true);
       setIsOpen(false);
+
+      // generate invoice
+      const response = await generateInvoice(courseId)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice_course_${courseId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } else {
-      Swal.fire("Incorrect OTP");
+      Swal.fire({
+        title: "Incorrect OTP",
+        text: "Please try again",
+        icon: "error", // shows red cross
+        confirmButtonText: "Retry"
+      });
+      
     }
   };
 

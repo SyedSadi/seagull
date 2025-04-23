@@ -206,3 +206,89 @@ class RateCourseView(UserEnrollmentMixin, APIView):
             {"course": course.title, "rating": rating.rating if rating else 0}, 
             status=status.HTTP_200_OK
         )
+    
+
+# --------------------- INVOICE GENERATION ----------------------
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.colors import HexColor, black, grey
+from django.http import HttpResponse
+from datetime import datetime
+
+class InvoiceDownloadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, course_id):
+        course = Course.objects.get(id=course_id)
+        user = request.user
+        price = 49.99
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="invoice_{course.title}_{user.username}.pdf"'
+
+        width = 4 * inch
+        height = 6.5 * inch
+        p = canvas.Canvas(response, pagesize=(width, height))
+
+        # Header
+        p.setFillColor(HexColor("#004080"))
+        p.rect(0, height - 60, width, 60, fill=True, stroke=False)
+        p.setFillColor("white")
+        p.setFont("Helvetica-Bold", 16)
+        p.drawString(12, height - 38, "KUETx")
+        p.setFont("Helvetica", 9)
+        p.drawString(12, height - 52, "Where Learning Connects")
+
+        # Title
+        p.setFont("Helvetica-Bold", 12)
+        p.setFillColor(black)
+        p.drawString(12, height - 85, "Course Invoice")
+
+        # Course & User Info
+        y = height - 110
+        p.setFont("Helvetica", 9)
+        p.drawString(12, y, f"Name: {user.username}")
+        y -= 14
+        p.drawString(12, y, f"Email: {user.email}")
+        y -= 14
+        p.drawString(12, y, f"Date: {datetime.now().strftime('%Y-%m-%d %I:%M %p')}")
+        y -= 20
+
+        # Section: Course Details
+        p.setFont("Helvetica-Bold", 10)
+        p.drawString(12, y, "Course Details")
+        y -= 14
+        p.setFont("Helvetica", 9)
+        p.drawString(20, y, f"• Title: {course.title}")
+        y -= 12
+        p.drawString(20, y, f"• Subject: {course.subject}")
+        y -= 12
+        p.drawString(20, y, f"• Level: {course.difficulty}")
+        y -= 12
+        p.drawString(20, y, f"• Duration: {course.duration} hrs")
+        y -= 20
+
+        # Section: Payment
+        p.setFont("Helvetica-Bold", 10)
+        p.drawString(12, y, "Payment Info")
+        y -= 14
+        p.setFont("Helvetica", 9)
+        p.drawString(20, y, f"• Price: ${price:.2f}")
+        y -= 14
+        p.drawString(20, y, "• Verified by Seagull")
+
+        # Footer
+        y = 50
+        p.setStrokeColor(grey)
+        p.setLineWidth(0.4)
+        p.line(10, y + 10, width - 10, y + 10)
+
+        p.setFont("Helvetica-Oblique", 7)
+        p.setFillColor(HexColor("#004080"))
+        p.drawString(12, y, "Thank you for learning with KUETx!")
+        p.drawString(12, y - 10, "support@kuetx.com")
+
+        p.showPage()
+        p.save()
+
+        return response

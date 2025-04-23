@@ -24,7 +24,6 @@ const CourseDetails = () => {
 
         setCourse(courseData);
         const enrolledCourses = enrolledData.data || [];
-        console.log(courseData);
         setIsEnrolled(enrolledCourses.some((c) => c.id === parseInt(id)));
       } catch (error) {
         console.error("Error loading course or enrollment info:", error);
@@ -108,21 +107,21 @@ const CourseDetails = () => {
           </p>
 
           <p className="text-gray-900 text-lg">
-            <span className="font-bold" >Ratings:</span> {course.ratings} <FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />{course.ratings_count ?  <span className="text-gray-500">ratings</span>:<span className="text-gray-500">(No ratings yet)</span> }
+            <span className="font-bold" >Ratings:</span> {course.ratings} <FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />{course?.ratings_count ?  <span className="text-gray-500"> ({course?.ratings_count} ratings)</span>:<span className="text-gray-500">(No ratings yet)</span> }
           </p>
 
           {/* Instructor Info */}
           <div className="pt-4 border-t mt-4">
-            <p className="text-gray-900 text-lg "><span className="font-bold">Instructor Name:</span> {course.created_by_details?.name}</p>
-            <p className="text-gray-900 text-lg "><span className="font-bold">Designation:</span> {course.created_by_details?.designation || "Not Provided"}</p>
-            <p className="text-gray-900 text-lg "><span className="font-bold">University:</span> {course.created_by_details?.university || "Not Provided"}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">Instructor Name:</span> {course.created_by_details?.name.toUpperCase()}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">Designation:</span> {course.created_by_details?.designation || "not provided"}</p>
+            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">University:</span> {course.created_by_details?.university || "not provided"}</p>
           </div>
         </div>
 
         {/* Action Button */}
         <div className="mt-6">
           {renderActionButton()}
-          <OTPModal ref={otpRef} />
+          <OTPModal ref={otpRef} courseId={id} />
         </div>
       </div>
 

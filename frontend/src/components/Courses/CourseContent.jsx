@@ -5,7 +5,7 @@ import RateCourse from "./RateCourse";
 import PropTypes from "prop-types";
 import { AiFillFilePdf, AiFillPlayCircle, AiOutlineFileText } from 'react-icons/ai';
 import { MdArticle } from 'react-icons/md';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaSpinner } from 'react-icons/fa';
 
 
 // Helper components
@@ -14,7 +14,7 @@ const VideoContent = ({ url }) => {
 	return youtubeId ? (
 		<div className="w-full mb-6">
 			<iframe
-				className="w-full mx-auto h-60 rounded-lg"
+				className="w-3/4 h-80 rounded-lg"
 				src={`https://www.youtube.com/embed/${youtubeId}`}
 				title="Course Video"
 				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -75,7 +75,9 @@ const CourseContent = () => {
 	}, [id]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <div className="flex justify-center items-center h-screen">
+				<FaSpinner className="animate-spin text-4xl" />
+			  </div>
 	}
 	if (contents.length == 0) {
 		return <div className="text-center text-2xl my-6">NO CONTENTS FOUND</div>;
@@ -132,7 +134,7 @@ const CourseContent = () => {
 			<div className="flex flex-col md:flex-row w-full gap-6 p-6">
 				{/* Left: Content Display */}
 				<div className="md:w-3/4 w-full bg-base-100 rounded-xl shadow-md p-6 space-y-4">
-					<div className="text-gray-800 font-semibold text-3xl">
+					<div className="text-gray-800 font-semibold text-3xl mb-8">
 						{content?.order + 1}. {content?.title}
 					</div>
 
@@ -150,8 +152,8 @@ const CourseContent = () => {
 				</div>
 
 				{/* Right: Content List */}
-				<div className="md:w-1/4 w-full bg-base-200 rounded-xl shadow-inner p-4 space-y-2 max-h-[80vh] overflow-y-auto">
-					<h3 className="text-xl font-bold text-gray-700 my-2">All Contents</h3>
+				<div className="md:w-1/3 w-full bg-base-200 rounded-xl shadow-inner p-4 space-y-2 max-h-[80vh] overflow-y-auto">
+					<h3 className="text-xl font-bold text-gray-700 my-2 mb-4">All Contents</h3>
 					{contents?.map((item, index) => (
 					<button
 						key={item.id}

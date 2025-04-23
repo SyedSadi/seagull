@@ -51,3 +51,9 @@ export const getInstructorCourses = async () => {
 	const res = await API.get("/courses/by-instructor");
 	return res;
 };
+
+//get invoice for course enrollment
+export const generateInvoice = async (courseId) => {
+	const res = await API.get(`/courses/invoice/${courseId}/`);
+	return res;
+}

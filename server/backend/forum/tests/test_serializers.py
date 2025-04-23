@@ -2,11 +2,12 @@ import pytest
 from forum.models import Post, Comment, Vote, Tag
 from users.models import User
 from forum.serializers import PostSerializer, CommentSerializer, VoteSerializer
+from decouple import config
 
 
 @pytest.mark.django_db
 def test_post_serializer_create():
-    user = User.objects.create_user(username='tester', password='testpass')
+    user = User.objects.create_user(username='tester', password=config('TEST_PASSWORD'))
     tag1 = Tag.objects.create(name='django')
     tag2 = Tag.objects.create(name='rest')
 
@@ -25,7 +26,7 @@ def test_post_serializer_create():
 
 @pytest.mark.django_db
 def test_post_serializer_tag_limit_validation():
-    user = User.objects.create_user(username='tester', password='testpass')
+    user = User.objects.create_user(username='tester', password=config('TEST_PASSWORD'))
     tags = [Tag.objects.create(name=f'tag{i}') for i in range(4)]
     
     data = {
@@ -41,7 +42,7 @@ def test_post_serializer_tag_limit_validation():
 
 @pytest.mark.django_db
 def test_comment_serializer_nested_children():
-    user = User.objects.create_user(username='commenter', password='testpass')
+    user = User.objects.create_user(username='commenter', password=config('TEST_PASSWORD'))
     post = Post.objects.create(title='Test', content='test content', author=user)
     parent_comment = Comment.objects.create(post=post, user=user, content='parent')
     child_comment = Comment.objects.create(post=post, user=user, content='child', parent=parent_comment)
@@ -55,7 +56,7 @@ def test_comment_serializer_nested_children():
 
 @pytest.mark.django_db
 def test_vote_serializer():
-    user = User.objects.create_user(username='voter', password='testpass')
+    user = User.objects.create_user(username='voter', password=config('TEST_PASSWORD'))
     post = Post.objects.create(title='Vote Test', content='...', author=user)
     vote = Vote.objects.create(user=user, post=post, value=1)
 
@@ -68,7 +69,7 @@ def test_vote_serializer():
 
 @pytest.mark.django_db
 def test_post_serializer_update_valid():
-    user = User.objects.create_user(username='tester', password='testpass')
+    user = User.objects.create_user(username='tester', password=config('TEST_PASSWORD'))
     tags = [Tag.objects.create(name=f'tag{i}') for i in range(2)]
     post = Post.objects.create(author=user, title='Old Title', content='Old content')
     post.tags.set(tags)
@@ -91,7 +92,7 @@ def test_post_serializer_update_valid():
 
 @pytest.mark.django_db
 def test_post_serializer_total_votes():
-    user = User.objects.create_user(username='voter', password='testpass')
+    user = User.objects.create_user(username='voter', password=config('TEST_PASSWORD'))
     post = Post.objects.create(title='Vote Count', content='...', author=user)
 
     Vote.objects.create(user=user, post=post, value=1)
@@ -105,7 +106,7 @@ def test_post_serializer_total_votes():
 # ✅ NEW TEST: No tags on update
 @pytest.mark.django_db
 def test_post_serializer_update_with_no_tags():
-    user = User.objects.create_user(username='tester', password='testpass')
+    user = User.objects.create_user(username='tester', password=config('TEST_PASSWORD'))
     initial_tag = Tag.objects.create(name='initial')
     post = Post.objects.create(title='Initial', content='Initial content', author=user)
     post.tags.add(initial_tag)
