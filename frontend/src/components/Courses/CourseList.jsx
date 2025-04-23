@@ -1,75 +1,41 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAllCourses } from "../../services/coursesApi";
-import { FaBookOpen, FaSearch, FaSpinner } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FiSearch } from "react-icons/fi"; 
 
 const CourseList = () => {
 	const [courses, setCourses] = useState([]);
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams] = useSearchParams();
 	const [loading, setLoading] = useState(false);
-	const [localSearch, setLocalSearch] = useState(
-		searchParams.get("search") || ""
-	);
 
 	useEffect(() => {
 		const fetchCourses = async () => {
-			setLoading(true)
+			setLoading(true);
 			try {
 				const searchQuery = searchParams.get("search") || "";
 				const data = await getAllCourses(searchQuery);
 				setCourses(data);
 			} catch (error) {
 				console.error("Error fetching courses:", error);
-			}finally{
-				setLoading(false)
+			} finally {
+				setLoading(false);
 			}
 		};
 
 		fetchCourses();
 	}, [searchParams]);
 
-	const handleLocalSearch = (e) => {
-		e.preventDefault();
-		setSearchParams(localSearch ? { search: localSearch } : {});
-	};
-
-	if(loading) {
+	if (loading) {
 		return (
-			  <div className="flex justify-center items-center h-screen">
-				<FaSpinner className="animate-spin text-4xl" />
-			  </div>
-			);
+			<div className="flex justify-center items-center h-64">
+				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+			</div>
+		);
 	}
 
 	return (
 		<div className="px-10 pb-12">
-			{/* Search Bar */}
-			<div className="my-8 flex justify-between items-center">
-				<h1 className="text-3xl font-bold">Courses</h1>
-				<form onSubmit={handleLocalSearch} className="max-w-2xl ml-auto">
-					<div className="flex gap-2">
-						<div className="relative flex-1">
-							<input
-								type="text"
-								placeholder="Search courses..."
-								value={localSearch}
-								onChange={(e) => setLocalSearch(e.target.value)}
-								className="w-full px-4 py-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							/>
-							<FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-						</div>
-						<button
-							type="submit"
-							className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-						>
-							<FaSearch/>
-						</button>
-					</div>
-				</form>
-			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 				{courses?.map((course) => (
 					<Link key={course.id} to={`/courses/${course.id}`}>
@@ -78,13 +44,16 @@ const CourseList = () => {
 							<div className="relative h-40 w-full flex-shrink-0">
 								{" "}
 								<img
-									src={course.image || "https://placehold.co/600x400?text=Course+Image"}
+									src={
+										course.image ||
+										"https://placehold.co/600x400?text=Course+Image"
+									}
 									alt={course.title || "Course"}
 									className="w-full h-full object-cover"
 									loading="lazy"
 								/>
 							</div>
-					
+
 							{/* Course Info */}
 							<div className="p-4 flex flex-col flex-grow">
 								<h3
@@ -98,13 +67,13 @@ const CourseList = () => {
 									{" "}
 									{course.description || "No description available."}
 								</p>
-					
+
 								{/* Course Meta */}
 								<div className="flex items-center justify-between text-sm mb-4 mt-auto pt-2">
 									{" "}
 									<span
 										className={`px-3 py-1 rounded-full font-medium ${
-												course.difficulty.toLowerCase() === "beginner"
+											course.difficulty.toLowerCase() === "beginner"
 												? "bg-green-100 text-green-800"
 												: course.difficulty.toLowerCase() === "intermediate"
 												? "bg-yellow-100 text-yellow-800"
@@ -116,11 +85,14 @@ const CourseList = () => {
 										{course.difficulty.toUpperCase() || "N/A"}
 									</span>
 									<span className="flex items-center text-gray-700">
-										<FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />
+										<FontAwesomeIcon
+											icon={faStar}
+											className="text-yellow-400 mr-1"
+										/>
 										{course.ratings?.toFixed(1) || "N/A"}
 									</span>
 								</div>
-					
+
 								{/* View Button */}
 								<Link
 									to={`/courses/${course.id}`}
@@ -129,9 +101,8 @@ const CourseList = () => {
 									View Course
 								</Link>
 							</div>
-					</div>
+						</div>
 					</Link>
-					
 				))}
 			</div>
 		</div>
