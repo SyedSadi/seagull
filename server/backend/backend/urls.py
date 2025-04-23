@@ -20,6 +20,7 @@ from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPa
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
+    path('', include('devlog.urls')),
     path("admin/", admin.site.urls),
     path("register/", RegisterView.as_view(), name='register'),
     path("login/", LoginView.as_view(), name='login'),

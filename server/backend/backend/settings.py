@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 # This is for when you deploy your app. Make sure to set this to your desired directory.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "courses",
     "quiz",
     'drf_spectacular',
+    'devlog',
 ]
 
 

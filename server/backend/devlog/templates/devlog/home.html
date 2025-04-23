@@ -1,0 +1,63 @@
+{% extends "devlog/base.html" %}
+
+{% block title %}Home | KUETx{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-12 px-6">
+    <h1 class="text-4xl font-extrabold text-center mb-6 text-gray-900">Welcome to KUETx Server 🌐</h1>
+    <p class="text-xl text-center mb-4 text-gray-600">This is the backend homepage of our Learning Management System, built to elevate educational experiences.</p>
+    <p class="text-lg text-center mt-8 mr-2 font-semibold text-gray-800">Discover our robust API functionality:
+        <a class="text-xl text-center mt-4 underline text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out" href="https://seagull-production.up.railway.app/api/schema/swagger-ui/" target="_blank">
+            Explore Our API's
+        </a>
+    </p>
+</div>
+
+
+    <section class="bg-white py-20 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto text-center">
+          <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Meet Our Team</h2>
+          <p class="text-lg text-gray-600 mb-12">Final year students of ECE, KUET — united by code, driven by purpose.</p>
+      
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Team Member 1 -->
+            <div class="bg-gradient-to-tr from-indigo-50 via-white to-purple-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
+              <div class="flex flex-col items-center">
+                <div class="w-16 h-16 mb-4 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
+                  1
+                </div>
+                <h3 class="text-2xl font-bold text-indigo-700">Imamul Islam Ifti</h3>
+                <p class="text-sm text-gray-500 mb-2">Team Leader</p>
+                <p class="text-gray-700 mt-3 italic text-base">"Architecting the backbone — from secure sign-ins to structured learning, one module at a time."</p>
+              </div>
+            </div>
+      
+            <!-- Team Member 2 -->
+            <div class="bg-gradient-to-tr from-green-50 via-white to-yellow-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
+              <div class="flex flex-col items-center">
+                <div class="w-16 h-16 mb-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
+                  2
+                </div>
+                <h3 class="text-2xl font-bold text-green-700">Syed Nazib Sadi</h3>
+                <p class="text-sm text-gray-500 mb-2">Developer</p>
+                <p class="text-gray-700 mt-3 italic text-base">"Bringing designs to life and people together — pixel by pixel, post by post."</p>
+              </div>
+            </div>
+      
+            <!-- Team Member 3 -->
+            <div class="bg-gradient-to-tr from-blue-50 via-white to-pink-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
+              <div class="flex flex-col items-center">
+                <div class="w-16 h-16 mb-4 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
+                  3
+                </div>
+                <h3 class="text-2xl font-bold text-blue-700">Saif Alvi</h3>
+                <p class="text-sm text-gray-500 mb-2">Developer</p>
+                <p class="text-gray-700 mt-3 italic text-base">"Building intuitive flows for complex evaluations — where design meets data."</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+            
+
+{% endblock %}
