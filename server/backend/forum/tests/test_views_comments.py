@@ -112,3 +112,47 @@ def test_delete_comment_denied_for_non_author(authenticated_client):
     assert response.status_code == 403
     assert response.data["detail"] == "You do not have permission to perform this action."
 
+@pytest.mark.django_db
+def test_update_comment_denied_for_non_author():
+    # Create two users: the author and a non-author
+    author = User.objects.create_user(username="author", password="password")
+    non_author = User.objects.create_user(username="non_author", password="password")
+    
+    # Create a post and a comment by the author
+    post = Post.objects.create(title="Test Post", content="Test content", author=author)
+    comment = Comment.objects.create(post=post, user=author, content="Initial comment")
+
+    # Authenticate the non-author user
+    client = APIClient()
+    client.force_authenticate(user=non_author)
+
+    # Try to update the comment as the non-author user
+    url = reverse("comment-detail", args=[comment.id])
+    response = client.put(url, {"content": "Updated comment", "post": post.id})
+
+    # Assert that the response status is 403 Forbidden
+    assert response.status_code == 403
+    assert response.data["detail"] == "You do not have permission to perform this action."
+
+
+@pytest.mark.django_db
+def test_delete_comment_denied_for_non_author():
+    # Create two users: the author and a non-author
+    author = User.objects.create_user(username="author", password="password")
+    non_author = User.objects.create_user(username="non_author", password="password")
+    
+    # Create a post and a comment by the author
+    post = Post.objects.create(title="Test Post", content="Test content", author=author)
+    comment = Comment.objects.create(post=post, user=author, content="Comment to be deleted")
+
+    # Authenticate the non-author user
+    client = APIClient()
+    client.force_authenticate(user=non_author)
+
+    # Try to delete the comment as the non-author user
+    url = reverse("comment-detail", args=[comment.id])
+    response = client.delete(url)
+
+    # Assert that the response status is 403 Forbidden
+    assert response.status_code == 403
+    assert response.data["detail"] == "You do not have permission to perform this action."
