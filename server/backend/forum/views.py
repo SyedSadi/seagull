@@ -182,7 +182,8 @@ class VoteViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
     def create(self, request, *args, **kwargs):
         name = request.data.get('name', '').strip()
 

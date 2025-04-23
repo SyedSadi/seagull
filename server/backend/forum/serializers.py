@@ -55,17 +55,21 @@ class PostSerializer(serializers.ModelSerializer):
         instance.content = validated_data.get('content', instance.content)
 
         if tag_ids is not None:
-            if not tag_ids:
-                raise serializers.ValidationError({"tag_ids": ["At least one tag must be selected."]})
-            if len(tag_ids) > 3:
-                raise serializers.ValidationError({"tag_ids": ["You can select a maximum of 3 tags."]})
             instance.tags.set(tag_ids)
 
         instance.save()
         return instance
 
+
     def get_total_votes(self, obj):
         return obj.votes.filter(value=1).count() - obj.votes.filter(value=-1).count()
+    def validate_tag_ids(self, value):
+        if not value:
+            raise serializers.ValidationError("At least one tag must be selected.")
+        if len(value) > 3:
+            raise serializers.ValidationError("You can assign a maximum of 3 tags.")
+        return value
+
 
 
 class VoteSerializer(serializers.ModelSerializer):
@@ -73,7 +77,3 @@ class VoteSerializer(serializers.ModelSerializer):
         model = Vote
         fields = ['id', 'user', 'post', 'value']
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tag
-        fields = '__all__'
