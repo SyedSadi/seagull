@@ -1,5 +1,5 @@
 import CourseList from "../components/Courses/CourseList";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const CoursePage = () => {
 	return (

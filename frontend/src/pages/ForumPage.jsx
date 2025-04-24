@@ -1,5 +1,5 @@
 import PostList from "../components/Forum/PostList";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const ForumPage = () => {
 	return (

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizAttempt from "../../src/components/Quiz/QuizAttempt";
 import ProfileSection from "../components/Profile/ProfileSection";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 
 const Profile = () => {

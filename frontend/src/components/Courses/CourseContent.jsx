@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { AiFillFilePdf, AiFillPlayCircle, AiOutlineFileText } from 'react-icons/ai';
 import { MdArticle } from 'react-icons/md';
 import { FaArrowLeft, FaArrowRight, FaSpinner } from 'react-icons/fa';
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 
 // Helper components

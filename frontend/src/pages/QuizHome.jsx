@@ -1,5 +1,5 @@
 import Category from "../components/Quiz/Category";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 
 const QuizHome = () => {

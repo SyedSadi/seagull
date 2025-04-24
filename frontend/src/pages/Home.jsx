@@ -4,7 +4,7 @@ import WhyChooseUs from "../components/LandingPage/WhyChooseUs";
 import ForWhome from "../components/LandingPage/ForWhom";
 import Statistics from "../components/LandingPage/Statistics";
 import ForumPreview from "../components/LandingPage/ForumPreview";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
 	return (

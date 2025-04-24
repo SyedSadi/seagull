@@ -55,14 +55,18 @@ const ManageContents = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [contents, setContents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true)
       try {
         const { data } = await API.get('/courses/');
         setCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      }finally{
+        setLoading(false)
       }
     };
     fetchCourses();
@@ -128,9 +132,12 @@ const ManageContents = () => {
           className="p-2 border rounded mb-6"
         >
           <option value="">Select a course</option>
-          {courses.map(({ id, title }) => (
-            <option key={id} value={id}>{title}</option>
-          ))}
+          {
+            loading ? <option>Loading...</option> : 
+            courses.map(({ id, title }) => (
+              <option key={id} value={id}>{title}</option>
+            ))
+          }
         </select>
 
         {selectedCourseId && (

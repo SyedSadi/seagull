@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 const AddContentPage = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [contentData, setContentData] = useState({
     title: '',
@@ -16,11 +17,14 @@ const AddContentPage = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true)
       try {
         const response = await API.get('/courses/'); // adjust endpoint if needed
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      } finally{
+        setLoading(false)
       }
     };
     fetchCourses();
@@ -78,11 +82,14 @@ const AddContentPage = () => {
           className="p-2 border rounded mb-6"
         >
           <option value="">Select a course</option>
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.title}
-            </option>
-          ))}
+          {
+            loading ? <option>Loading...</option> :
+            courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))
+          }
         </select>
 
         {selectedCourseId && (

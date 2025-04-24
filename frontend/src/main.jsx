@@ -6,7 +6,7 @@ import {
 	RouterProvider,
 	useRouteError,
 } from "react-router-dom";
-
+import { HelmetProvider } from 'react-helmet-async';
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
 
@@ -149,18 +149,20 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
-		<AuthProvider>
-			<RouterProvider router={router} />
-			<ToastContainer
-				position="bottom-right"
-				autoClose={2000}
-				hideProgressBar={false}
-				newestOnTop
-				closeOnClick
-				pauseOnHover
-				draggable
-			/>
-		</AuthProvider>
+		<HelmetProvider>
+			<AuthProvider>
+				<RouterProvider router={router} />
+				<ToastContainer
+					position="bottom-right"
+					autoClose={2000}
+					hideProgressBar={false}
+					newestOnTop
+					closeOnClick
+					pauseOnHover
+					draggable
+				/>
+			</AuthProvider>
+		</HelmetProvider>
 	</StrictMode>
 );
 

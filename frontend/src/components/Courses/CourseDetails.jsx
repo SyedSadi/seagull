@@ -6,7 +6,7 @@ import { FaArrowRight, FaSpinner } from "react-icons/fa";
 import OTPModal from "./OTPModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const CourseDetails = () => {
   const { id } = useParams();

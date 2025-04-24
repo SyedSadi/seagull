@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
 	const navigate = useNavigate();

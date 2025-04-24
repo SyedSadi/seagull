@@ -1,5 +1,5 @@
 import { FaBookOpen, FaUsers, FaChalkboardTeacher } from "react-icons/fa";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 
 const AboutUsPage = () => {
   return (
