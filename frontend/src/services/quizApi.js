@@ -104,6 +104,8 @@ export const updateQuestion = async (questionId, questionData) => {
 		if (!token) {
 			throw new Error("Authentication token is missing");
 		}
+		console.log(`Sending request to: /quiz/update-questions/${questionId}/`);
+
 		const response = await API.put(
 			`/quiz/update-questions/${questionId}/`,
 			questionData,
@@ -116,7 +118,8 @@ export const updateQuestion = async (questionId, questionData) => {
 		);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating question", error);
+		console.error("Detailed error in updateQuestion:", error);
+		console.error("Response data if available:", error.response?.data);
 		throw error;
 	}
 };
