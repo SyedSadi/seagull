@@ -1,36 +1,55 @@
 from rest_framework import serializers
 from .models import Category, Question, Option, QuizAttempt, UserAnswer
+from drf_writable_nested import WritableNestedModelSerializer
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = ['id', 'text', 'is_correct']
+        extra_kwargs = {
+            'id': {'read_only': False}  # Important for updates
+        }
 
-class QuestionSerializer(serializers.ModelSerializer):
+
+class QuestionSerializer(WritableNestedModelSerializer):
     options = OptionSerializer(many=True)
 
     class Meta:
         model = Question
         fields = ['id', 'category', 'text', 'options']
 
-    def create(self, validated_data):
-        options_data = validated_data.pop('options')
-        question = Question.objects.create(**validated_data)
+    def update(self, instance, validated_data):
+        options_data = validated_data.pop('options', [])
         
-        # Ensure at least one correct answer
-        has_correct = False
+        # Update the question fields
+        instance = super().update(instance, validated_data)
+        
+        # Keep track of existing options
+        existing_options = {option.id: option for option in instance.options.all()}
+        updated_options = []
+        
+        # Update or create options
         for option_data in options_data:
-            option = Option.objects.create(question=question, **option_data)
-            if option.is_correct:
-                has_correct = True
+            option_id = option_data.get('id', None)
+            
+            if option_id and option_id in existing_options:
+                # Update existing option
+                option = existing_options[option_id]
+                for attr, value in option_data.items():
+                    setattr(option, attr, value)
+                option.save()
+                updated_options.append(option)
+            else:
+                # Create new option
+                option = Option.objects.create(question=instance, **option_data)
+                updated_options.append(option)
         
-        if not has_correct:
-            question.delete()
-            raise serializers.ValidationError(
-                {"options": "At least one option must be marked as correct"}
-            )
+        # Delete options that weren't included in the update
+        for option_id, option in existing_options.items():
+            if option not in updated_options:
+                option.delete()
         
-        return question
+        return instance
 
 class CategorySerializer(serializers.ModelSerializer):
     question_count = serializers.IntegerField(read_only=True)

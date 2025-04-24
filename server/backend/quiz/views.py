@@ -89,16 +89,31 @@ class UpdateQuizView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateQuestionView(APIView):
-    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
-    def put(self, request: Request, question_id:int)->Response:
-        questions=get_object_or_404(Question, id=question_id)
-        serializer=QuestionSerializer(questions, data=request.data, partial=True)
+    def put(self, request, question_id):
+        question = get_object_or_404(Question, id=question_id)
+        
+        # Validate at least one correct option exists
+        options_data = request.data.get('options', [])
+        if options_data and not any(opt.get('is_correct', False) for opt in options_data):
+            return Response(
+                {"options": "At least one option must be marked as correct"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        serializer = QuestionSerializer(
+            instance=question,
+            data=request.data,
+            partial=True
+        )
+        
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data)
+            
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
