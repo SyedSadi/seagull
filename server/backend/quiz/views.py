@@ -120,7 +120,7 @@ class UpdateQuestionView(APIView):
                 {"error": "At least one option must be marked as correct"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+            
         # Return updated question with options
         serializer = QuestionSerializer(question)
         return Response(serializer.data, status=status.HTTP_200_OK)

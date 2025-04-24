@@ -38,10 +38,21 @@ const UpdateQuestionsPage = () => {
 		setQuestions(
 			questions.map((q) => {
 				if (q.id === questionId) {
-					const updatedOptions = q.options.map((opt) =>
-						opt.id === optionId ? { ...opt, [field]: value } : opt
-					);
-					return { ...q, options: updatedOptions };
+					// For the "is_correct" field, we need to handle radio button behavior
+					if (field === "is_correct" && value === true) {
+						// When one option is selected as correct, set all others to false
+						const updatedOptions = q.options.map((opt) => ({
+							...opt,
+							is_correct: opt.id === optionId,
+						}));
+						return { ...q, options: updatedOptions };
+					} else {
+						// For other fields (like text), update normally
+						const updatedOptions = q.options.map((opt) =>
+							opt.id === optionId ? { ...opt, [field]: value } : opt
+						);
+						return { ...q, options: updatedOptions };
+					}
 				}
 				return q;
 			})
@@ -51,22 +62,29 @@ const UpdateQuestionsPage = () => {
 	const handleSave = async (questionId) => {
 		try {
 			const question = questions.find((q) => q.id === questionId);
-			// options are properly formatted with just the fields the backend expects
-			const formattedOptions = question.options.map((opt) => ({
-				id: opt.id,
-				text: opt.text,
-				is_correct: opt.is_correct,
-			}));
 
-			await updateQuestion(questionId, {
+			// Validate that at least one option is marked as correct
+			const hasCorrectOption = question.options.some((opt) => opt.is_correct);
+			if (!hasCorrectOption) {
+				toast.error("At least one option must be marked as correct!");
+				return;
+			}
+
+			// Format the data to match what the backend expects
+			const questionData = {
 				text: question.text,
-				category: question.category,
-				options: formattedOptions,
-			});
+				options: question.options.map((opt) => ({
+					id: opt.id,
+					text: opt.text,
+					is_correct: opt.is_correct,
+				})),
+			};
+
+			await updateQuestion(questionId, questionData);
 			toast.success("Question updated successfully!");
 		} catch (error) {
 			console.error("Error updating question:", error);
-			toast.error("Failed to update question");
+			toast.error(error.response?.data?.error || "Failed to update question");
 		}
 	};
 
@@ -140,16 +158,14 @@ const UpdateQuestionsPage = () => {
 													type="radio"
 													name={`correct-${question.id}`}
 													checked={option.is_correct}
-													onChange={() => {
-														question.options.forEach((opt) => {
-															handleOptionChange(
-																question.id,
-																opt.id,
-																"is_correct",
-																opt.id === option.id
-															);
-														});
-													}}
+													onChange={() =>
+														handleOptionChange(
+															question.id,
+															option.id,
+															"is_correct",
+															true
+														)
+													}
 													className="text-blue-600"
 												/>
 												<span className="text-sm text-gray-600">Correct</span>
