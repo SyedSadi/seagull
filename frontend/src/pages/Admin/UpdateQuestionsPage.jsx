@@ -51,9 +51,17 @@ const UpdateQuestionsPage = () => {
 	const handleSave = async (questionId) => {
 		try {
 			const question = questions.find((q) => q.id === questionId);
+			// options are properly formatted with just the fields the backend expects
+			const formattedOptions = question.options.map((opt) => ({
+				id: opt.id,
+				text: opt.text,
+				is_correct: opt.is_correct,
+			}));
+
 			await updateQuestion(questionId, {
 				text: question.text,
-				options: question.options,
+				category: question.category,
+				options: formattedOptions,
 			});
 			toast.success("Question updated successfully!");
 		} catch (error) {

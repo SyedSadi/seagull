@@ -31,6 +31,30 @@ class QuestionSerializer(serializers.ModelSerializer):
             )
         
         return question
+    
+    def update(self, instance, validated_data):
+        instance.text = validated_data.get('text', instance.text)
+        instance.save()
+        
+        # Handle options update
+        options_data = validated_data.get('options', [])
+        
+        # Update existing options
+        for option_data in options_data:
+            option_id = option_data.get('id')
+            if option_id:
+                option = Option.objects.get(id=option_id)
+                option.text = option_data.get('text', option.text)
+                option.is_correct = option_data.get('is_correct', option.is_correct)
+                option.save()
+        
+        # Ensure at least one correct option
+        if not instance.options.filter(is_correct=True).exists():
+            raise serializers.ValidationError(
+                {"options": "At least one option must be marked as correct"}
+            )
+        
+        return instance
 
 class CategorySerializer(serializers.ModelSerializer):
     question_count = serializers.IntegerField(read_only=True)
