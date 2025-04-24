@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "courses",
     "quiz",
     'drf_spectacular',
+    'django_extensions',
 ]
 
 
