@@ -6,6 +6,7 @@ import { FaArrowRight, FaSpinner } from "react-icons/fa";
 import OTPModal from "./OTPModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { Helmet } from "react-helmet";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -84,6 +85,11 @@ const CourseDetails = () => {
   };
 
   return (
+    <>
+    <Helmet>
+		    <title>{course.title} | KUETx</title>
+    </Helmet>
+    
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
   <div className="max-w-7xl mx-auto  p-6 md:p-10">
     <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-10">
@@ -137,7 +143,8 @@ const CourseDetails = () => {
 
     <ToastContainer position="bottom-right" />
   </div>
-</div>
+    </div>
+    </>
 
   );
 };

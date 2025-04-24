@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { AiFillFilePdf, AiFillPlayCircle, AiOutlineFileText } from 'react-icons/ai';
 import { MdArticle } from 'react-icons/md';
 import { FaArrowLeft, FaArrowRight, FaSpinner } from 'react-icons/fa';
+import { Helmet } from "react-helmet";
 
 
 // Helper components
@@ -102,6 +103,11 @@ const CourseContent = () => {
 	const dummyPdfUrl = "https://arxiv.org/pdf/1708.08021.pdf"; // Maybe dynamic later
 	
 	return (
+		<>
+		<Helmet>
+		    <title>{content.title} | KUETx</title>
+    	</Helmet>	
+		
 		<div className="bg-gray-50 px-20">			
 			<div className="flex items-center justify-between mt-6">
 				<div className="flex justify-center gap-4 mt-6">
@@ -171,6 +177,7 @@ const CourseContent = () => {
     		</div>
 
 		</div>
+		</>
 	);
 };
 
