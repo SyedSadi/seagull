@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 
 const Register = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const { registerUser } = useContext(AuthContext);
+    const [errorMsgs, setErrorMsgs] = useState({});
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -19,12 +21,17 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMsgs({});
+        setLoading(true);
         const res = await registerUser(formData);
         console.log(res)
+        setErrorMsgs(res?.response?.data)
+        console.log('eroor', errorMsgs)
         if(res.status === 201){
             toast.success('Registration successful! Please log in.');
             navigate('/login')
         }
+        setLoading(false);
     };
 
     return (
@@ -46,6 +53,8 @@ const Register = () => {
                             onChange={handleChange}
                             required
                         />
+                        <span className="text-xs text-gray-500 mt-1">Username can’t contain spaces or special characters (only letters, numbers, -, _).</span>
+                        {errorMsgs?.username && <span className="text-xs text-red-500 mt-1">{errorMsgs?.username}</span>}
                     </div>
                     <div className="form-control mt-2">
                         <label htmlFor="email" className="label">
@@ -61,6 +70,7 @@ const Register = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errorMsgs?.email && <span className="text-xs text-red-500 mt-1">{errorMsgs?.email}</span>}
                     </div>
                     <div className="form-control mt-2">
                         <label htmlFor="password" className="label">
@@ -76,6 +86,7 @@ const Register = () => {
                             onChange={handleChange}
                             required
                         />
+                        {errorMsgs?.password && <span className="text-xs text-red-500 mt-1">{errorMsgs?.password}</span>}
                     </div>
                     <div className="form-control mt-2">
                         <label htmlFor="role" className="label">
@@ -92,8 +103,11 @@ const Register = () => {
                             <option value="instructor">Instructor</option>
                         </select>
                     </div>
-                    <button type="submit" className="btn btn-primary w-full mt-4">
-                        Register
+                    <button type="submit" className="btn btn-primary w-full mt-4" disabled={loading}>
+                    {loading && (
+                        <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    )}
+                        {loading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
 
