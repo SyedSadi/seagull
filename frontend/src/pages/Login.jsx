@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
 const Login = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [loading, setLoading] = useState(false);
 	const { loginUser } = useContext(AuthContext);
 	const [formData, setFormData] = useState({ username: "", password: "" });
 
@@ -16,7 +17,7 @@ const Login = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+		setLoading(true);
 		try {
 			const res = await loginUser(formData, navigate, location);
 			console.log("res", res);
@@ -31,6 +32,8 @@ const Login = () => {
 		} catch (error) {
 			console.error("Login error:", error);
 			toast.error("An error occurred. Please try again.");
+		} finally{
+			setLoading(false)
 		}
 	};
 
@@ -69,8 +72,11 @@ const Login = () => {
 							required
 						/>
 					</div>
-					<button type="submit" className="btn btn-primary w-full mt-4">
-						Login
+					<button type="submit" className="btn btn-primary w-full mt-4" disabled={loading}>
+					{loading && (
+                        <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    )}
+                        {loading ? 'Loading...' : 'Login'}
 					</button>
 				</form>
 				<p className="text-sm text-gray-600 text-center mt-3">

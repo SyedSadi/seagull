@@ -31,8 +31,7 @@ export const AuthProvider = ({ children }) => {
       const response = await API.post("/register/", userData);
       return response;
     } catch (error) {
-      console.log(error.response.data.username[0]);
-      toast.error(error.response.data.username[0]);
+      return error
     }
   };
 
