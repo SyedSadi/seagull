@@ -30,8 +30,8 @@ const Register = () => {
         setErrorMsgs(res?.response?.data)
         console.log('eroor', errorMsgs)
         if(res.status === 201){
-            toast.success('Registration successful! Please log in.');
             navigate('/login')
+            toast.success('Registration successful! Please log in.');
         }
         setLoading(false);
     };
