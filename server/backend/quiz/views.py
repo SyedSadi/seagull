@@ -17,6 +17,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class QuizAPIView(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request, category_id):
         try:
             category_id = int(category_id)
@@ -25,6 +26,7 @@ class QuizAPIView(APIView):
                 {'error': 'Invalid category ID'}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
         category = get_object_or_404(Category, pk=category_id)
         # Get 20 random questions for the category
         questions = Question.objects.filter(category=category).order_by('?')[:20]
@@ -83,6 +85,7 @@ class UpdateQuizView(APIView):
     def put(self, request: Request, category_id: int) -> Response:
         category = get_object_or_404(Category, id=category_id)
         serializer = CategorySerializer(category, data=request.data, partial=True)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -92,12 +95,35 @@ class UpdateQuestionView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
     def put(self, request: Request, question_id:int)->Response:
-        questions=get_object_or_404(Question, id=question_id)
-        serializer=QuestionSerializer(questions, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        question=get_object_or_404(Question, id=question_id)
+
+        # Handle basic question fields
+        question.text = request.data.get('text', question.text)
+        question.save()
+
+        # Handle options update
+        options_data = request.data.get('options', [])
+        for option_data in options_data:
+            option_id = option_data.get('id')
+            if option_id:
+                try:
+                    option = Option.objects.get(id=option_id, question=question)
+                    option.text = option_data.get('text', option.text)
+                    option.is_correct = option_data.get('is_correct', option.is_correct)
+                    option.save()
+                except Option.DoesNotExist:
+                    continue
+
+        # Verify at least one correct option exists
+        if not question.options.filter(is_correct=True).exists():
+            return Response(
+                {"error": "At least one option must be marked as correct"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Return updated question with options
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
