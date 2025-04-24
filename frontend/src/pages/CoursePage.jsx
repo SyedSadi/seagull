@@ -1,8 +1,12 @@
 import CourseList from "../components/Courses/CourseList";
+import { Helmet } from "react-helmet";
 
 const CoursePage = () => {
 	return (
-		<div>	
+		<div>
+			<Helmet>
+		        <title>Courses | KUETx</title>
+    		</Helmet>	
 			<CourseList />
 		</div>
 	);

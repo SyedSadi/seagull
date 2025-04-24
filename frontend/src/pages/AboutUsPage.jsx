@@ -1,7 +1,12 @@
 import { FaBookOpen, FaUsers, FaChalkboardTeacher } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const AboutUsPage = () => {
   return (
+    <>
+    <Helmet>
+        <title>About | KUETx</title>
+    </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-10 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <h1 className="text-4xl font-bold mb-6 text-blue-900">About Our LMS</h1>
@@ -49,6 +54,7 @@ const AboutUsPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

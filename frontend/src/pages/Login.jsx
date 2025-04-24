@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
+import { Helmet } from "react-helmet";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -38,6 +39,10 @@ const Login = () => {
 	};
 
 	return (
+		<>
+		<Helmet>
+		    <title>Login | KUETx</title>
+    	</Helmet>
 		<div className="flex justify-center items-center min-h-screen bg-gray-100">
 			<div className="card w-96 bg-white shadow-lg p-6 rounded-xl">
 				<h2 className="text-2xl font-bold text-center text-gray-700">Login</h2>
@@ -87,6 +92,7 @@ const Login = () => {
 				</p>
 			</div>
 		</div>
+		</>
 	);
 };
 
