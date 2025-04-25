@@ -17,7 +17,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]     # Allow anyone to access course listings
     serializer_class = CourseSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'description', 'subject', 'difficulty']   # Fields to search against
+    search_fields = ['title']   # Fields to search against
     
     def get_queryset(self):
         """
@@ -31,10 +31,7 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
         
          # Apply search filter to the query set based on title, description, subject, and difficulty
         return queryset.filter(
-            Q(title__icontains=search_query) | 
-            Q(description__icontains=search_query) |
-            Q(subject__icontains=search_query) |
-            Q(difficulty__icontains=search_query)
+            Q(title__icontains=search_query) 
         )
 
 
