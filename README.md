@@ -22,17 +22,21 @@ Seagull is a full-stack Learning Management System (LMS) built for Learnathon. I
 
 ## 🌐 Live Demo
 
-🔗 (https://your-netlify-url.netlify.app)
+<p align="center">
+  <a href="https://seagull-lms.netlify.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Now-blue?style=for-the-badge&logo=netlify" alt="Live Demo Badge"/>
+  </a>
+</p>
 
 ## 👨‍💻 Team
 
 Meet the passionate developers behind **KUETx**:
 
-| Role         | Name & GitHub Profile                               |
-| ------------ | --------------------------------------------------- |
-| 👑 Team Lead | [Imamul Islam Ifti](https://github.com/ImamIfti056) |
-| 🛠️ Developer | [Saif Alvi](https://github.com/yuusaif)             |
-| 🎨 Developer | [syed Nazib Sadi](https://github.com/SyedSadi)      |
+| Role      | Name & GitHub Profile                               |
+| --------- | --------------------------------------------------- |
+| Team Lead | [Imamul Islam Ifti](https://github.com/ImamIfti056) |
+| Developer | [Saif Alvi](https://github.com/yuusaif)             |
+| Developer | [syed Nazib Sadi](https://github.com/SyedSadi)      |
 
 ---
 
@@ -122,9 +126,9 @@ Modular Django REST framework structure with clean API architecture and future-r
 
 ---
 
-## 📃 Documentation
+## 📃API Documentation
 
-API documentation is powered by **drf-spectacular** and is available at:
+Explore our RESTful API with interactive docs powered by drf-spectacular:
 
 [![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
