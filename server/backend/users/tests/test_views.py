@@ -63,7 +63,7 @@ class TestAuthViews:
         }
         response = self.client.post('/register/', data, format='json')        
         assert response.status_code == status.HTTP_201_CREATED
-        assert response.data["message"] == "Registration successful. Please check your email to verify your account."
+        assert response.data["message"] == "Registration successful! Please check your inbox (or spam folder) to verify your email address."
         user = User.objects.get(username='testuser')
         assert user.email == 'testuser@example.com'    
 

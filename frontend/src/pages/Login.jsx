@@ -27,12 +27,11 @@ const Login = () => {
 				const redirectTo = location.state?.from?.pathname || "/";
 				navigate(redirectTo);
 				toast.success("Login successful!");
-			} else {
-				toast.error("Invalid username or password");
+			}else{
+				toast.error(res?.response?.data?.non_field_errors[0] || "Login Failed")
 			}
 		} catch (error) {
 			console.error("Login error:", error);
-			toast.error("An error occurred. Please try again.");
 		} finally{
 			setLoading(false)
 		}
