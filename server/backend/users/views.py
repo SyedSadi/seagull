@@ -67,7 +67,7 @@ class RegisterView(generics.CreateAPIView):
         send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
 
         return Response({
-            "message": "Registration successful. Please check your email to verify your account."
+            "message": "Registration successful! Please check your inbox (or spam folder) to verify your email address."
         }, status=status.HTTP_201_CREATED)
 
 # -------------- VERIFY EMAIL ----------------------------

@@ -31,7 +31,7 @@ const Register = () => {
             setErrorMsgs(res?.response?.data)
             console.log('eroor', errorMsgs)
             if(res.status === 201){
-                toast.success(res?.data?.message);
+                toast.success(res?.data?.message, { autoClose: 7000 });
                 setFormData({
                     username: "",
                     email: "",

@@ -67,6 +67,12 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = User.objects.filter(username=data['username']).first()
+
+        if not user:
+            raise serializers.ValidationError("No user found with this username. Please register first.")
+        if not user.is_active:
+            raise serializers.ValidationError("Please verify your email before logging in.")
+        
         if user and user.check_password(data['password']):
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
@@ -78,18 +84,35 @@ class LoginSerializer(serializers.Serializer):
                 'access': str(access_token),
                 'user': UserSerializer(user).data
             }
-        raise serializers.ValidationError("Invalid credentials")
+        raise serializers.ValidationError("Incorrect password. Please try again.")
 
 
 
 # ------------------------- TOKEN --------------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, attrs):
+        user = User.objects.filter(username=attrs.get("username")).first()        
+
+        if not user:
+            raise serializers.ValidationError("No user found with this username. Please register first.")
+        
+        if user and not user.is_active:
+            raise serializers.ValidationError("Please verify your email before logging in.")
+        
+        data = super().validate(attrs)
+
+        data['user'] = {
+            'id': self.user.id,
+            'email': self.user.email,
+            'username': self.user.username
+        }
+        return data
+    
     def get_token(self, user):
         token = super().get_token(user)
-        print("mmmmm",token)
         token['role'] = user.role  # Add role to the token
         token['is_superuser'] = user.is_superuser  # Add admin status
-        print("mmmmm",token)
         return token
     
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
