@@ -97,7 +97,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not user:
             raise serializers.ValidationError("No user found with this username. Please register first.")
         
-        if user and not user.is_active:
+        if not user.is_active:
             raise serializers.ValidationError("Please verify your email before logging in.")
         
         data = super().validate(attrs)
