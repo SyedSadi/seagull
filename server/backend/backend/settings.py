@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "quiz",
     'drf_spectacular',
     'devlog',
+    'django_extensions',
 ]
 
 

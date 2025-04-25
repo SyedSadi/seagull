@@ -10,18 +10,26 @@ from .serializers import CourseSerializer, CourseContentsSerializer
 
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [AllowAny]
+    """
+    Public viewset to list and search courses.
+    Only supports read operations.
+    """
+    permission_classes = [AllowAny]     # Allow anyone to access course listings
     serializer_class = CourseSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'description', 'subject', 'difficulty']
+    search_fields = ['title', 'description', 'subject', 'difficulty']   # Fields to search against
     
     def get_queryset(self):
+        """
+        Supports filtering via search query parameters.
+        """
         queryset = Course.objects.all()
         search_query = self.request.query_params.get('search')
         
         if not search_query:
             return queryset
-            
+        
+         # Apply search filter to the query set based on title, description, subject, and difficulty
         return queryset.filter(
             Q(title__icontains=search_query) | 
             Q(description__icontains=search_query) |
@@ -31,7 +39,11 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CourseDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    """
+    View to retrieve a single course's details.
+    Requires authentication.
+    """
+    permission_classes = [IsAuthenticated]  # Only authenticated users can view course details
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
@@ -41,6 +53,7 @@ class AdminOnlyAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_course_or_404(self, course_id):
+        # Helper function to fetch course or return 404 if not found
         return get_object_or_404(Course, id=course_id)
         
     def handle_serializer(self, serializer, status_code=status.HTTP_200_OK):
@@ -52,18 +65,27 @@ class AdminOnlyAPIView(APIView):
 
 
 class AddCourseView(AdminOnlyAPIView):
+    """
+    Admin endpoint to add a new course.
+    """
     def post(self, request):
+         # Handle course creation by admin
         serializer = CourseSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
 
 class UpdateDeleteCourseView(AdminOnlyAPIView):
+    """
+    Admin endpoint to update or delete an existing course.
+    """
     def put(self, request, course_id):
+         # Update an existing course
         course = self.get_course_or_404(course_id)
         serializer = CourseSerializer(course, data=request.data, partial=True)
         return self.handle_serializer(serializer)
 
     def delete(self, request, course_id):
+        # Delete an existing course
         course = self.get_course_or_404(course_id)
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
@@ -72,20 +94,27 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
 class UserEnrollmentMixin:
     """Mixin to handle student enrollment validation."""
     def is_student_enrolled(self, user, course):
+        # Check if the student is enrolled in the course
         if not hasattr(user, 'student'):
             return False
         return Enrollment.objects.filter(course=course, student=user.student).exists()
 
 
 class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
+    """
+    View to list course contents for enrolled students.
+    """
     serializer_class = CourseContentsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        course_id = self.kwargs['course_id']
-        course = get_object_or_404(Course, id=course_id)
+         # Get course contents for the enrolled student
+       
+        user = self.request.user         # Retrieve the currently authenticated user making the request
+        course_id = self.kwargs['course_id']    # Get the course_id from the URL path parameters
+        course = get_object_or_404(Course, id=course_id)       # Try to fetch the course object from the database; return 404 if not found
 
+         # Ensure the user is enrolled before returning contents
         if not self.is_student_enrolled(user, course):
             return CourseContents.objects.none()
 
@@ -93,27 +122,42 @@ class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
 
 
 class AddContentAPIView(AdminOnlyAPIView):
+    """
+    Admin can add content to a course.
+    """
     def post(self, request):
+         # Admin adds content to a course
         self.get_course_or_404(request.data.get('course'))
         serializer = CourseContentsSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
 
 class UpdateContentView(AdminOnlyAPIView):
+    """
+    Admin can update existing content.
+    """
     def put(self, request, id):
+         # Admin updates course content
         content = get_object_or_404(CourseContents, id=id)
         serializer = CourseContentsSerializer(content, data=request.data, partial=True)
         return self.handle_serializer(serializer)
 
 
 class DeleteContentView(AdminOnlyAPIView):
+    """
+    Admin can delete content from a course.
+    """
     def delete(self, request, id):
+        # Admin deletes content from a course
         content = get_object_or_404(CourseContents, id=id)
         content.delete()
         return Response({'message': 'Content deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class EnrollCourseView(APIView):
+    """
+    Endpoint for students to enroll in a course.
+    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request, course_id):
@@ -131,10 +175,14 @@ class EnrollCourseView(APIView):
 
 
 class EnrolledCoursesView(generics.ListAPIView):
+    """
+    List courses a student is enrolled in.
+    """
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+         # Get the list of courses the student is enrolled in
         user = self.request.user
         if not hasattr(user, 'student'):
             return Course.objects.none()
@@ -143,10 +191,14 @@ class EnrolledCoursesView(generics.ListAPIView):
 
 
 class InstructorCoursesView(generics.ListAPIView):
+    """
+    List all courses created by an instructor.
+    """
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+         # Ensure only instructors can access their courses
         user = request.user
         if not hasattr(user, 'instructor'):
             return Response(
@@ -161,6 +213,9 @@ class InstructorCoursesView(generics.ListAPIView):
 
 
 class RateCourseView(UserEnrollmentMixin, APIView):
+    """
+    Allows enrolled students to rate a course.
+    """
     permission_classes = [IsAuthenticated]
 
     def _validate_rating(self, rating_value):
@@ -177,6 +232,9 @@ class RateCourseView(UserEnrollmentMixin, APIView):
             return None, "Rating must be an integer between 1 and 5."
 
     def post(self, request, course_id):
+        """
+        Creates or updates rating for a course.
+        """
         course = get_object_or_404(Course, pk=course_id)
         
         if not self.is_student_enrolled(request.user, course):
@@ -199,6 +257,9 @@ class RateCourseView(UserEnrollmentMixin, APIView):
         return Response({"message": message, "rating": rating_value}, status=status.HTTP_200_OK)
 
     def get(self, request, course_id):
+        """
+        Retrieves the user's rating for a specific course.
+        """
         course = get_object_or_404(Course, pk=course_id)
         rating = Rating.objects.filter(course=course, user=request.user).first()
         
@@ -209,6 +270,7 @@ class RateCourseView(UserEnrollmentMixin, APIView):
     
 
 # --------------------- INVOICE GENERATION ----------------------
+# PDF invoice generation libraries
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.colors import HexColor, black, grey
@@ -216,6 +278,9 @@ from django.http import HttpResponse
 from datetime import datetime
 
 class InvoiceDownloadView(APIView):
+    """
+    Generates and downloads a PDF invoice for a course.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request, course_id):
@@ -223,9 +288,11 @@ class InvoiceDownloadView(APIView):
         user = request.user
         price = 49.99
 
+        # Setup HTTP response for PDF download
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="invoice_{course.title}_{user.username}.pdf"'
 
+        # Define custom PDF size
         width = 4 * inch
         height = 6.5 * inch
         p = canvas.Canvas(response, pagesize=(width, height))
