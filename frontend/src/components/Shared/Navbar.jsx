@@ -1,16 +1,67 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX, faBars, faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 
+/**
+ * Navbar component that provides navigation options for the application.
+ * It includes links to various pages, a responsive design for mobile and desktop,
+ * and user-specific options such as login, logout, and profile access.
+ *
+ * @component
+ *
+ * @returns {JSX.Element} The rendered Navbar component.
+ *
+ * @example
+ * <Navbar />
+ *
+ * @description
+ * - Displays a sticky navigation bar that changes its background color based on scroll position.
+ * - Includes a mobile menu toggle for smaller screens.
+ * - Dynamically renders navigation options based on user authentication status.
+ * - Provides links to "Courses", "Quiz", "Forum", "About Us", and an admin dashboard (if applicable).
+ * - Includes login, signup, profile, and logout options for users.
+ *
+ * @dependencies
+ * - React hooks: `useState`, `useEffect`, `useContext`, `useRef`.
+ * - React Router: `NavLink`, `useLocation`.
+ * - FontAwesome icons: `faBars`, `faX`, `faCircleUser`.
+ *
+ * @state
+ * - `isMenuOpen` (boolean): Tracks whether the mobile menu is open.
+ * - `scrolled` (boolean): Tracks whether the user has scrolled down the page.
+ *
+ * @context
+ * - `AuthContext`: Provides `user` (authenticated user data) and `logoutUser` (function to log out the user).
+ *
+ * @props
+ * - None
+ */
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, logoutUser } = useContext(AuthContext);
 	const [scrolled, setScrolled] = useState(false);
 	const location = useLocation();
 	const insLandingPage = location.pathname === "/";
+	const menuRef = useRef(null);
+
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				menuRef.current &&
+				!menuRef.current.contains(event.target) &&
+				isMenuOpen
+			) {
+				setIsMenuOpen(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isMenuOpen]);
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -26,11 +77,23 @@ const Navbar = () => {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, [insLandingPage]);
 
+	useEffect(() => {
+		const handleResize = () => {
+			//Close mobile menu if window width os larger than lg breakpoint 1024px
+			if (window.innerWidth >= 1024 && isMenuOpen) {
+				setIsMenuOpen(false);
+			}
+		};
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, [isMenuOpen]);
+
 	const navOptions = (
 		<ul className="flex flex-col lg:flex-row lg:space-x-20 space-y-4 lg:space-y-0 text-center text-m">
 			<li>
 				<NavLink
 					to={"/courses"}
+					title="Browse available courses"
 					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
@@ -40,6 +103,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/quiz"}
+					title="Test your knowledge with quizzes"
 					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
@@ -49,6 +113,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/forum"}
+					title="Join discussions in our forum"
 					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
@@ -58,6 +123,7 @@ const Navbar = () => {
 			<li>
 				<NavLink
 					to={"/aboutus"}
+					title="Learn more about us"
 					className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 					onClick={() => setIsMenuOpen(false)}
 				>
@@ -68,6 +134,7 @@ const Navbar = () => {
 				<li>
 					<NavLink
 						to={"/admin/dashboard"}
+						title="Access admin dashboard"
 						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 						onClick={() => setIsMenuOpen(false)}
 					>
@@ -80,6 +147,7 @@ const Navbar = () => {
 
 	return (
 		<div
+			ref={menuRef}
 			className={`navbar top-0 z-50 w-full sticky transition-all duration-300 ease-in-out ${
 				insLandingPage && !scrolled && !isMenuOpen
 					? "bg-transparent"
@@ -101,7 +169,11 @@ const Navbar = () => {
 			</div>
 			{/*Desktop left section- Logo */}
 			<div className="w-full justify-center lg:w-1/4">
-				<NavLink to={"/"} onClick={() => setIsMenuOpen(false)}>
+				<NavLink
+					to={"/"}
+					title="Go to homepage"
+					onClick={() => setIsMenuOpen(false)}
+				>
 					<img
 						src={logo}
 						className="col-span-2 h-10 w-full object-contain transform hover:scale-110 transition-all duration-300 cursor-pointer lg:col-span-1"
@@ -120,6 +192,7 @@ const Navbar = () => {
 					<>
 						<NavLink
 							to={"/login"}
+							title="Login to your account"
 							className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
 							onClick={() => setIsMenuOpen(false)}
 						>
@@ -127,6 +200,7 @@ const Navbar = () => {
 						</NavLink>
 						<NavLink
 							to={"/register"}
+							title="Create a new account"
 							className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 							onClick={() => setIsMenuOpen(false)}
 						>
@@ -137,6 +211,7 @@ const Navbar = () => {
 					<>
 						<NavLink
 							to={"/profile"}
+							title="View your profile"
 							className="text-4xl text-gray-200 hover:text-blue-500 hover:transition-colors duration-500"
 							onClick={() => setIsMenuOpen(false)}
 						>
@@ -145,6 +220,7 @@ const Navbar = () => {
 						<button
 							onClick={logoutUser}
 							className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
+							title="Log out"
 						>
 							Log out
 						</button>
@@ -154,6 +230,7 @@ const Navbar = () => {
 
 			{/* Mobile Menu */}
 			<div
+				ref={menuRef}
 				className={`fixed top-16 left-0 right-0 bg-[#323d5e] transform transition-all duration-300 ease-in-out justify-center ${
 					isMenuOpen
 						? "opacity-100 translate-y-0"
@@ -180,27 +257,27 @@ const Navbar = () => {
 								</NavLink>
 								<NavLink
 									to={"/register"}
-									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 									onClick={() => setIsMenuOpen(false)}
 								>
 									Sign Up
 								</NavLink>
 							</div>
 						) : (
-							<div className="flex flex-col space-y-4">
+							<div className="flex flex-col text-center space-y-4">
 								<NavLink
 									to={"/profile"}
-									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									className="text-4xl text-gray-200 hover:text-blue-500 hover:transition-colors duration-500"
 									onClick={() => setIsMenuOpen(false)}
 								>
-									Profile
+									<FontAwesomeIcon icon={faCircleUser} />
 								</NavLink>
 								<button
 									onClick={() => {
 										logoutUser();
 										setIsMenuOpen(false);
 									}}
-									className="btn bg-blue-500 hover:bg-blue-600 border-0 text-white cursor-pointer w-full transform transition hover:scale-105"
+									className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 								>
 									Log out
 								</button>
