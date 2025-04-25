@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import API from '../services/api';
 
 export default function VerifyEmail() {
   const { uid, token } = useParams();
@@ -10,10 +10,8 @@ export default function VerifyEmail() {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/verify-email/${uid}/${token}/`);
+        const res = await API.get(`/verify-email/${uid}/${token}/`);
         console.log(res)
-        // localStorage.setItem('access_token', res.data.access);
-        // localStorage.setItem('refresh_token', res.data.refresh);
         setMessage("🎉 Email verified successfully");
         setSuccess(true);
       } catch (err) {
