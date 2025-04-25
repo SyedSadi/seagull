@@ -1,131 +1,218 @@
-# 🎓 Learning Management System (LMS)
+# KUETx
 
-[![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)](https://reactjs.org/)
-[![Django](https://img.shields.io/badge/Django-4.2-092e20.svg)](https://www.djangoproject.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.0-336791.svg)](https://www.postgresql.org/)
+**Empowering the Future of Online Learning**  
+Seagull is a full-stack Learning Management System (LMS) built for Learnathon. It enables educators to manage courses and learners to access interactive, community-driven education in one seamless platform.
 
-## 👥 Team
+---
 
-| Role        | Name                                          |
-| ----------- | --------------------------------------------- |
-| Team Leader | [ImamIfti056](https://github.com/ImamIfti056) |
-| Developer   | [yuusaif](https://github.com/yuusaif)         |
-| Developer   | [SyedSadi](https://github.com/SyedSadi)       |
-| Mentor      | [maahad767](https://github.com/maahad767)     |
+<div align="center">
 
-## 📝 Overview
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="40" title="React" />](https://reactjs.org)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vite/vite-original.svg" width="40" title="Vite" />](https://vitejs.dev)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" width="40" title="Django" />](https://www.djangoproject.com)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="40" title="Python" />](https://www.python.org)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" title="PostgreSQL" />](https://www.postgresql.org)
+[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="40" title="Git" />](https://git-scm.com)
+![Django REST](https://img.shields.io/badge/Django%20REST-API-blue?logo=django)
+[<img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" width="40" title="HuggingFace" />](https://huggingface.co)
 
-A modern Learning Management System built to revolutionize online education. Our platform provides comprehensive tools for course management, interactive learning, and assessment.
+</div>
 
-### 🌟 Key Features
+---
 
-- **📚 Course Management**
+## 🌐 Live Demo
 
-  - Create and organize course content
-  - Upload multiple file formats (PDF, PPT, Video)
-  - Embed YouTube videos seamlessly
-  - Track course progress
+🔗 (https://your-netlify-url.netlify.app)
 
-- **🎯 Interactive Learning**
+## 👨‍💻 Team
 
-  - Real-time discussion forums
-  - Q&A sections
-  - Community engagement features
-  - Rating and feedback system
+Meet the passionate developers behind **KUETx**:
 
-- **📝 Assessment System**
-  - Timed MCQ quizzes (25 questions, 25 minutes)
-  - Instant results and feedback
-  - Progress tracking
-  - Performance analytics
+| Role         | Name & GitHub Profile                               |
+| ------------ | --------------------------------------------------- |
+| 👑 Team Lead | [Imamul Islam Ifti](https://github.com/ImamIfti056) |
+| 🛠️ Developer | [Saif Alvi](https://github.com/yuusaif)             |
+| 🎨 Developer | [syed Nazib Sadi](https://github.com/SyedSadi)      |
 
-## 🛠️ Tech Stack
+---
 
-- **Frontend:**
+### 🧠 Our Guide & Mentor
 
-  - React.js with Vite
-  - TailwindCSS for styling
-  - Redux for state management
-  - Axios for API calls
+A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
-- **Backend:**
-  - Django REST Framework
-  - PostgreSQL database
-  - JWT Authentication
-  - Celery for async tasks
+---
+
+## 📚 Features
+
+## 📘 Student Course Interaction
+
+- 🔍 **Browse Available Courses**  
+  Students can explore and enroll in courses based on topics or tags.
+
+- 📺 **Watch Lessons**  
+  Access embedded YouTube videos or uploaded lecture content within a clean viewer.
+
+- 📄 **Download Materials**  
+  Get access to slides, PDFs, and supplementary resources for offline learning.
+
+- ✅ **Track Progress**  
+  Visual indicators mark completed lessons and materials.
+
+- 🧪 **Attempt Quizzes**  
+  Participate in course quizzes with instant feedback and scoring.
+
+---
+
+## 🧠 Interactive Quizzes & Evaluation
+
+- ⏱️ **Timed Quiz Sessions**  
+  Students take quizzes under time constraints, simulating real test conditions.
+
+- 🧮 **Auto-Graded Scoring**  
+  Quiz submissions are automatically evaluated with instant feedback.
+
+- 🧾 **Detailed Result Breakdown**  
+  Students receive question-wise analysis, showing correct answers.
+
+- 📈 **Progress Tracking**  
+  Quiz performance is recorded and reflected in the student's profile
+
+- 🔄 **Re-attempts & Practice**  
+  Instructors can allow multiple attempts for practice and learning reinforcement.
+
+---
+
+## 💬 Interactive Discussion Forum
+
+- 🗨️ **Threaded Conversations**  
+  Students can create and reply to posts in a structured, thread-based layout.
+
+- 🧠 **Course-Specific Discussions**  
+  Forums are tied to individual courses, keeping topics relevant and organized.
+
+- 🧹 **Toxicity Detection**  
+  Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
+
+- 👍 **Voting & Tagging**  
+  Posts can be upvoted and tagged, helping highlight important or useful discussions.
+
+---
+
+## 📊 Dashboards & Analytics
+
+Insightful data visualization for both learners and instructors to monitor performance and progress.
+
+---
+
+## 🔐 Secure Authentication
+
+Modern JWT-based authentication flow for registration, login, and protected APIs.
+
+---
+
+## 🧪 Scalable Backend
+
+Modular Django REST framework structure with clean API architecture and future-ready integration hooks.
+
+## 🏗️ System Architecture
+
+> Diagram shows how users interact through the frontend with DRF APIs for different modules including courses, quizzes, forums, and authentication.
+
+<img src="assets/system_arch.png" alt="System Architecture" width="400" />
+
+---
+
+## 📃 Documentation
+
+API documentation is powered by **drf-spectacular** and is available at:
+
+[![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
+
+## 🗂️ Entity-Relationship Diagram
+
+Here’s an overview of the system’s data structure:
+
+![ER Diagram](assets/graphviz.png)
+
+## 📂 Project Directory Structure
+
+Here’s the directory structure of the **Seagull LMS** project:
+
+```
+seagull
+├── frontend
+│   ├── public
+│   │   └── assets
+│   ├── src
+│   │   ├── assets
+│   │   ├── components
+│   │   │   ├── admin
+│   │   │   ├── courses
+│   │   │   ├── forum
+│   │   │   ├── landingpage
+│   │   │   ├── profile
+│   │   │   ├── quiz
+│   │   │   └── shared
+│   │   ├── pages
+│   │   ├── services
+│   │   └── context
+├── server
+│   ├── requirements.txt
+│   └── backend
+│       ├── ai_utils
+│       ├── course
+│       ├── quiz
+│       ├── forum
+│       ├── user
+├── README.md
+├── LICENSE
+└── .github
+    └── workflows
+```
 
 ## 🚀 Getting Started
 
-### Prerequisites
+**Clone the repository:**
 
 ```bash
-# Required versions
-Node.js >= 16.0.0
-Python >= 3.8.0
-PostgreSQL >= 14.0
-```
-
-### Installation
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/yourusername/seagull.git
+git clone https://github.com/your-username/seagull.git
 cd seagull
 ```
 
-2. **Backend Setup**
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run migrations
-python manage.py migrate
-
-# Start server
-python manage.py runserver
-```
-
-3. **Frontend Setup**
+## 🧩 Frontend Setup
 
 ```bash
 cd frontend
-npm install
-npm run dev
+npm install       # install dependencies
+npm run dev       # run the app at localhost
 ```
 
-## 🔧 Development
+## 🐍 Backend Setup
 
-### Branch Naming Convention
+```bash
+cd server
+python -m venv env       # create virtual environment
+source env/bin/activate  # activate environment (Linux/macOS)
+env\Scripts\activate     # for Windows
 
-- Feature: `feature/your-feature-name`
-- Bugfix: `bugfix/issue-description`
-- Hotfix: `hotfix/critical-fix`
-
-### Commit Guidelines
-
-- Use clear, descriptive commit messages
-- Reference issue numbers when applicable
-- Keep commits focused and atomic
-
-## 📚 Documentation
-
-- [API Documentation](docs/api.md)
-- [Development Guide](docs/development.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
+pip install -r requirements.txt
+cd backend
+python manage.py migrate
+python manage.py createsuperuser  # follow prompts
+python manage.py runserver
+```
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+We welcome contributions! Here's how you can help:
+
+1. Fork this repository
+2. Create a new branch: `git checkout -b feature-name`
+3. Make your changes and commit: `git commit -m 'Add new feature'`
+4. Push to your fork: `git push origin feature-name`
+5. Submit a Pull Request
+
+> 💡 For major changes, please open an issue first to discuss what you'd like to change.
 
 ## 📄 License
 
