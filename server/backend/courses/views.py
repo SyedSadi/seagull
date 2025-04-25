@@ -14,10 +14,10 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     Public viewset to list and search courses.
     Only supports read operations.
     """
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny]     # Allow anyone to access course listings
     serializer_class = CourseSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'description', 'subject', 'difficulty']
+    search_fields = ['title', 'description', 'subject', 'difficulty']   # Fields to search against
     
     def get_queryset(self):
         """
@@ -28,7 +28,8 @@ class CourseViewSet(viewsets.ReadOnlyModelViewSet):
         
         if not search_query:
             return queryset
-            
+        
+         # Apply search filter to the query set based on title, description, subject, and difficulty
         return queryset.filter(
             Q(title__icontains=search_query) | 
             Q(description__icontains=search_query) |
@@ -42,7 +43,7 @@ class CourseDetailView(generics.RetrieveAPIView):
     View to retrieve a single course's details.
     Requires authentication.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  # Only authenticated users can view course details
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
@@ -52,6 +53,7 @@ class AdminOnlyAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_course_or_404(self, course_id):
+        # Helper function to fetch course or return 404 if not found
         return get_object_or_404(Course, id=course_id)
         
     def handle_serializer(self, serializer, status_code=status.HTTP_200_OK):
@@ -67,6 +69,7 @@ class AddCourseView(AdminOnlyAPIView):
     Admin endpoint to add a new course.
     """
     def post(self, request):
+         # Handle course creation by admin
         serializer = CourseSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
@@ -76,11 +79,13 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
     Admin endpoint to update or delete an existing course.
     """
     def put(self, request, course_id):
+         # Update an existing course
         course = self.get_course_or_404(course_id)
         serializer = CourseSerializer(course, data=request.data, partial=True)
         return self.handle_serializer(serializer)
 
     def delete(self, request, course_id):
+        # Delete an existing course
         course = self.get_course_or_404(course_id)
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
@@ -89,6 +94,7 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
 class UserEnrollmentMixin:
     """Mixin to handle student enrollment validation."""
     def is_student_enrolled(self, user, course):
+        # Check if the student is enrolled in the course
         if not hasattr(user, 'student'):
             return False
         return Enrollment.objects.filter(course=course, student=user.student).exists()
@@ -102,11 +108,13 @@ class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+         # Get course contents for the enrolled student
        
         user = self.request.user         # Retrieve the currently authenticated user making the request
         course_id = self.kwargs['course_id']    # Get the course_id from the URL path parameters
         course = get_object_or_404(Course, id=course_id)       # Try to fetch the course object from the database; return 404 if not found
 
+         # Ensure the user is enrolled before returning contents
         if not self.is_student_enrolled(user, course):
             return CourseContents.objects.none()
 
@@ -118,6 +126,7 @@ class AddContentAPIView(AdminOnlyAPIView):
     Admin can add content to a course.
     """
     def post(self, request):
+         # Admin adds content to a course
         self.get_course_or_404(request.data.get('course'))
         serializer = CourseContentsSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
@@ -128,6 +137,7 @@ class UpdateContentView(AdminOnlyAPIView):
     Admin can update existing content.
     """
     def put(self, request, id):
+         # Admin updates course content
         content = get_object_or_404(CourseContents, id=id)
         serializer = CourseContentsSerializer(content, data=request.data, partial=True)
         return self.handle_serializer(serializer)
@@ -138,6 +148,7 @@ class DeleteContentView(AdminOnlyAPIView):
     Admin can delete content from a course.
     """
     def delete(self, request, id):
+        # Admin deletes content from a course
         content = get_object_or_404(CourseContents, id=id)
         content.delete()
         return Response({'message': 'Content deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
@@ -171,6 +182,7 @@ class EnrolledCoursesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+         # Get the list of courses the student is enrolled in
         user = self.request.user
         if not hasattr(user, 'student'):
             return Course.objects.none()
@@ -186,6 +198,7 @@ class InstructorCoursesView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+         # Ensure only instructors can access their courses
         user = request.user
         if not hasattr(user, 'instructor'):
             return Response(
