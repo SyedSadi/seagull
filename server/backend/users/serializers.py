@@ -6,9 +6,16 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from .models import Instructor, Student
 
+# Get the custom User model
 User = get_user_model()
 
+# ------------------------- PROFILE SERIALIZERS -------------------------
+
 class InstructorSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Instructor model.
+    Includes a read-only field 'name' from the related User model.
+    """
     name = serializers.CharField(source='user.username', read_only=True)  # Get name from User model
 
     class Meta:
@@ -16,20 +23,33 @@ class InstructorSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'designation', 'university']
 
 class StudentSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Student model.
+    Currently only includes the 'id' field.
+    """
     class Meta:
         model = Student
         fields = ['id']
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the custom User model.
+    Nested serializers for student and instructor data.
+    """
     instructor = InstructorSerializer(required=False)
     student = StudentSerializer(required=False)
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser', 'instructor', 'student']
 
-# ------------------------- AUTHENTICATION --------------------------------
+# ------------------------- AUTHENTICATION serializers --------------------------------
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for registering new users.
+    Validates password strength and ensures email uniqueness.
+    Automatically creates corresponding Student or Instructor profile based on the selected role.
+    """
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
@@ -45,6 +65,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'role', 'bio']
 
     def create(self, validated_data):
+        """
+        Creates a user and automatically creates an associated Student or Instructor profile.
+        """
         role = validated_data.pop('role', None)
         user = User.objects.create_user(**validated_data)
         
@@ -62,14 +85,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class LoginSerializer(serializers.Serializer):
+    """
+    Serializer for logging in users with username and password.
+    Returns JWT tokens along with user data if credentials are valid.
+    """
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
+        """
+        Validates user credentials and returns JWT tokens with extra claims.
+        """
         user = User.objects.filter(username=data['username']).first()
         if user and user.check_password(data['password']):
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
+            # Add custom claims
             access_token['role'] = user.role
             access_token['is_superuser'] = user.is_superuser
 
@@ -82,7 +113,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 
-# ------------------------- TOKEN --------------------------------
+# ------------------------- CUSTOM JWT TOKEN SERIALIZERS -------------------------
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(self, user):
         token = super().get_token(user)
@@ -93,6 +124,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
     
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
+    """
+    Custom serializer to extend token payload with additional user information during login.
+    """
     def validate(self, attrs):
         data = super().validate(attrs)
         
@@ -112,6 +146,10 @@ class CustomTokenRefreshSerializer(TokenRefreshSerializer):
 
 # ------------------------- ADMIN --------------------------------
 class DashboardStatsSerializer(serializers.Serializer):
+    """
+    Serializer for returning admin dashboard statistics.
+    Includes total counts and recent user activity.
+    """
     total_users = serializers.IntegerField()
     total_students = serializers.IntegerField()
     total_instructors = serializers.IntegerField()
@@ -125,6 +163,10 @@ class DashboardStatsSerializer(serializers.Serializer):
 
 # ------------------------- LANDING PAGE STATS --------------------------------
 class LandingPageStatsSerializer(serializers.Serializer):
+    """
+    Serializer for returning statistics on the landing page.
+    Used to show platform scale and user engagement.
+    """
     total_students = serializers.IntegerField()
     total_instructors = serializers.IntegerField()
     total_courses = serializers.IntegerField()
