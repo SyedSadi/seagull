@@ -18,6 +18,7 @@ class TestUserModels:
         assert student.course_enrolled == 5
         assert user.role == 'student'
         assert student.user.username == 'student1'
+        assert str(student) == 'student1'
 
     def test_create_instructor_user(self):
         user = User.objects.create_user(username='instructor1', password=config("TEST_PASSWORD"), role='instructor')
@@ -32,6 +33,7 @@ class TestUserModels:
         assert instructor.university == 'University of Science'
         assert user.role == 'instructor'
         assert instructor.user.username == 'instructor1'
+        assert str(instructor) == 'instructor1'
 
     def test_user_str_method(self):
         user = User.objects.create_user(username='testuser', password=config("TEST_PASSWORD"), role='student')        

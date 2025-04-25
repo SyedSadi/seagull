@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
 import { Helmet } from 'react-helmet-async';
+import coverPic from '../assets/login.png'
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -42,9 +43,12 @@ const Login = () => {
 		<Helmet>
 		    <title>Login | KUETx</title>
     	</Helmet>
-		<div className="flex justify-center items-center min-h-screen bg-gray-100">
-			<div className="card w-96 bg-white shadow-lg p-6 rounded-xl">
-				<h2 className="text-2xl font-bold text-center text-gray-700">Login</h2>
+		<div className="md:flex justify-around items-center min-h-screen bg-white px-6">
+			<div>
+				<img src={coverPic} alt="kuetx-logo" width={450} height={450}/>
+			</div>
+			<div className="card w-84 md:w-96 bg-white p-6 rounded-xl">
+				<h2 className="text-3xl font-bold text-center text-blue-700">Login</h2>
 				<form onSubmit={handleSubmit} className="mt-4">
 					<div className="form-control">
 						<label htmlFor="username" className="label">
@@ -84,9 +88,14 @@ const Login = () => {
 					</button>
 				</form>
 				<p className="text-sm text-gray-600 text-center mt-3">
+					<Link to="/forgot-password" className="text-blue-500">
+						Forgot Password?
+					</Link>
+				</p>
+				<p className="text-sm text-gray-600 text-center mt-3">
 					Don&apos;t have an account?{" "}
 					<Link to="/register" className="text-blue-500">
-						Register
+						Sign Up
 					</Link>
 				</p>
 			</div>

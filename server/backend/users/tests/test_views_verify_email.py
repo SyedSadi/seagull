@@ -8,6 +8,8 @@ from django.utils.http import urlsafe_base64_encode
 from datetime import timedelta
 from django.utils import timezone
 from decouple import config
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 # Get the custom user model
 User = get_user_model()
@@ -74,3 +76,42 @@ def test_verify_email_user_already_verified(client, user):
     assert response.status_code == status.HTTP_200_OK
     assert response.data['message'] == "Email verified successfully."
 
+@pytest.mark.django_db
+class TestVerifyEmailAPIView:
+
+    def setup_method(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(username='testuser', password='password123', email='test@example.com')
+        self.uidb64 = self.encode_uid(self.user.pk)
+        self.token = 'validtoken' 
+
+    def encode_uid(self, uid):
+        return urlsafe_base64_encode(force_bytes(uid)) 
+
+    def test_invalid_uid(self):
+        invalid_uidb64 = 'invalidbase64uid'
+        url = reverse('verify-email', kwargs={'uidb64': invalid_uidb64, 'token': self.token})
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data['error'] == 'Invalid or expired link'
+
+    def test_user_does_not_exist(self):
+        invalid_uidb64 = self.encode_uid(9999) 
+        url = reverse('verify-email', kwargs={'uidb64': invalid_uidb64, 'token': self.token})
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data['error'] == 'Invalid or expired link'
+
+    def test_invalid_token(self):
+        invalid_token = 'invalidtoken'
+        url = reverse('verify-email', kwargs={'uidb64': self.uidb64, 'token': invalid_token})
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data['error'] == 'Invalid or expired token'
+
+    def test_django_unicode_decode_error(self):
+        invalid_uidb64 = '?????'  
+        url = reverse('verify-email', kwargs={'uidb64': invalid_uidb64, 'token': self.token})
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data['error'] == 'Invalid or expired link'

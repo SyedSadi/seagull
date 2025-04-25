@@ -1,32 +1,32 @@
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
-from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer, UserSerializer
-from .models import Instructor
 from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
-from django.utils.http import urlsafe_base64_encode
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.core.mail import send_mail
-from django.utils.encoding import force_str, DjangoUnicodeDecodeError
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from decouple import config
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.html import strip_tags
+from django.core.mail import send_mail
+from django.utils.encoding import force_str, DjangoUnicodeDecodeError, force_bytes
+from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from datetime import timedelta
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer, LandingPageStatsSerializer
+from .models import Instructor
+from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer, LandingPageStatsSerializer, RegisterSerializer, LoginSerializer, InstructorSerializer, UserSerializer
 from .services import DashboardStatsService, LandingPageStatsService
 
 User = get_user_model()
 # -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
+    """
+    Handles user registration.
+    Sends a verification email with a unique token after successful registration.
+    """
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
@@ -72,6 +72,7 @@ class RegisterView(generics.CreateAPIView):
 
 # -------------- VERIFY EMAIL ----------------------------
 class VerifyEmailAPIView(APIView):
+    """Verify the email using uid and token."""
     permission_classes = [AllowAny]
     def get(self, _, uidb64, token):
         try:
@@ -103,16 +104,20 @@ class VerifyEmailAPIView(APIView):
             return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
         
 
+# -------------------------- AUTHENTICATION -----------------------------
 class LoginView(generics.GenericAPIView):
+    """Authenticate user and return JWT tokens."""
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
     def post(self, request):
+        # Validate and return token data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
+    """Invalidate the refresh token on logout."""
     permission_classes = [AllowAny]  # Allow logout without requiring access token
 
     def post(self, request):
@@ -130,21 +135,86 @@ class LogoutView(APIView):
 
 
 
+# ----------------------------- RESET PASSWORD --------------------------------
+class RequestPasswordResetView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(email=email)            
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = PasswordResetTokenGenerator().make_token(user)
+
+            reset_link = f"{config('FRONTEND_DOMAIN')}/reset-password/{uidb64}/{token}/"
+            send_mail(
+                subject="Reset Your Password",
+                message=f"Click the link to reset your password: {reset_link}",
+                from_email=config('EMAIL_HOST_USER'),
+                recipient_list=[email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "If this email exists, a password reset link has been sent."})
+        
+        except User.DoesNotExist:
+            # Do not reveal user existence for security
+            return Response({"message": "If this email exists, a password reset link has been sent."})
+        
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, uidb64, token):
+        password = request.data.get("password")
+        if not password:
+            return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Validate password complexity
+            if len(password) < 8:
+                return Response(
+                    {"error": "Password must be at least 8 characters long"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            user.password = make_password(password)
+            user.save()
+            return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+        
+        except Exception:
+            return Response({"error": "Something went wrong. Try again later."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 # -------------------- TOKEN ---------------------------------
 class CustomTokenObtainPairView(TokenObtainPairView):
+    """Custom token pair view with role and is_superuser in payload."""
     serializer_class = CustomTokenObtainPairSerializer
 
 class CustomTokenRefreshView(TokenRefreshView):
+    """Custom token refresh view to retain custom claims."""
     serializer_class = CustomTokenRefreshSerializer
 
 
 
 # -------------------- ADMIN PANEL ---------------------------------
 class DashboardStatsView(APIView):
+    """Provide stats for the admin dashboard."""
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
     def get(self, request, *args, **kwargs):
         try:
+            # Get and serialize dashboard stats
             stats_data = DashboardStatsService.get_dashboard_stats()
             serializer = DashboardStatsSerializer(stats_data)
             return Response(
@@ -167,6 +237,7 @@ class DashboardStatsView(APIView):
 
 # -------------------- LANDING PAGE STATS ---------------------------------
 class LandingPageStatsView(APIView):
+    """Provide stats for the landing page."""
     permission_classes=[AllowAny]
 
     def get(self, _request, *_args, **_kwargs):
@@ -193,15 +264,18 @@ class LandingPageStatsView(APIView):
 
 # ------------------------------- USERS -----------------------------------------
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
+    """Provides a list/detail of instructors."""
     permission_classes = [AllowAny]
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
 
 
 class ProfileView(APIView):
+    """Allows authenticated users to view or update their profile."""
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+         # Return current user's profile
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
@@ -209,8 +283,10 @@ class ProfileView(APIView):
         user = request.user
         data = request.data
 
+        # Update bio
         user.bio = data.get('bio', user.bio)
         user.save()
+         # If instructor, update related fields
         if user.role == 'instructor':
             instructor, _ = Instructor.objects.get_or_create(user=user)
             instructor_data = data.get('instructor', {})
