@@ -8,6 +8,7 @@ import { getAllCourses, getCourseDetailsById } from "../../services/coursesApi";
 import ModifyCourseForm from "../../components/Admin/ModifyCourseForm";
 import { ImageUploader } from "../../services/ImageUploader";
 import ShowConfirmation from "../../components/Shared/ShowConfirmation";
+import { Helmet } from 'react-helmet-async';
 
 const ModifyCoursePage = () => {
   const navigate = useNavigate();
@@ -25,12 +26,15 @@ const ModifyCoursePage = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true)
       try {
         const data = await getAllCourses();
         setCourses(data);
       } catch (error) {
         console.error("Error fetching courses:", error);
         toast.error("Failed to load courses. Try again later.");
+      } finally{
+        setLoading(false)
       }
     };
     fetchCourses();
@@ -101,6 +105,9 @@ const ModifyCoursePage = () => {
 
   return (
     <AdminLayout>
+      <Helmet>
+		    <title>Modify Courses | KUETx</title>
+    	</Helmet>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
         <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
           <h2 className="text-3xl font-bold text-center mb-6">Modify Course</h2>
@@ -117,18 +124,15 @@ const ModifyCoursePage = () => {
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-400"
             >
               <option value="">-- Select a course --</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.title}
-                </option>
-              ))}
+              {
+                loading ? <option>Loading...</option> : 
+                courses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.title}
+                  </option>
+                ))
+              }
             </select>
-
-            {selectedCourseId && (
-              <p className="mt-2 text-sm text-green-600">
-                Selected Course ID: {selectedCourseId}
-              </p>
-            )}
           </div>
 
           {/* Modify Course Form */}

@@ -6,7 +6,7 @@ import {
 	RouterProvider,
 	useRouteError,
 } from "react-router-dom";
-
+import { HelmetProvider } from 'react-helmet-async';
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
 
@@ -42,6 +42,7 @@ import Quizzes from "./components/Quiz/Quizzes.jsx";
 // Styles
 import { ToastContainer } from "react-toastify";
 import "./index.css";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
 			{
 				path: "/courses",
 				element: <CoursePage />,
+			},
+			{
+				path: "/verify-email/:uid/:token",
+				element: <VerifyEmail />,
 			},
 			{
 				element: <ProtectedRoute />,
@@ -149,18 +154,20 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
-		<AuthProvider>
-			<RouterProvider router={router} />
-			<ToastContainer
-				position="bottom-right"
-				autoClose={2000}
-				hideProgressBar={false}
-				newestOnTop
-				closeOnClick
-				pauseOnHover
-				draggable
-			/>
-		</AuthProvider>
+		<HelmetProvider>
+			<AuthProvider>
+				<RouterProvider router={router} />
+				<ToastContainer
+					position="bottom-right"
+					autoClose={2000}
+					hideProgressBar={false}
+					newestOnTop
+					closeOnClick
+					pauseOnHover
+					draggable
+				/>
+			</AuthProvider>
+		</HelmetProvider>
 	</StrictMode>
 );
 

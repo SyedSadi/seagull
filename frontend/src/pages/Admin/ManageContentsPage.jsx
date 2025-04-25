@@ -5,6 +5,7 @@ import { deleteContentById, updateContentById } from '../../services/contentsApi
 import { toast } from "react-toastify";
 import ShowConfirmation from '../../components/Shared/ShowConfirmation';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet-async';
 
 
 // Small reusable component for content input fields
@@ -55,14 +56,18 @@ const ManageContents = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [contents, setContents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true)
       try {
         const { data } = await API.get('/courses/');
         setCourses(data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      }finally{
+        setLoading(false)
       }
     };
     fetchCourses();
@@ -119,6 +124,9 @@ const ManageContents = () => {
 
   return (
     <AdminLayout>
+      <Helmet>
+		    <title>Manage Contents | KUETx</title>
+    	</Helmet>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Manage Contents</h1>
 
@@ -128,9 +136,12 @@ const ManageContents = () => {
           className="p-2 border rounded mb-6"
         >
           <option value="">Select a course</option>
-          {courses.map(({ id, title }) => (
-            <option key={id} value={id}>{title}</option>
-          ))}
+          {
+            loading ? <option>Loading...</option> : 
+            courses.map(({ id, title }) => (
+              <option key={id} value={id}>{title}</option>
+            ))
+          }
         </select>
 
         {selectedCourseId && (
