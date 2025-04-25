@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView, LandingPageStatsView
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path('', include('devlog.urls')),

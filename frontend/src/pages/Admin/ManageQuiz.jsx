@@ -3,6 +3,7 @@ import { getAllCategories } from "../../services/quizApi";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);
@@ -71,12 +72,18 @@ const ManageQuiz = () => {
 		navigate(`/update-quiz/${categoryId}`);
 	};
 
-	if (loading)
-		return (
+	// Loading Spinner Component
+	const Loading = () => (
+		<AdminLayout>
 			<div className="flex justify-center items-center h-64">
 				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
 			</div>
-		);
+		</AdminLayout>
+	);
+
+	if (loading) {
+		return <Loading />;
+	}
 
 	if (error)
 		return (
@@ -89,6 +96,9 @@ const ManageQuiz = () => {
 		);
 	return (
 		<AdminLayout>
+			<Helmet>
+		        <title>Manage Quiz | KUETx</title>
+    		</Helmet>
 			<div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg shadow-lg p-10">
 				<h2 className="text-3xl font-bold text-center text-black mb-6">
 					Manage Quizzes

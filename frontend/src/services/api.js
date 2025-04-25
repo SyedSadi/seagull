@@ -49,7 +49,7 @@ API.interceptors.response.use(
 				console.error("Token Refresh Failed:", refreshError.response);
 				localStorage.removeItem("access_token");
 				localStorage.removeItem("refresh_token");
-				localStorage.clear()
+				localStorage.clear();
 				window.location.href = "/login";
 			}
 		}

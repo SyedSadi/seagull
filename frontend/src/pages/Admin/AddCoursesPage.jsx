@@ -6,6 +6,7 @@ import AdminLayout from "../../components/Admin/AdminLayout";
 import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 import { ImageUploader } from "../../services/ImageUploader";
+import { Helmet } from 'react-helmet-async';
 
 
 const AddCoursesPage = () => {
@@ -97,6 +98,9 @@ const AddCoursesPage = () => {
 
   return (
     <AdminLayout>
+      <Helmet>
+        <title>Add Courses | KUETx</title>
+      </Helmet>
       <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-gray-800">Add New Course</h2>
 

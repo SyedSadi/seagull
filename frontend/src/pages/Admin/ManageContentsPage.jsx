@@ -5,6 +5,7 @@ import { deleteContentById, updateContentById } from '../../services/contentsApi
 import { toast } from "react-toastify";
 import ShowConfirmation from '../../components/Shared/ShowConfirmation';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet-async';
 
 
 // Small reusable component for content input fields
@@ -123,6 +124,9 @@ const ManageContents = () => {
 
   return (
     <AdminLayout>
+      <Helmet>
+		    <title>Manage Contents | KUETx</title>
+    	</Helmet>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Manage Contents</h1>
 

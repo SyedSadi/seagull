@@ -2,6 +2,7 @@ import { useState } from "react";
 import { addQuiz } from "../../services/quizApi";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import AddQuestionForm from "../../components/Quiz/AddQuestionForm";
+import { Helmet } from 'react-helmet-async';
 
 const AddQuizPage = () => {
 	const [quiz, setQuiz] = useState({
@@ -33,6 +34,9 @@ const AddQuizPage = () => {
 
 	return (
 		<AdminLayout>
+			<Helmet>
+		    	<title>Add Quiz | KUETx</title>
+    		</Helmet>
 			<div className="max-w-2xl mx-auto p-6">
 				{!quizCreated ? (
 					<div className="bg-blue-100 p-6 rounded-lg shadow-lg">
