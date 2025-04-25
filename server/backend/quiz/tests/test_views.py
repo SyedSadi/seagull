@@ -73,11 +73,23 @@ class TestQuizViews:
         assert 'name' in response.data
 
     def test_add_question_view(self):
-        user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))
-        category = Category.objects.create(name="Math", description="Math related questions")
-        payload = {
-            "category": category.id,
+        # Create admin user and authenticate
+        user = User.objects.create_superuser(
+            username="testuser", 
+            password=config("TEST_PASSWORD")
+        )
+        self.client.force_authenticate(user=user)
+
+        # Create category first
+        category = Category.objects.create(
+            name="Math", 
+            description="Math related questions"
+        )
+
+        # Valid payload with all required fields
+        valid_payload = {
             "text": "What is the capital of France?",
+            "category": category.id,
             "options": [
                 {"text": "Paris", "is_correct": True},
                 {"text": "London", "is_correct": False},
@@ -85,10 +97,28 @@ class TestQuizViews:
                 {"text": "Rome", "is_correct": False}
             ]
         }
-        self.client.force_authenticate(user=user)
-        response = self.client.post('/quiz/add-question/', payload, format='json')
+
+        # Test with valid data
+        response = self.client.post(
+            '/quiz/add-question/', 
+            valid_payload, 
+            format='json'
+        )
         assert response.status_code == status.HTTP_201_CREATED
-        assert response.data['text'] == "What is the capital of France?"
+        assert Question.objects.count() == 1
+        assert Option.objects.count() == 4
+
+        # Test with invalid data - missing options
+        invalid_payload = {
+            "text": "Invalid question",
+            "category": category.id
+        }
+        response = self.client.post(
+            '/quiz/add-question/', 
+            invalid_payload, 
+            format='json'
+        )
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_delete_quiz_view(self):
         user = User.objects.create_superuser(username="testuser", password=config("TEST_PASSWORD"))

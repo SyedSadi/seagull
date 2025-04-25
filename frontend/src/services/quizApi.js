@@ -4,7 +4,7 @@ import API from "./api";
 // Fetch all quiz categories
 export const getAllCategories = async () => {
 	const response = await API.get("/quiz/");
-	console.log("API Response:", response.data);
+	// console.log("API Response:", response.data);
 	return response.data;
 };
 

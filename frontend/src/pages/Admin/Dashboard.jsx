@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
 import PropTypes from "prop-types";
+import { Helmet } from 'react-helmet-async';
 
 const Dashboard = () => {
 	const [stats, setStats] = useState(null);
@@ -28,6 +29,9 @@ const Dashboard = () => {
 
 	return (
 		<AdminLayout>
+			<Helmet>
+		    	<title>Dashboard | KUETx</title>
+    		</Helmet>
 			<div className="p-6 pt-0 shadow-md rounded-lg">
 				<h2 className="text-2xl text-center font-bold mb-6">Dashboard Stats</h2>
 

@@ -4,6 +4,7 @@ import AdminLayout from "../../components/Admin/AdminLayout";
 import { getAllCategories, updateQuiz } from "../../services/quizApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from 'react-helmet-async';
 
 const UpdateQuizPage = () => {
 	const { categoryId } = useParams();
@@ -86,6 +87,9 @@ const UpdateQuizPage = () => {
 
 	return (
 		<AdminLayout>
+			<Helmet>
+		        <title>Update Quiz | KUETx</title>
+    		</Helmet>
 			<div className="max-w-2xl mx-auto p-6">
 				<div className="bg-blue-100 p-6 rounded-lg shadow-lg">
 					<h2 className="text-xl font-bold mb-4">

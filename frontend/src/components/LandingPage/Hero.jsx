@@ -36,10 +36,10 @@ const Hero = () => {
 			{/* Content - positioned for navbar overlay */}
 			<div className="relative z-10 w-full h-full flex items-center justify-center">
 				<div className="max-w-3xl mx-auto px-4 text-center text-white">
-					<h1 className="text-xl md:text-5xl font-bold mb-4 leading-tight">
+					<div className="text-xl md:text-5xl font-bold mb-4 leading-tight">
 						Unlock Your Learning{" "}
 						Potential <h1 className="mt-4">at <span className="text-blue-500">KUETx</span></h1>{" "}
-					</h1>
+					</div>
 					<p className="text-lg md:text-xl mb-6 text-gray-200">
 						Where Learning Connects — Explore expert-led courses, join vibrant communities, and take control of your education.{" "}
 					</p>

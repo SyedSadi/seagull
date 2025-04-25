@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizAttempt from "../../src/components/Quiz/QuizAttempt";
 import ProfileSection from "../components/Profile/ProfileSection";
+import { Helmet } from 'react-helmet-async';
+
 
 const Profile = () => {
 	const { user } = useContext(AuthContext);
@@ -104,6 +106,10 @@ const Profile = () => {
 	};
 
 	return (
+		<>
+		<Helmet>
+		    <title>Profile | KUETx</title>
+    	</Helmet>
 		<div className="md:flex min-h-screen bg-gray-50">
 			{/* Left Sidebar */}
 			<aside className="w-full md:w-1/3 lg:w-1/4 p-4 bg-gradient-to-b from-blue-100 to-indigo-100 shadow-md">
@@ -131,6 +137,7 @@ const Profile = () => {
 				)}
 			</main>
 		</div>
+		</>
 	);
 };
 

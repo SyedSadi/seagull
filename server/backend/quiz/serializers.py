@@ -3,11 +3,13 @@ from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from drf_writable_nested import WritableNestedModelSerializer
 
 class OptionSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)  # Make id optional
+
     class Meta:
         model = Option
         fields = ['id', 'text', 'is_correct']
         extra_kwargs = {
-            'id': {'read_only': False}  # Important for updates
+            'id': {'read_only': False, 'required': False}  # Make id optional and writable
         }
 
 

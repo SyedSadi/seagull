@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import API from '../../services/api';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet-async';
 
 const AddContentPage = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [contentData, setContentData] = useState({
     title: '',
@@ -16,11 +18,14 @@ const AddContentPage = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true)
       try {
         const response = await API.get('/courses/'); // adjust endpoint if needed
         setCourses(response.data);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      } finally{
+        setLoading(false)
       }
     };
     fetchCourses();
@@ -69,6 +74,9 @@ const AddContentPage = () => {
 
   return (
     <AdminLayout>
+      <Helmet>
+		    <title>Add Content | KUETx</title>
+    	</Helmet>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Add New Content</h1>
 
@@ -78,11 +86,14 @@ const AddContentPage = () => {
           className="p-2 border rounded mb-6"
         >
           <option value="">Select a course</option>
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.title}
-            </option>
-          ))}
+          {
+            loading ? <option>Loading...</option> :
+            courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))
+          }
         </select>
 
         {selectedCourseId && (

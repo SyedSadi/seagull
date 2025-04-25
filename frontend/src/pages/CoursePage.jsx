@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import CourseList from "../components/Courses/CourseList";
+import { Helmet } from 'react-helmet-async';
 import { FaSearch } from "react-icons/fa";
 
 const CoursePage = () => {
@@ -16,6 +17,9 @@ const CoursePage = () => {
 
 	return (
 		<div>
+			<Helmet>
+		        <title>Courses | KUETx</title>
+    		</Helmet>
 			<div className="my-8 flex justify-between items-center px-10 pb-12">
 				<div>
 					<h1 className="text-3xl font-bold">KUETx Courses</h1>

@@ -4,6 +4,52 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from users.models import User, Instructor
 from decouple import config
+from django.urls import reverse
+from django.core import mail
+from django.urls import reverse
+
+@pytest.mark.django_db
+class TestRegisterView:
+    def test_register_user_success(self, client):
+        # Setup valid data
+        user_data = {
+            "username": "testuser",
+            "password": config('TEST_PASSWORD'),
+            "email": "testuser@example.com",
+            "role": "student",
+        }
+
+        # Make POST request to register endpoint
+        response = client.post(reverse('register'), data=user_data, format='json')
+
+        # Check if the user is created and response is 201 Created
+        assert response.status_code == status.HTTP_201_CREATED
+        assert "Registration successful" in response.data["message"]
+
+        # Check if the user is created in the database but inactive
+        user = User.objects.get(username="testuser")
+        assert user.is_active is False  # User should be inactive until email verification
+
+        # Check that an email was sent
+        assert len(mail.outbox) == 1
+        verification_email = mail.outbox[0]
+        assert verification_email.subject == "Confirm Your Email to Get Started with KUETx"
+        assert user.email in verification_email.to
+
+    def test_register_user_invalid_data(self, client):
+        # Setup invalid data (e.g., missing email)
+        user_data = {
+            "username": "testuser",
+            "password": config('TEST_PASSWORD'),
+            "role": "student",
+        }
+
+        # Make POST request to register endpoint
+        response = client.post(reverse('register'), data=user_data, format='json')
+
+        # Check that the response status is 400 Bad Request
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "email" in response.data  # Expect validation error for missing email
 
 @pytest.mark.django_db
 class TestAuthViews:
@@ -17,11 +63,9 @@ class TestAuthViews:
         }
         response = self.client.post('/register/', data, format='json')        
         assert response.status_code == status.HTTP_201_CREATED
-        assert 'user' in response.data
-        assert 'refresh' in response.data
-        assert 'access' in response.data
+        assert response.data["message"] == "Registration successful. Please check your email to verify your account."
         user = User.objects.get(username='testuser')
-        assert user.email == 'testuser@example.com'
+        assert user.email == 'testuser@example.com'    
 
     def test_login_view(self):
         data = {

@@ -2,6 +2,8 @@ import { useState, useContext } from "react";
 import {AuthContext} from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Helmet } from 'react-helmet-async';
+
 
 const Register = () => {
     const navigate = useNavigate();
@@ -23,18 +25,33 @@ const Register = () => {
         e.preventDefault();
         setErrorMsgs({});
         setLoading(true);
-        const res = await registerUser(formData);
-        console.log(res)
-        setErrorMsgs(res?.response?.data)
-        console.log('eroor', errorMsgs)
-        if(res.status === 201){
-            toast.success('Registration successful! Please log in.');
-            navigate('/login')
+        try{
+            const res = await registerUser(formData);
+            console.log(res)
+            setErrorMsgs(res?.response?.data)
+            console.log('eroor', errorMsgs)
+            if(res.status === 201){
+                toast.success(res?.data?.message);
+                setFormData({
+                    username: "",
+                    email: "",
+                    password: "",
+                    role: "student",
+                })
+            }
+        }catch(err){
+            console.log(err)
+        }finally{
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (
+        <>
+        <Helmet>
+            <title>Registration | KUETx</title>
+        </Helmet>
+        
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
             <div className="card w-96 bg-white shadow-lg p-6 rounded-xl">
                 <h2 className="text-2xl font-bold text-center text-gray-700">Register</h2>
@@ -119,6 +136,7 @@ const Register = () => {
                 </p>
             </div>
         </div>
+        </>
     );
 };
 
