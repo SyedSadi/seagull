@@ -25,15 +25,25 @@ const Register = () => {
         e.preventDefault();
         setErrorMsgs({});
         setLoading(true);
-        const res = await registerUser(formData);
-        console.log(res)
-        setErrorMsgs(res?.response?.data)
-        console.log('eroor', errorMsgs)
-        if(res.status === 201){
-            navigate('/login')
-            toast.success('Registration successful! Please log in.');
+        try{
+            const res = await registerUser(formData);
+            console.log(res)
+            setErrorMsgs(res?.response?.data)
+            console.log('eroor', errorMsgs)
+            if(res.status === 201){
+                toast.success(res?.data?.message);
+                setFormData({
+                    username: "",
+                    email: "",
+                    password: "",
+                    role: "student",
+                })
+            }
+        }catch(err){
+            console.log(err)
+        }finally{
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

@@ -4,13 +4,27 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer, LoginSerializer, InstructorSerializer, UserSerializer
 from .models import Instructor
 from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.utils.encoding import force_str, DjangoUnicodeDecodeError
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from decouple import config
+from django.contrib.auth.tokens import default_token_generator
+from django.utils import timezone
+from datetime import timedelta
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, DashboardStatsSerializer, LandingPageStatsSerializer
 from .services import DashboardStatsService, LandingPageStatsService
 
-
+User = get_user_model()
 # -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -24,16 +38,70 @@ class RegisterView(generics.CreateAPIView):
         
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        user.is_active = False  # mark user as inactive until email is verified
+        user.save()
 
-        # Generate JWT tokens after registration
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
+        # Create custom expiration time for the token (e.g., 24 hours)
+        _ = timezone.now() + timedelta(days=1)  # 24 hours from now
+
+        # Generate email verification token
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        domain = config('FRONTEND_DOMAIN')
+        verification_link = f"{domain}/verify-email/{uid}/{token}/" 
+
+        # Render the HTML template
+        html_message = render_to_string("users/verify_email.html", {
+            'user': user,
+            'verification_link': verification_link,
+        })
+
+        # Create plain text fallback
+        plain_message = strip_tags(html_message)
+
+        subject = "Confirm Your Email to Get Started with KUETx"
+        from_email = config('EMAIL_HOST_USER')
+        to_email = user.email
+
+        # Send the email
+        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
 
         return Response({
-            "user": serializer.data,
-            "refresh": str(refresh),
-            "access": access_token
+            "message": "Registration successful. Please check your email to verify your account."
         }, status=status.HTTP_201_CREATED)
+
+# -------------- VERIFY EMAIL ----------------------------
+class VerifyEmailAPIView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, _, uidb64, token):
+        try:
+            # Decode the UID from base64
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, DjangoUnicodeDecodeError):
+            return Response({'error': 'Invalid or expired link'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+
+            #Generate JWT tokens now
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            return Response({
+                "message": "Email verified successfully.",
+                "refresh": str(refresh),
+                "access": access_token,
+                "user": {
+                    "id": user.id,
+                    "email": user.email,
+                    "username": user.username
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer

@@ -65,6 +65,7 @@ jobs:
             echo "DB_PORT=${{ secrets.DB_PORT }}"
             echo "TEST_PASSWORD=${{ secrets.TEST_PASSWORD }}"
             echo "CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}"
+            echo "FRONTEND_DOMAIN=${{ secrets.FRONTEND_DOMAIN }}"
           } > .env
         shell: bash
 
