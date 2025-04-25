@@ -43,6 +43,8 @@ import Quizzes from "./components/Quiz/Quizzes.jsx";
 import { ToastContainer } from "react-toastify";
 import "./index.css";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -89,6 +91,14 @@ const router = createBrowserRouter([
 			{
 				path: "/verify-email/:uid/:token",
 				element: <VerifyEmail />,
+			},
+			{
+				path: "/forgot-password",
+				element: <ForgotPassword />,
+			},
+			{
+				path: "/reset-password/:uid/:token",
+				element: <ResetPassword />,
 			},
 			{
 				element: <ProtectedRoute />,

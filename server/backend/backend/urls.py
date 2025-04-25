@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView, LandingPageStatsView, VerifyEmailAPIView
+from users.views import RegisterView, LoginView, LogoutView, CustomTokenObtainPairView, CustomTokenRefreshView, DashboardStatsView, LandingPageStatsView, VerifyEmailAPIView, RequestPasswordResetView, PasswordResetConfirmView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
@@ -26,6 +26,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name='login'),
     path("logout/", LogoutView.as_view(), name='logout'),
     path('verify-email/<uidb64>/<token>/', VerifyEmailAPIView.as_view(), name='verify-email'),
+    path('request-reset-password/', RequestPasswordResetView.as_view(), name='request-reset-password'),
+    path('reset-password/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='reset-password-confirm'),
 
     #token
     path("token/",  CustomTokenObtainPairView.as_view(), name='get_token'),
