@@ -10,14 +10,18 @@ from .models import Category, Question, Option, QuizAttempt, UserAnswer
 from .serializers import CategorySerializer, QuestionSerializer, QuizAttemptSerializer
 from rest_framework.request import Request
 
+# ---------------------- CATEGORY VIEWSET ----------------------
+# Allows anyone to list or retrieve categories
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes=[AllowAny]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+# ---------------------- GET RANDOM QUIZ ----------------------
 class QuizAPIView(APIView):
     permission_classes = [AllowAny]
     def get(self, request, category_id):
+        # Validate category_id
         try:
             category_id = int(category_id)
         except (TypeError, ValueError):
@@ -37,6 +41,8 @@ class QuizAPIView(APIView):
             'questions': serializer.data
         })
 
+# ---------------------- ADMIN: ADD CATEGORY ----------------------
+# Allows only admin users to add new categories
 class AddQuizView(APIView):
     permission_classes=[IsAuthenticated, IsAdminUser]
 
@@ -48,7 +54,10 @@ class AddQuizView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
+# ---------------------- ADMIN: ADD QUESTION ----------------------   
+# Allows only admin users to add new questions 
 class AddQuestionView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
@@ -60,10 +69,12 @@ class AddQuestionView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# ---------------------- ADMIN: DELETE QUIZ ----------------------
 class DeleteQuizView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
     def delete(self, request: Request) -> Response:
+         # Get category IDs to delete
         category_ids = request.data.get('category_ids', [])
         if not category_ids:
             return Response({"message": "No categories specified."}, status=status.HTTP_400_BAD_REQUEST)
@@ -76,7 +87,9 @@ class DeleteQuizView(APIView):
         # Delete the categories
         deleted_count = Category.objects.filter(id__in=category_ids).delete()[0]
         return Response({"message": f"{deleted_count} categories and their associated data deleted."}, status=status.HTTP_200_OK)
-        
+
+# ---------------------- ADMIN: UPDATE QUIZ ----------------------
+# Allows only admin users to update existing categories     
 class UpdateQuizView(APIView):
     permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
 
@@ -88,10 +101,12 @@ class UpdateQuizView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# ---------------------- ADMIN: UPDATE QUESTION ----------------------
 class UpdateQuestionView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def put(self, request, question_id):
+        # Get question
         question = get_object_or_404(Question, id=question_id)
         
         # Validate at least one correct option exists
@@ -113,7 +128,8 @@ class UpdateQuestionView(APIView):
             return Response(serializer.data)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+# ---------------------- USER: SUBMIT QUIZ ----------------------    
 class SubmitQuizAPIView(APIView):
     permission_classes = [IsAuthenticated]
     
@@ -197,7 +213,9 @@ class SubmitQuizAPIView(APIView):
             'unanswered': unanswered,
             'questions': questions_data
         }, status=status.HTTP_200_OK)
-    
+
+
+# ---------------------- USER: QUIZ HISTORY ----------------------
 class QuizAttemptsView(APIView):
     permission_classes=[IsAuthenticated]
 
