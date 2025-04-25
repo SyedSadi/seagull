@@ -66,6 +66,8 @@ jobs:
             echo "TEST_PASSWORD=${{ secrets.TEST_PASSWORD }}"
             echo "CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}"
             echo "FRONTEND_DOMAIN=${{ secrets.FRONTEND_DOMAIN }}"
+            echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}"
+            echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}"
           } > .env
         shell: bash
 
