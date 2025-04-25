@@ -27,6 +27,10 @@ from .services import DashboardStatsService, LandingPageStatsService
 User = get_user_model()
 # -------------------- AUTHENTICATION ---------------------------------
 class RegisterView(generics.CreateAPIView):
+    """
+    Handles user registration.
+    Sends a verification email with a unique token after successful registration.
+    """
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
@@ -72,6 +76,7 @@ class RegisterView(generics.CreateAPIView):
 
 # -------------- VERIFY EMAIL ----------------------------
 class VerifyEmailAPIView(APIView):
+    """Verify the email using uid and token."""
     permission_classes = [AllowAny]
     def get(self, _, uidb64, token):
         try:
@@ -104,15 +109,18 @@ class VerifyEmailAPIView(APIView):
         
 
 class LoginView(generics.GenericAPIView):
+    """Authenticate user and return JWT tokens."""
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
     def post(self, request):
+        # Validate and return token data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
+    """Invalidate the refresh token on logout."""
     permission_classes = [AllowAny]  # Allow logout without requiring access token
 
     def post(self, request):
@@ -132,19 +140,23 @@ class LogoutView(APIView):
 
 # -------------------- TOKEN ---------------------------------
 class CustomTokenObtainPairView(TokenObtainPairView):
+    """Custom token pair view with role and is_superuser in payload."""
     serializer_class = CustomTokenObtainPairSerializer
 
 class CustomTokenRefreshView(TokenRefreshView):
+    """Custom token refresh view to retain custom claims."""
     serializer_class = CustomTokenRefreshSerializer
 
 
 
 # -------------------- ADMIN PANEL ---------------------------------
 class DashboardStatsView(APIView):
+    """Provide stats for the admin dashboard."""
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
     def get(self, request, *args, **kwargs):
         try:
+            # Get and serialize dashboard stats
             stats_data = DashboardStatsService.get_dashboard_stats()
             serializer = DashboardStatsSerializer(stats_data)
             return Response(
@@ -167,6 +179,7 @@ class DashboardStatsView(APIView):
 
 # -------------------- LANDING PAGE STATS ---------------------------------
 class LandingPageStatsView(APIView):
+    """Provide stats for the landing page."""
     permission_classes=[AllowAny]
 
     def get(self, _request, *_args, **_kwargs):
@@ -193,15 +206,18 @@ class LandingPageStatsView(APIView):
 
 # ------------------------------- USERS -----------------------------------------
 class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
+    """Provides a list/detail of instructors."""
     permission_classes = [AllowAny]
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
 
 
 class ProfileView(APIView):
+    """Allows authenticated users to view or update their profile."""
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+         # Return current user's profile
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
@@ -209,8 +225,10 @@ class ProfileView(APIView):
         user = request.user
         data = request.data
 
+        # Update bio
         user.bio = data.get('bio', user.bio)
         user.save()
+         # If instructor, update related fields
         if user.role == 'instructor':
             instructor, _ = Instructor.objects.get_or_create(user=user)
             instructor_data = data.get('instructor', {})
