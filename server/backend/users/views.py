@@ -170,7 +170,15 @@ class PasswordResetConfirmView(APIView):
             user = User.objects.get(pk=uid)
 
             if not PasswordResetTokenGenerator().check_token(user, token):
+            if not PasswordResetTokenGenerator().check_token(user, token):
                 return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Validate password complexity
+            if len(password) < 8:
+                return Response(
+                    {"error": "Password must be at least 8 characters long"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
             user.password = make_password(password)
             user.save()
