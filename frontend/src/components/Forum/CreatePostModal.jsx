@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {createTag, fetchTag, createPost } from '../../services/forumApi'; 
+import { createTag, fetchTag, createPost } from '../../services/forumApi';
 import { AuthContext } from '../../context/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';  // <--- Add this at the top if not already
+import { useNavigate } from 'react-router-dom';
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [allTags, setAllTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [isCreatingTag, setIsCreatingTag] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Fetch tags from the API
   useEffect(() => {
@@ -27,9 +30,16 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     fetchTags();
   }, []);
 
+  // Custom filter for tag suggestions
+  const filterOption = (option, inputValue) => {
+    // Allow the "Create" option to appear by not filtering it out
+    if (option.data.__isNew__) return true;
+    // Show existing tags only if input is not empty and matches
+    return inputValue && option.label.toLowerCase().startsWith(inputValue.toLowerCase());
+  };
+
   // Handle tag change
   const handleTagChange = (selectedOptions) => {
-
     if (selectedOptions.length <= 3) {
       setSelectedTags(selectedOptions);
     } else {
@@ -39,48 +49,50 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
 
   // Handle creating new tags
   const handleCreateTag = async (inputValue) => {
+    setIsCreatingTag(true);
     try {
       const newTag = await createTag({ name: inputValue });
       const formattedTag = { value: newTag.id, label: newTag.name };
       setAllTags([...allTags, newTag]);
       setSelectedTags((prev) => [...prev, formattedTag]);
     } catch (error) {
-      toast.error('Failed to create tag.');
+      toast.error('Failed to create tag.', { autoClose: 3000 });
       console.error(error);
+    } finally {
+      setIsCreatingTag(false);
     }
   };
 
-  const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submit clicked');
 
     if (selectedTags.length < 1) {
-      toast.error('Please select at least one tag.');
+      toast.error('Please select at least one tag.', { autoClose: 3000 });
       return;
     }
 
-    
-  if (!user) {
-    toast.error('User not authenticated. Redirecting to login...', { autoClose: 2000 });
-    setTimeout(() => {
-      navigate('/login');   // <-- Navigate to login page after a short delay
-    }, 2000);
-    return;
-  }
+    if (!user) {
+      toast.error('User not authenticated. Redirecting to login...', {
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+      return;
+    }
 
+    setIsSubmitting(true);
     try {
       const payload = {
         title,
         content,
-        tag_ids: selectedTags.map((t) => t.value), // Map to tag IDs
-        author: user.id
+        tag_ids: selectedTags.map((t) => t.value),
+        author: user.id,
       };
 
-      await createPost(payload);  // Create the post
-      console.log('Post created successfully!'); // Debugging lo
-      toast.success('Post created successfully!', { autoClose: 3000 });  // Success toast
+      await createPost(payload);
+      toast.success('Post created successfully!', { autoClose: 3000 });
       refreshPosts();
       onClose();
     } catch (error) {
@@ -94,8 +106,10 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
         errorMessage = error.message;
       }
 
-      toast.error(errorMessage, { autoClose: 5000 });  // Error toast
+      toast.error(errorMessage, { autoClose: 5000 });
       console.error('Error creating post:', data);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -127,12 +141,20 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       ':hover': {
         backgroundColor: '#bfdbfe',
         color: '#1e3a8a',
-      }
+      },
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: '0.75rem',
+      marginTop: '4px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    }),
+    loadingIndicator: (base) => ({
+      ...base,
+      color: '#3b82f6', // Match blue-500
+      fontSize: '14px', // Small spinner for tag input
     }),
   };
-  
-
-  
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
@@ -146,6 +168,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
             required
+            disabled={isSubmitting}
           />
           <textarea
             placeholder="Write your content here..."
@@ -154,6 +177,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
             className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
             rows="6"
             required
+            disabled={isSubmitting}
           />
 
           {/* React Select Tag Selection */}
@@ -161,26 +185,36 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
             <label className="block font-medium text-gray-700 mb-2">Select Tags (1–3):</label>
             <CreatableSelect
               isMulti
-              options={allTags.map(tag => ({ value: tag.id, label: tag.name }))}
+              options={allTags.map((tag) => ({ value: tag.id, label: tag.name }))}
               value={selectedTags}
               onChange={handleTagChange}
               onCreateOption={handleCreateTag}
-              placeholder="Search or create a tag..."
+              placeholder="Type to search or create a tag..."
               styles={customStyles}
               closeMenuOnSelect={false}
+              filterOption={filterOption}
+              noOptionsMessage={() => (isCreatingTag ? 'Creating tag...' : 'Type to see suggestions...')}
+              isLoading={isCreatingTag}
+              isDisabled={isSubmitting}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
+            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg flex items-center justify-center"
+            disabled={isSubmitting}
           >
-            Post
+            {isSubmitting ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+            ) : (
+              'Post'
+            )}
           </button>
           <button
             onClick={onClose}
             type="button"
             className="w-full text-center text-gray-500 hover:underline pt-2"
+            disabled={isSubmitting}
           >
             Cancel
           </button>
@@ -202,8 +236,8 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
 };
 
 CreatePostModal.propTypes = {
-	onClose: PropTypes.func.isRequired,
-	refreshPosts: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  refreshPosts: PropTypes.func.isRequired,
 };
 
 export default CreatePostModal;
