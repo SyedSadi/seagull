@@ -200,7 +200,7 @@ class PasswordResetConfirmView(APIView):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             return User.objects.get(pk=uid)
-        except (ValueError, User.DoesNotExist, Exception):
+        except (User.DoesNotExist, Exception):
             return None
 
 
