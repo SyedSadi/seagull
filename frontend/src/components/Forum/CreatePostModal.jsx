@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import CreatableSelect from 'react-select/creatable';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';  // <--- Add this at the top if not already
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
@@ -49,6 +50,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     }
   };
 
+  const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,10 +61,14 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       return;
     }
 
-    if (!user) {
-      toast.error('User not authenticated. Please log in.');
-      return;
-    }
+    
+  if (!user) {
+    toast.error('User not authenticated. Redirecting to login...', { autoClose: 2000 });
+    setTimeout(() => {
+      navigate('/login');   // <-- Navigate to login page after a short delay
+    }, 2000);
+    return;
+  }
 
     try {
       const payload = {
