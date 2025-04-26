@@ -104,7 +104,7 @@ class VerifyEmailAPIView(APIView):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             return User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist, DjangoUnicodeDecodeError):
+        except (TypeError, ValueError, User.DoesNotExist, DjangoUnicodeDecodeError):
             return None
 
 # -------------------------- LOGIN -----------------------------
@@ -200,7 +200,7 @@ class PasswordResetConfirmView(APIView):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             return User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist, Exception):
+        except (ValueError, User.DoesNotExist, Exception):
             return None
 
 
