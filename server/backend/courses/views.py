@@ -2,48 +2,11 @@ from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-
 from .models import Course, CourseContents, Enrollment, Rating
 from .serializers import CourseSerializer, CourseContentsSerializer
-
-
-class CourseViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Public viewset to list and search courses.
-    Only supports read operations.
-    """
-    permission_classes = [AllowAny]     # Allow anyone to access course listings
-    serializer_class = CourseSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['title']   # Fields to search against
-    
-    def get_queryset(self):
-        """
-        Supports filtering via search query parameters.
-        """
-        queryset = Course.objects.all()
-        search_query = self.request.query_params.get('search')
-        
-        if not search_query:
-            return queryset
-        
-         # Apply search filter to the query set based on title, description, subject, and difficulty
-        return queryset.filter(
-            Q(title__icontains=search_query) 
-        )
-
-
-class CourseDetailView(generics.RetrieveAPIView):
-    """
-    View to retrieve a single course's details.
-    Requires authentication.
-    """
-    permission_classes = [IsAuthenticated]  # Only authenticated users can view course details
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-
 
 class AdminOnlyAPIView(APIView):
     """Base class for admin-only operations."""
@@ -60,11 +23,36 @@ class AdminOnlyAPIView(APIView):
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CourseViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Public viewset to list and search courses.
+    Only supports read operations.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = CourseSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']   # Fields to search against
+    
+    def get_queryset(self):
+        queryset = Course.objects.all()
+        search_query = self.request.query_params.get('search')
+        if search_query:
+            queryset = queryset.filter(Q(title__icontains=search_query))
+        return queryset
 
+
+class CourseDetailView(generics.RetrieveAPIView):
+    """
+    View to retrieve a single course's details.
+    Requires authentication.
+    """
+    permission_classes = [IsAuthenticated]  # Only authenticated users can view course details
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+#  ---------------------------- COURSE MANAGEMENT -------------------------------
 class AddCourseView(AdminOnlyAPIView):
-    """
-    Admin endpoint to add a new course.
-    """
+    """Admin endpoint to add a new course."""
     def post(self, request):
          # Handle course creation by admin
         serializer = CourseSerializer(data=request.data)
@@ -72,9 +60,7 @@ class AddCourseView(AdminOnlyAPIView):
 
 
 class UpdateDeleteCourseView(AdminOnlyAPIView):
-    """
-    Admin endpoint to update or delete an existing course.
-    """
+    """Admin endpoint to update or delete an existing course."""
     def put(self, request, course_id):
          # Update an existing course
         course = self.get_course_or_404(course_id)
@@ -87,69 +73,13 @@ class UpdateDeleteCourseView(AdminOnlyAPIView):
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
+# ----------------------------- ENROLLMENT ---------------------------------
 
 class UserEnrollmentMixin:
-    """Mixin to handle student enrollment validation."""
+    """Check if the student is enrolled in the course."""
     def is_student_enrolled(self, user, course):
-        # Check if the student is enrolled in the course
-        if not hasattr(user, 'student'):
-            return False
-        return Enrollment.objects.filter(course=course, student=user.student).exists()
-
-
-class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
-    """
-    View to list course contents for enrolled students.
-    """
-    serializer_class = CourseContentsSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-         # Get course contents for the enrolled student
-       
-        user = self.request.user         # Retrieve the currently authenticated user making the request
-        course_id = self.kwargs['course_id']    # Get the course_id from the URL path parameters
-        course = get_object_or_404(Course, id=course_id)       # Try to fetch the course object from the database; return 404 if not found
-
-         # Ensure the user is enrolled before returning contents
-        if not self.is_student_enrolled(user, course):
-            return CourseContents.objects.none()
-
-        return CourseContents.objects.filter(course=course)
-
-
-class AddContentAPIView(AdminOnlyAPIView):
-    """
-    Admin can add content to a course.
-    """
-    def post(self, request):
-         # Admin adds content to a course
-        self.get_course_or_404(request.data.get('course'))
-        serializer = CourseContentsSerializer(data=request.data)
-        return self.handle_serializer(serializer, status.HTTP_201_CREATED)
-
-
-class UpdateContentView(AdminOnlyAPIView):
-    """
-    Admin can update existing content.
-    """
-    def put(self, request, id):
-         # Admin updates course content
-        content = get_object_or_404(CourseContents, id=id)
-        serializer = CourseContentsSerializer(content, data=request.data, partial=True)
-        return self.handle_serializer(serializer)
-
-
-class DeleteContentView(AdminOnlyAPIView):
-    """
-    Admin can delete content from a course.
-    """
-    def delete(self, request, id):
-        # Admin deletes content from a course
-        content = get_object_or_404(CourseContents, id=id)
-        content.delete()
-        return Response({'message': 'Content deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
-
+        return hasattr(user, 'student') and Enrollment.objects.filter(course=course, student=user.student).exists()
+    
 
 class EnrollCourseView(APIView):
     """
@@ -186,6 +116,60 @@ class EnrolledCoursesView(generics.ListAPIView):
         
         return Course.objects.filter(enrollment__student=user.student)
 
+# ------------------------------- COURSE CONTENTS ----------------------------------
+
+class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
+    """
+    View to list course contents for enrolled students.
+    """
+    serializer_class = CourseContentsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+         # Get course contents for the enrolled student
+       
+        user = self.request.user         # Retrieve the currently authenticated user making the request
+        course = get_object_or_404(Course, id=self.kwargs['course_id'])
+
+         # Ensure the user is enrolled before returning contents
+        if not self.is_student_enrolled(user, course):
+            return CourseContents.objects.none()
+
+        return CourseContents.objects.filter(course=course)
+
+
+class AddContentAPIView(AdminOnlyAPIView):
+    """
+    Admin can add content to a course.
+    """
+    def post(self, request):
+         # Admin adds content to a course
+        self.get_course_or_404(request.data.get('course'))
+        serializer = CourseContentsSerializer(data=request.data)
+        return self.handle_serializer(serializer, status.HTTP_201_CREATED)
+
+
+class UpdateContentView(AdminOnlyAPIView):
+    """
+    Admin can update existing content.
+    """
+    def put(self, request, id):
+         # Admin updates course content
+        content = get_object_or_404(CourseContents, id=id)
+        serializer = CourseContentsSerializer(content, data=request.data, partial=True)
+        return self.handle_serializer(serializer)
+
+
+class DeleteContentView(AdminOnlyAPIView):
+    """
+    Admin can delete content from a course.
+    """
+    def delete(self, request, id):
+        # Admin deletes content from a course
+        get_object_or_404(CourseContents, id=id).delete()
+        return Response({'message': 'Content deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+# ------------------- INSTRUCTORS COURSES --------------------------------------
 
 class InstructorCoursesView(generics.ListAPIView):
     """
@@ -209,61 +193,62 @@ class InstructorCoursesView(generics.ListAPIView):
         return Response({"courses": serialized_courses}, status=status.HTTP_200_OK)
 
 
+#  ------------------------ RATING ------------------------------------
+
 class RateCourseView(UserEnrollmentMixin, APIView):
-    """
-    Allows enrolled students to rate a course.
-    """
+    """Allows enrolled students to rate a course."""
+
     permission_classes = [IsAuthenticated]
 
     def _validate_rating(self, rating_value):
         """Validate the rating value."""
         if rating_value is None:
             return None, "Rating value is required."
-            
         try:
             rating_value = int(rating_value)
-            if rating_value < 1 or rating_value > 5:
-                return None, "Rating must be an integer between 1 and 5."
-            return rating_value, None
+            if 1 <= rating_value <= 5:
+                return rating_value, None
+            return None, "Rating must be an integer between 1 and 5."
         except (ValueError, TypeError):
             return None, "Rating must be an integer between 1 and 5."
 
+    def _get_course(self, course_id):
+        """Fetch course or return 404."""
+        return get_object_or_404(Course, pk=course_id)
+
+    def _check_enrollment(self, user, course):
+        """Ensure the user is enrolled in the course."""
+        if not self.is_student_enrolled(user, course):
+            raise PermissionDenied("You must be enrolled in this course to rate it.")
+
     def post(self, request, course_id):
-        """
-        Creates or updates rating for a course.
-        """
-        course = get_object_or_404(Course, pk=course_id)
-        
-        if not self.is_student_enrolled(request.user, course):
-            return Response(
-                {"error": "You must be enrolled in this course to rate it."}, 
-                status=status.HTTP_403_FORBIDDEN
-            )
+        """Create or update a rating for a course."""
+        course = self._get_course(course_id)
+        self._check_enrollment(request.user, course)
 
         rating_value, error = self._validate_rating(request.data.get('rating'))
         if error:
             return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
 
         _, created = Rating.objects.update_or_create(
-            course=course, 
-            user=request.user, 
+            course=course,
+            user=request.user,
             defaults={'rating': rating_value}
         )
-        
+
         message = "Rating created successfully." if created else "Rating updated successfully."
         return Response({"message": message, "rating": rating_value}, status=status.HTTP_200_OK)
 
     def get(self, request, course_id):
-        """
-        Retrieves the user's rating for a specific course.
-        """
-        course = get_object_or_404(Course, pk=course_id)
+        """Retrieve the user's rating for a specific course."""
+        course = self._get_course(course_id)
         rating = Rating.objects.filter(course=course, user=request.user).first()
-        
+
         return Response(
-            {"course": course.title, "rating": rating.rating if rating else 0}, 
+            {"course": course.title, "rating": rating.rating if rating else 0},
             status=status.HTTP_200_OK
         )
+
     
 
 # --------------------- INVOICE GENERATION ----------------------

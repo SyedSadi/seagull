@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getEnrolledCourses, enroll, getCourseDetailsById } from "../../services/coursesApi";
+import { getEnrolledCourses, enroll, getCourseDetailsById, generateInvoice } from "../../services/coursesApi";
 import { toast, ToastContainer } from "react-toastify";
 import { FaArrowRight, FaSpinner } from "react-icons/fa";
 import OTPModal from "./OTPModal";
@@ -46,6 +46,16 @@ const CourseDetails = () => {
       const response = await enroll(id);
       toast.success(response?.data?.message || "Enrolled successfully!");
       setIsEnrolled(true);
+
+      // generate invoice
+      const res = await generateInvoice(id)
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice_course_${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (error) {
       toast.error(error.response?.data?.error || "Enrollment failed");
       console.log(error)
@@ -91,58 +101,71 @@ const CourseDetails = () => {
     </Helmet>
     
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
-  <div className="max-w-7xl mx-auto  p-6 md:p-10">
-    <div className="grid items-center grid-cols-1 md:grid-cols-2 gap-10">
-      {/* Left Content Area */}
-      <div>
-        <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
-        <p className="text-lg text-gray-600 mb-6">{course.description}</p>
-
-        <div className="space-y-3 text-gray-700 text-sm">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-gray-900 text-lg font-bold">Subject:</span>
-            <span className="bg-sky-100 text-blue-600 px-3 py-1 rounded-full text-md font-semibold">{course.subject}</span>
+      <div className="max-w-7xl mx-auto  p-6 md:p-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+          {/* Right Image Area (first on mobile) */}
+          <div className="order-1 md:order-2 flex justify-center items-start">
+            <img
+              src={course.image}
+              alt={course.title}
+              className="w-full h-auto max-w-md object-contain rounded-xl shadow-lg"
+            />
           </div>
 
-          <p className="text-gray-900 text-lg">
-            <span className="font-bold">Difficulty:</span> {course.difficulty.toUpperCase()}
-          </p>
+          {/* Left Content Area */}
+          <div className="order-2 md:order-1">
+            <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
+            <p className="text-lg text-gray-600 mb-6">{course.description}</p>
 
-          <p className="text-gray-900 text-lg">
-            <span className="font-bold" >Duration:</span> {course.duration} hours
-          </p>
+            <div className="space-y-3 text-gray-700 text-sm">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-gray-900 text-lg font-bold">Subject:</span>
+                <span className="bg-sky-100 text-blue-600 px-3 py-1 rounded-full text-md font-semibold">
+                  {course.subject}
+                </span>
+              </div>
 
-          <p className="text-gray-900 text-lg">
-            <span className="font-bold" >Ratings:</span> {course.ratings} <FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />{course?.ratings_count ?  <span className="text-gray-500"> ({course?.ratings_count} ratings)</span>:<span className="text-gray-500">(No ratings yet)</span> }
-          </p>
+              <p className="text-gray-900 text-lg">
+                <span className="font-bold">Difficulty:</span> {course.difficulty.toUpperCase()}
+              </p>
 
-          {/* Instructor Info */}
-          <div className="pt-4 border-t mt-4">
-            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">Instructor Name:</span> {course.created_by_details?.name.toUpperCase()}</p>
-            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">Designation:</span> {course.created_by_details?.designation || "not provided"}</p>
-            <p className="text-gray-900 text-lg "><span className="font-bold mr-2">University:</span> {course.created_by_details?.university || "not provided"}</p>
+              <p className="text-gray-900 text-lg">
+                <span className="font-bold">Duration:</span> {course.duration} hours
+              </p>
+
+              <p className="text-gray-900 text-lg">
+                <span className="font-bold">Ratings:</span> {course.ratings}
+                <FontAwesomeIcon icon={faStar} className="text-yellow-400 ml-2 mr-1" />
+                {course?.ratings_count ? (
+                  <span className="text-gray-500">({course?.ratings_count} ratings)</span>
+                ) : (
+                  <span className="text-gray-500">(No ratings yet)</span>
+                )}
+              </p>
+
+              {/* Instructor Info */}
+              <div className="pt-4 border-t mt-4">
+                <p className="text-gray-900 text-lg">
+                  <span className="font-bold mr-2">Instructor Name:</span> {course.created_by_details?.name.toUpperCase()}
+                </p>
+                <p className="text-gray-900 text-lg">
+                  <span className="font-bold mr-2">Designation:</span> {course.created_by_details?.designation || "not provided"}
+                </p>
+                <p className="text-gray-900 text-lg">
+                  <span className="font-bold mr-2">University:</span> {course.created_by_details?.university || "not provided"}
+                </p>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="mt-6">
+              {renderActionButton()}
+              <OTPModal ref={otpRef} />
+            </div>
           </div>
         </div>
-
-        {/* Action Button */}
-        <div className="mt-6">
-          {renderActionButton()}
-          <OTPModal ref={otpRef} courseId={id} />
-        </div>
+        <ToastContainer position="bottom-right" />
       </div>
-
-      {/* Right Image Area */}
-      <div className="flex justify-center items-start">
-        <img
-          src={course.image}
-          alt={course.title}
-          className="w-full h-auto max-w-md object-contain rounded-xl shadow-lg"
-        />
-      </div>
-    </div>
-
-    <ToastContainer position="bottom-right" />
-  </div>
     </div>
     </>
 

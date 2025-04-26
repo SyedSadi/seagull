@@ -42,81 +42,54 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'role', 'bio', 'is_superuser', 'instructor', 'student']
 
-# ------------------------- AUTHENTICATION serializers --------------------------------
+# ------------------------- AUTHENTICATION SERIALIZERS -------------------------
 
 class RegisterSerializer(serializers.ModelSerializer):
-    """
-    Serializer for registering new users.
-    Validates password strength and ensures email uniqueness.
-    Automatically creates corresponding Student or Instructor profile based on the selected role.
-    """
-    password = serializers.CharField(
-        write_only=True, required=True, validators=[validate_password]
-    )
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    role = serializers.ChoiceField(choices=User.ROLE_CHOICES, required=True)  # Explicitly add role
-    
+    """Serializer for registering new users and creating related profiles."""
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
+    role = serializers.ChoiceField(choices=User.ROLE_CHOICES)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password', 'role', 'bio']
 
     def create(self, validated_data):
-        """
-        Creates a user and automatically creates an associated Student or Instructor profile.
-        """
-        role = validated_data.pop('role', None)
+        role = validated_data.pop('role')
         user = User.objects.create_user(**validated_data)
-        
-        # Explicitly set the role
-        if role:
-            user.role = role
-            user.save()  # Save after setting the role
+        user.role = role
+        user.save()
 
-        # Create student/instructor profile
-        if role == 'instructor':
-            Instructor.objects.create(user=user)
-        elif role == 'student':
-            Student.objects.create(user=user)
+        profile_model = Instructor if role == 'instructor' else Student
+        profile_model.objects.create(user=user)
 
         return user
 
 class LoginSerializer(serializers.Serializer):
-    """
-    Serializer for logging in users with username and password.
-    Returns JWT tokens along with user data if credentials are valid.
-    """
+    """Serializer for authenticating users and returning JWT tokens with custom claims."""
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        """
-        Validates user credentials and returns JWT tokens with extra claims.
-        """
         user = User.objects.filter(username=data['username']).first()
 
         if not user:
             raise serializers.ValidationError("No user found with this username. Please register first.")
         if not user.is_active:
             raise serializers.ValidationError("Please verify your email before logging in.")
-        
-        if user and user.check_password(data['password']):
-            refresh = RefreshToken.for_user(user)
-            access_token = refresh.access_token
-            # Add custom claims
-            access_token['role'] = user.role
-            access_token['is_superuser'] = user.is_superuser
+        if not user.check_password(data['password']):
+            raise serializers.ValidationError("Incorrect password. Please try again.")
 
-            return {
-                'refresh': str(refresh),
-                'access': str(access_token),
-                'user': UserSerializer(user).data
-            }
-        raise serializers.ValidationError("Incorrect password. Please try again.")
+        refresh = RefreshToken.for_user(user)
+        access_token = refresh.access_token
+        access_token['role'] = user.role
+        access_token['is_superuser'] = user.is_superuser
 
+        return {
+            'refresh': str(refresh),
+            'access': str(access_token),
+            'user': UserSerializer(user).data
+        }
 
 
 # ------------------------- CUSTOM JWT TOKEN SERIALIZERS -------------------------

@@ -21,7 +21,9 @@ from .serializers import CustomTokenObtainPairSerializer, CustomTokenRefreshSeri
 from .services import DashboardStatsService, LandingPageStatsService
 
 User = get_user_model()
+
 # -------------------- AUTHENTICATION ---------------------------------
+
 class RegisterView(generics.CreateAPIView):
     """
     Handles user registration.
@@ -36,106 +38,108 @@ class RegisterView(generics.CreateAPIView):
             print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        user.is_active = False  # mark user as inactive until email is verified
+        user.is_active = False
         user.save()
 
-        # Create custom expiration time for the token (e.g., 24 hours)
-        _ = timezone.now() + timedelta(days=1)  # 24 hours from now
-
-        # Generate email verification token
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        domain = config('FRONTEND_DOMAIN')
-        verification_link = f"{domain}/verify-email/{uid}/{token}/" 
-
-        # Render the HTML template
-        html_message = render_to_string("users/verify_email.html", {
-            'user': user,
-            'verification_link': verification_link,
-        })
-
-        # Create plain text fallback
-        plain_message = strip_tags(html_message)
-
-        subject = "Confirm Your Email to Get Started with KUETx"
-        from_email = config('EMAIL_HOST_USER')
-        to_email = user.email
-
-        # Send the email
-        send_mail(subject, plain_message, from_email, [to_email], html_message=html_message)
+        self.send_verification_email(user)
 
         return Response({
             "message": "Registration successful! Please check your inbox (or spam folder) to verify your email address."
         }, status=status.HTTP_201_CREATED)
 
+    def send_verification_email(self, user):
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        domain = config('FRONTEND_DOMAIN')
+        verification_link = f"{domain}/verify-email/{uid}/{token}/"
+
+        html_message = render_to_string("users/verify_email.html", {
+            'user': user,
+            'verification_link': verification_link,
+        })
+
+        plain_message = strip_tags(html_message)
+
+        send_mail(
+            subject="Confirm Your Email to Get Started with KUETx",
+            message=plain_message,
+            from_email=config('EMAIL_HOST_USER'),
+            recipient_list=[user.email],
+            html_message=html_message
+        )
+
 # -------------- VERIFY EMAIL ----------------------------
+
 class VerifyEmailAPIView(APIView):
     """Verify the email using uid and token."""
     permission_classes = [AllowAny]
+
     def get(self, _, uidb64, token):
-        try:
-            # Decode the UID from base64
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist, DjangoUnicodeDecodeError):
+        user = self.get_user_from_uid(uidb64)
+        if not user:
             return Response({'error': 'Invalid or expired link'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-
-            #Generate JWT tokens now
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-
-            return Response({
-                "message": "Email verified successfully.",
-                "refresh": str(refresh),
-                "access": access_token,
-                "user": {
-                    "id": user.id,
-                    "email": user.email,
-                    "username": user.username
-                }
-            }, status=status.HTTP_200_OK)
-        else:
+        if not default_token_generator.check_token(user, token):
             return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
-        
 
-# -------------------------- AUTHENTICATION -----------------------------
+        user.is_active = True
+        user.save()
+
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        return Response({
+            "message": "Email verified successfully.",
+            "refresh": str(refresh),
+            "access": access_token,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "username": user.username
+            }
+        }, status=status.HTTP_200_OK)
+
+    def get_user_from_uid(self, uidb64):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, DjangoUnicodeDecodeError):
+            return None
+
+# -------------------------- LOGIN -----------------------------
+
 class LoginView(generics.GenericAPIView):
     """Authenticate user and return JWT tokens."""
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
 
     def post(self, request):
-        # Validate and return token data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
+# -------------------------- LOGOUT -----------------------------
+
 class LogoutView(APIView):
     """Invalidate the refresh token on logout."""
-    permission_classes = [AllowAny]  # Allow logout without requiring access token
+    permission_classes = [AllowAny]
 
     def post(self, request):
+        refresh_token = request.data.get("refresh")
+        if not refresh_token:
+            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            refresh_token = request.data.get("refresh")
-            if not refresh_token:
-                return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
-
             token = RefreshToken(refresh_token)
-            token.blacklist()  # Blacklist the token
-
+            token.blacklist()
             return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
-        except Exception as _:
+        except Exception:
             return Response({"error": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
-
-
+        
 
 # ----------------------------- RESET PASSWORD --------------------------------
+
 class RequestPasswordResetView(APIView):
     permission_classes = [AllowAny]
 
@@ -143,27 +147,32 @@ class RequestPasswordResetView(APIView):
         email = request.data.get("email")
         if not email:
             return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+        user = self.get_user_by_email(email)
+        if user:
+            self.send_reset_email(user, email)
+
+        return Response({"message": "If this email exists, a password reset link has been sent."})
+
+    def get_user_by_email(self, email):
         try:
-            user = User.objects.get(email=email)            
-            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            token = PasswordResetTokenGenerator().make_token(user)
-
-            reset_link = f"{config('FRONTEND_DOMAIN')}/reset-password/{uidb64}/{token}/"
-            send_mail(
-                subject="Reset Your Password",
-                message=f"Click the link to reset your password: {reset_link}",
-                from_email=config('EMAIL_HOST_USER'),
-                recipient_list=[email],
-                fail_silently=False,
-            )
-
-            return Response({"message": "If this email exists, a password reset link has been sent."})
-        
+            return User.objects.get(email=email)
         except User.DoesNotExist:
-            # Do not reveal user existence for security
-            return Response({"message": "If this email exists, a password reset link has been sent."})
-        
+            return None
+
+    def send_reset_email(self, user, email):
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = PasswordResetTokenGenerator().make_token(user)
+        reset_link = f"{config('FRONTEND_DOMAIN')}/reset-password/{uidb64}/{token}/"
+
+        send_mail(
+            subject="Reset Your Password",
+            message=f"Click the link to reset your password: {reset_link}",
+            from_email=config('EMAIL_HOST_USER'),
+            recipient_list=[email],
+            fail_silently=False,
+        )
+
 
 class PasswordResetConfirmView(APIView):
     permission_classes = [AllowAny]
@@ -173,26 +182,26 @@ class PasswordResetConfirmView(APIView):
         if not password:
             return Response({"error": "Password is required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        user = self.get_user_from_uid(uidb64)
+        if not user or not PasswordResetTokenGenerator().check_token(user, token):
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(password) < 8:
+            return Response(
+                {"error": "Password must be at least 8 characters long"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.password = make_password(password)
+        user.save()
+        return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+
+    def get_user_from_uid(self, uidb64):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
-            user = User.objects.get(pk=uid)
-
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Validate password complexity
-            if len(password) < 8:
-                return Response(
-                    {"error": "Password must be at least 8 characters long"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            user.password = make_password(password)
-            user.save()
-            return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
-        
-        except Exception:
-            return Response({"error": "Something went wrong. Try again later."}, status=status.HTTP_400_BAD_REQUEST)
+            return User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, Exception):
+            return None
 
 
 
@@ -275,7 +284,6 @@ class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-         # Return current user's profile
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
@@ -283,15 +291,19 @@ class ProfileView(APIView):
         user = request.user
         data = request.data
 
-        # Update bio
-        user.bio = data.get('bio', user.bio)
-        user.save()
-         # If instructor, update related fields
+        self._update_user_bio(user, data.get('bio'))
         if user.role == 'instructor':
-            instructor, _ = Instructor.objects.get_or_create(user=user)
-            instructor_data = data.get('instructor', {})
-            instructor.designation = instructor_data.get('designation', instructor.designation)
-            instructor.university = instructor_data.get('university', instructor.university)
-            instructor.save()
+            self._update_instructor_profile(user, data.get('instructor', {}))
 
         return Response(UserSerializer(user).data)
+
+    def _update_user_bio(self, user, bio):
+        if bio is not None:
+            user.bio = bio
+            user.save()
+
+    def _update_instructor_profile(self, user, instructor_data):
+        instructor, _ = Instructor.objects.get_or_create(user=user)
+        instructor.designation = instructor_data.get('designation', instructor.designation)
+        instructor.university = instructor_data.get('university', instructor.university)
+        instructor.save()

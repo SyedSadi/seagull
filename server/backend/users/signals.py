@@ -7,15 +7,16 @@ from .models import User, Student, Instructor
 def create_student_or_instructor(sender, instance, created, **kwargs):
     """
     Signal receiver that listens to the post_save signal of the User model.
-    
-    This function is triggered automatically after a User instance is saved.
-    If the user was just created, it checks the user's role and creates
-    a corresponding Student or Instructor profile.
+    Automatically creates a Student or Instructor profile based on the user's role after creation.
     """
-    if created:
-        # Automatically create a Student profile if the role is 'student'
-        if instance.role == 'student':
-            Student.objects.create(user=instance)
-        
-        elif instance.role == 'instructor':
-            Instructor.objects.create(user=instance)
+    if not created:
+        return
+
+    role_model_map = {
+        'student': Student,
+        'instructor': Instructor,
+    }
+    
+    model = role_model_map.get(instance.role)
+    if model:
+        model.objects.create(user=instance)

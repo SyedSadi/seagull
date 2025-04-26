@@ -96,7 +96,7 @@ class TestCourseViews:
         rating_data = {"rating": 4}
         response = client.post(f'/courses/{course.id}/rate/', rating_data, format='json')
         assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert response.data['error'] == "You must be enrolled in this course to rate it."
+        assert response.data['detail'] == "You must be enrolled in this course to rate it."
 
     def test_get_course_rating(self):
         _, student_user, _, _, student, course = self.setup_user_and_course()
