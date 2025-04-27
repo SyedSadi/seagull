@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,8 +9,10 @@ import ModifyCourseForm from "../../components/Admin/ModifyCourseForm";
 import { ImageUploader } from "../../services/ImageUploader";
 import ShowConfirmation from "../../components/Shared/ShowConfirmation";
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from "../../context/AuthContext";
 
 const ModifyCoursePage = () => {
+  const {user} =  useContext(AuthContext)
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -25,22 +27,14 @@ const ModifyCoursePage = () => {
   });
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true)
-      try {
-        const data = await getAllCourses();
-        setCourses(data);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        toast.error("Failed to load courses. Try again later.");
-      } finally{
-        setLoading(false)
-      }
-    };
-    fetchCourses();
+    const c = JSON.parse(localStorage.getItem("courses"))
+    if(user.role === "instructor"){
+              const instructorCourses = c.filter(item => item.created_by_details.id === user?.instructor.id)
+              setCourses(instructorCourses)
+          } else setCourses(c)
   }, []);
-
   // Fetch course details when a course is selected
+  
   useEffect(() => {
     if (!selectedCourseId) return;
 

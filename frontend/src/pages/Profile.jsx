@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import {
 	getEnrolledCourses,
-	getInstructorCourses,
 } from "../services/coursesApi";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
@@ -28,8 +27,9 @@ const Profile = () => {
 					response = await getEnrolledCourses();
 					setCourses(response?.data);
 				} else if (user.role === "instructor") {
-					response = await getInstructorCourses();
-					setCourses(response?.data?.courses || []);
+					const allCourses = JSON.parse(localStorage.getItem("courses"))
+					const instructorsCourses = allCourses.filter(c => c.created_by_details.id == user?.instructor.id)
+					setCourses(instructorsCourses)
 				} else {
 					setCourses([]);
 				}
@@ -119,9 +119,12 @@ const Profile = () => {
 			{/* Main Content */}
 			<main className="flex-1 p-6 space-y-8 bg-gradient-to-b from-blue-50 to-indigo-100">
 				<div>
+	
 					<h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
 						{user.role === "student" ? "My Learning" : "My Courses"}
 					</h2>
+
+					
 					{renderCourses()}
 				</div>
 

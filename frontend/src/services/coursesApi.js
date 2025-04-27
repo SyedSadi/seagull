@@ -6,6 +6,7 @@ export const getAllCourses = async (searchQuery = "") => {
 		? `/courses/?search=${encodeURIComponent(searchQuery)}`
 		: "/courses/";
 	const response = await API.get(url);
+	localStorage.setItem("courses", JSON.stringify(response?.data))
 	return response.data;
 };
 

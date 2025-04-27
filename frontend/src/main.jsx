@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 // Context
 import { AuthProvider } from "./context/AuthContext.jsx";
 
+
 // Pages
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
@@ -116,27 +117,27 @@ const router = createBrowserRouter([
 						element: <CourseContent />,
 					},
 					{
+						path: "/add-courses",
+						element: <AddCoursesPage />,
+					},
+					{
+						path: "/manage-courses",
+						element: <ModifyCoursePage />,
+					},
+					{
+						path: "/manage-contents",
+						element: <ManageContentsPage />,
+					},
+					{
+						path: "/add-contents",
+						element: <AddContentPage />,
+					},
+					{
 						element: <AdminRoute />,
 						children: [
 							{
 								path: "/admin/dashboard",
 								element: <Dashboard />,
-							},
-							{
-								path: "/add-courses",
-								element: <AddCoursesPage />,
-							},
-							{
-								path: "/manage-courses",
-								element: <ModifyCoursePage />,
-							},
-							{
-								path: "/manage-contents",
-								element: <ManageContentsPage />,
-							},
-							{
-								path: "/add-contents",
-								element: <AddContentPage />,
 							},
 							{
 								path: "/add-quiz",
@@ -166,16 +167,16 @@ createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<HelmetProvider>
 			<AuthProvider>
-				<RouterProvider router={router} />
-				<ToastContainer
-					position="bottom-right"
-					autoClose={2000}
-					hideProgressBar={false}
-					newestOnTop
-					closeOnClick
-					pauseOnHover
-					draggable
-				/>
+					<RouterProvider router={router} />
+					<ToastContainer
+						position="bottom-right"
+						autoClose={2000}
+						hideProgressBar={false}
+						newestOnTop
+						closeOnClick
+						pauseOnHover
+						draggable
+					/>
 			</AuthProvider>
 		</HelmetProvider>
 	</StrictMode>

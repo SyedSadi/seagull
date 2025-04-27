@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import API from '../../services/api';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from '../../context/AuthContext';
 
 const AddContentPage = () => {
+  const {user} = useContext(AuthContext)
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState('');
@@ -17,18 +19,11 @@ const AddContentPage = () => {
   });
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true)
-      try {
-        const response = await API.get('/courses/'); // adjust endpoint if needed
-        setCourses(response.data);
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      } finally{
-        setLoading(false)
-      }
-    };
-    fetchCourses();
+    const c = JSON.parse(localStorage.getItem("courses"))
+    if(user.role === "instructor"){
+              const instructorCourses = c.filter(item => item.created_by_details.id === user?.instructor.id)
+              setCourses(instructorCourses)
+          } else setCourses(c)
   }, []);
 
   const handleCourseChange = (e) => {

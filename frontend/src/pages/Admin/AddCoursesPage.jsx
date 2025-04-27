@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllInstructors } from "../../services/instructorsApi";
 import { addCourse } from "../../services/coursesApi";
@@ -7,9 +7,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ImageUploader } from "../../services/ImageUploader";
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from "../../context/AuthContext";
 
 
 const AddCoursesPage = () => {
+  const {user} = useContext(AuthContext)
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const [, setUploadedUrl] = useState("");
@@ -24,19 +26,19 @@ const AddCoursesPage = () => {
     image: "",
     created_by: "",
   });
-
+  
   useEffect(() => {
     const fetchInstructors = async () => {
       try {
         const data = await getAllInstructors();
-        setInstructors(data);
+        user?.role === "instructor" ? setInstructors([user?.instructor]) : setInstructors(data);
       } catch (error) {
         console.error("Error fetching instructors:", error);
       }
     };
     fetchInstructors();
   }, []);
-
+  console.log(instructors)
   const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
   };

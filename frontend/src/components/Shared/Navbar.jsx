@@ -142,6 +142,18 @@ const Navbar = () => {
 					</NavLink>
 				</li>
 			)}
+			{user?.role === "instructor" && (
+				<li>
+					<NavLink
+						to={"/add-courses"}
+						title="Access admin dashboard"
+						className="text-white hover:text-blue-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-blue-300 after:left-1/2 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full hover:after:left-0"
+						onClick={() => setIsMenuOpen(false)}
+					>
+						Dashboard
+					</NavLink>
+				</li>
+			)}
 		</ul>
 	);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import API from '../../services/api';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import { deleteContentById, updateContentById } from '../../services/contentsApi';
@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import ShowConfirmation from '../../components/Shared/ShowConfirmation';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from '../../context/AuthContext';
 
 
 // Small reusable component for content input fields
@@ -57,20 +58,14 @@ const ManageContents = () => {
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const {user} = useContext(AuthContext)
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true)
-      try {
-        const { data } = await API.get('/courses/');
-        setCourses(data);
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-      }finally{
-        setLoading(false)
-      }
-    };
-    fetchCourses();
+    const c = JSON.parse(localStorage.getItem("courses"))
+    if(user.role === "instructor"){
+      const instructorCourses = c.filter(item => item.created_by_details.id === user?.instructor.id)
+      setCourses(instructorCourses)
+    } else setCourses(c)
   }, []);
 
   useEffect(() => {

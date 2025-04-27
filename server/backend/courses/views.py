@@ -1,6 +1,6 @@
 from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, BasePermission
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -22,6 +22,46 @@ class AdminOnlyAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class IsAdminOrInstructorOwner(APIView):
+    """
+    Custom permission to allow:
+    - Admins full access.
+    - Instructors can only manage their own courses and contents.
+    """
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        # Admins have full access
+        if request.user.is_staff:
+            return True
+
+        # Instructors: can only modify their OWN course/content
+        if hasattr(request.user, 'instructor'):
+            if isinstance(obj, Course):
+                print('dsfaf', obj, request)
+                return obj.created_by.user == request.user
+
+            if isinstance(obj, CourseContents):
+                return obj.course.created_by.user == request.user
+
+        return False
+
+class InstructorOrAdminAPIView(APIView):
+    """Base class for instructor (own content) and admin (all content) operations."""
+    permission_classes = [IsAuthenticated, IsAdminOrInstructorOwner]
+
+    def get_course_or_404(self, course_id):
+        return get_object_or_404(Course, id=course_id)
+
+    def handle_serializer(self, serializer, status_code=status.HTTP_200_OK):
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status_code)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CourseViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -51,25 +91,34 @@ class CourseDetailView(generics.RetrieveAPIView):
     serializer_class = CourseSerializer
 
 #  ---------------------------- COURSE MANAGEMENT -------------------------------
-class AddCourseView(AdminOnlyAPIView):
+class AddCourseView(InstructorOrAdminAPIView):
     """Admin endpoint to add a new course."""
     def post(self, request):
-         # Handle course creation by admin
+        data = request.data.copy()
+
+        if request.user.role == 'instructor':
+            # Force created_by to logged-in instructor
+            data['created_by'] = request.user.instructor.id
+
         serializer = CourseSerializer(data=request.data)
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
 
-class UpdateDeleteCourseView(AdminOnlyAPIView):
+class UpdateDeleteCourseView(InstructorOrAdminAPIView):
     """Admin endpoint to update or delete an existing course."""
     def put(self, request, course_id):
          # Update an existing course
-        course = self.get_course_or_404(course_id)
+        course = self.get_course_or_404(course_id)        
         serializer = CourseSerializer(course, data=request.data, partial=True)
         return self.handle_serializer(serializer)
 
     def delete(self, request, course_id):
         # Delete an existing course
         course = self.get_course_or_404(course_id)
+
+        if request.user.role == 'instructor' and course.created_by.user != request.user:
+            return Response({'detail': 'You do not have permission to delete this course.'}, status=status.HTTP_403_FORBIDDEN)
+        
         course.delete()
         return Response({"message": "Course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -138,7 +187,7 @@ class CourseContentsView(UserEnrollmentMixin, generics.ListAPIView):
         return CourseContents.objects.filter(course=course)
 
 
-class AddContentAPIView(AdminOnlyAPIView):
+class AddContentAPIView(InstructorOrAdminAPIView):
     """
     Admin can add content to a course.
     """
@@ -149,7 +198,7 @@ class AddContentAPIView(AdminOnlyAPIView):
         return self.handle_serializer(serializer, status.HTTP_201_CREATED)
 
 
-class UpdateContentView(AdminOnlyAPIView):
+class UpdateContentView(InstructorOrAdminAPIView):
     """
     Admin can update existing content.
     """
@@ -160,7 +209,7 @@ class UpdateContentView(AdminOnlyAPIView):
         return self.handle_serializer(serializer)
 
 
-class DeleteContentView(AdminOnlyAPIView):
+class DeleteContentView(InstructorOrAdminAPIView):
     """
     Admin can delete content from a course.
     """

@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async";
 import { FaSearch } from "react-icons/fa";
 
 const CoursePage = () => {
+	// console.log(localStorage.getItem)
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [localSearch, setLocalSearch] = useState(
 		searchParams.get("search") || ""
