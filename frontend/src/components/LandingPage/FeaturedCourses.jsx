@@ -99,7 +99,7 @@ const FeaturedCourses = () => {
 	}, []);
 
 	// --- Derived Course Lists ---
-	const latestCourses = allCourses.sort((a, b) => b.id - a.id).slice(0, 4); // Taking the last 4 as "Latest"
+	const latestCourses = allCourses?.sort((a, b) => b.id - a.id).slice(0, 4); // Taking the last 4 as "Latest"
 
 	// Logic for "Top Rated": Sort by rating descending.
 	const topRatedCourses = [...allCourses]
