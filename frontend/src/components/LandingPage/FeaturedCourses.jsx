@@ -95,16 +95,33 @@ const FeaturedCourses = () => {
 
 	// Fetch courses
 	useEffect(() => {
-		setAllCourses(JSON.parse(localStorage.getItem("courses")))
+		const fetchCourses = async () => {
+			setLoading(true);
+			setError(null);
+			try {
+				const data = await getAllCourses();
+				setAllCourses(data || []); // Ensure data is an array
+			} catch (err) {
+				console.error("Failed to load courses:", err);
+				setError("Could not fetch courses. Please try again later.");
+			} finally {
+				setLoading(false);
+			}
+		};
+		if(!localStorage.getItem("courses")) fetchCourses();
+		else setAllCourses(JSON.parse(localStorage.getItem("courses")))
 	}, []);
 
 	// --- Derived Course Lists ---
 	const latestCourses = allCourses?.sort((a, b) => b.id - a.id).slice(0, 4); // Taking the last 4 as "Latest"
 
 	// Logic for "Top Rated": Sort by rating descending.
-	const topRatedCourses = [...allCourses]
-		.sort((a, b) => (b.ratings || 0) - (a.ratings || 0))
-		.slice(0, 4);
+	const topRatedCourses = (allCourses && allCourses.length > 0)
+		? [...allCourses]
+			.sort((a, b) => (b.ratings || 0) - (a.ratings || 0))
+			.slice(0, 4)
+		: [];
+
 
 	// --- Swiper Configuration ---
 	const swiperOptions = {
@@ -187,7 +204,7 @@ const FeaturedCourses = () => {
 		);
 	}
 
-	if (allCourses.length === 0) {
+	if (allCourses?.length === 0) {
 		return (
 			<section className="py-12 px-4 text-center text-gray-500">
 				<p>No courses available at the moment.</p>

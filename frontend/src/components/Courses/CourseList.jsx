@@ -4,9 +4,8 @@ import { getAllCourses } from "../../services/coursesApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-const CourseList = ({courses}) => {
+const CourseList = ({courses, loading}) => {
 	const [searchParams] = useSearchParams();
-	const [loading, setLoading] = useState(false);
 	const [searchMessage, setSearchMessage] = useState("");
 	const searchQuery = searchParams.get("search") || "";
 

@@ -2,14 +2,28 @@ import { useState, useEffect } from "react";
 import CourseList from "../components/Courses/CourseList";
 import { Helmet } from "react-helmet-async";
 import { FaSearch } from "react-icons/fa";
+import { getAllCourses } from "../services/coursesApi";
 
 const CoursePage = () => {
+	const [loading, setLoading] = useState(false);
 	const [searchMessage, setSearchMessage] = useState("");
 	const [isSearching, setIsSearching] = useState(false);
 	const [localSearch, setLocalSearch] = useState("");
 	const [courses, setCourses] = useState([]);
 	useEffect(() => {
-		setCourses(JSON.parse(localStorage.getItem("courses")))
+		const fetchCourses = async () => {
+			setLoading(true);
+			try {
+				const data = await getAllCourses();
+				setCourses(data || []); // Ensure data is an array
+			} catch (err) {
+				console.error("Failed to load courses:", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+		if(!localStorage.getItem("courses")) fetchCourses();
+		else setCourses(JSON.parse(localStorage.getItem("courses")))
 		if(localSearch){
 			setIsSearching(true)
 			const filteredCourses = courses.filter(course =>
@@ -92,7 +106,7 @@ const CoursePage = () => {
 					</div>
 				</form>
 			</div>
-			<CourseList courses={courses} />
+			<CourseList courses={courses} loading={loading}/>
 		</div>
 	);
 };
