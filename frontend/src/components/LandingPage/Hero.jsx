@@ -55,7 +55,7 @@ const Hero = () => {
 					</p>
 
 					{/* Search form */}
-					<form
+					{/* <form
 						onSubmit={handleSearch}
 						className="w-full max-w-2xl mx-auto mt-4"
 					>
@@ -90,7 +90,7 @@ const Hero = () => {
 								</div>
 							)}
 						</div>
-					</form>
+					</form> */}
 				</div>
 			</div>
 		</section>

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getAllCourses } from "../../services/coursesApi";
 import PropTypes from "prop-types";
-import _ from "lodash";
+import _, { set } from "lodash";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -90,26 +90,12 @@ const CourseCard = ({ course }) => (
 // --- Main Featured Courses Component ---
 const FeaturedCourses = () => {
 	const [allCourses, setAllCourses] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
 	// Fetch courses
 	useEffect(() => {
-		const fetchCourses = async () => {
-			setLoading(true);
-			setError(null);
-			try {
-				const data = await getAllCourses();
-				setAllCourses(data || []); // Ensure data is an array
-			} catch (err) {
-				console.error("Failed to load courses:", err);
-				setError("Could not fetch courses. Please try again later.");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchCourses();
+		setAllCourses(JSON.parse(localStorage.getItem("courses")))
 	}, []);
 
 	// --- Derived Course Lists ---

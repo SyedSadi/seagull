@@ -4,42 +4,13 @@ import { getAllCourses } from "../../services/coursesApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-const CourseList = () => {
-	const [courses, setCourses] = useState([]);
+const CourseList = ({courses}) => {
 	const [searchParams] = useSearchParams();
 	const [loading, setLoading] = useState(false);
 	const [searchMessage, setSearchMessage] = useState("");
 	const searchQuery = searchParams.get("search") || "";
 
-	useEffect(() => {
-		const fetchCourses = async () => {
-			setLoading(true);
-			setSearchMessage(""); // Reset search message when fetching
-
-			try {
-				const data = await getAllCourses(searchQuery);
-				setCourses(data);
-
-				// Set search message based on results
-				if (searchQuery && data.length === 0) {
-					setSearchMessage(`No courses found matching "${searchQuery}"`);
-				} else if (searchQuery && data.length > 0) {
-					setSearchMessage(
-						`Found ${data.length} course${
-							data.length !== 1 ? "s" : ""
-						} matching "${searchQuery}"`
-					);
-				}
-			} catch (error) {
-				console.error("Error fetching courses:", error);
-				setSearchMessage("Error loading courses. Please try again.");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchCourses();
-	}, [searchParams, searchQuery]);
+	useEffect(()=>{},[courses])
 
 	const renderSearchMessage = () => {
 		if (!searchMessage) return null;

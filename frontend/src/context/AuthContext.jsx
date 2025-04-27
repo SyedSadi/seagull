@@ -68,7 +68,9 @@ export const AuthProvider = ({ children }) => {
   
       console.log("Logout successful:", res);
   
-      localStorage.clear();
+      localStorage.removeItem("user");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
       setUser(null);
       window.location.href = "/login";
     } catch (error) {
