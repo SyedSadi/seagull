@@ -3,7 +3,9 @@ import { getAllCategories } from "../../services/quizApi";
 import AdminLayout from "../../components/Admin/AdminLayout";
 import API from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ManageQuiz = () => {
 	const [categories, setCategories] = useState([]);
@@ -19,9 +21,9 @@ const ManageQuiz = () => {
 				setCategories(data);
 				setLoading(false);
 			})
-			.catch((err) => {
+			.catch(() => {
 				setError("Failed to load categories. Please try again later.");
-				console.error("Error fetching categories:", err);
+				toast.error("Failed to load quiz categories. Please try again later.");
 				setLoading(false);
 			});
 	}, []);
@@ -38,11 +40,11 @@ const ManageQuiz = () => {
 	};
 
 	const handleDelete = async () => {
-		if (
-			window.confirm(
-				"Are you sure you want to delete this quiz? This action cannot be undone."
-			)
-		) {
+		const confirmMessage =
+			selectedOptions.length === 1
+				? "Are you sure you want to delete this quiz?"
+				: `Are you sure you want to delete these ${selectedOptions.length} quizzes?`;
+		if (window.confirm(`${confirmMessage} This action cannot be undone.`)) {
 			try {
 				setLoading(true);
 				await API.delete("/quiz/delete/", {
@@ -54,14 +56,14 @@ const ManageQuiz = () => {
 				setSelectedOptions([]);
 				setSelectMode(false);
 				// Use a toast notification or custom component instead
-				alert("Quiz deleted successfully!");
+				toast.success(
+					selectedOptions.length === 1
+						? "Quiz deleted successfully!"
+						: `${selectedOptions.length} quizzes deleted successfully!`
+				);
 			} catch (error) {
 				console.error("Delete error: ", error);
-				alert(
-					`Failed to delete quiz: ${
-						error.response?.data?.message || "Unknown error occurred"
-					}`
-				);
+				toast.error("Failed to delete quiz");
 			} finally {
 				setLoading(false);
 			}
@@ -97,9 +99,9 @@ const ManageQuiz = () => {
 	return (
 		<AdminLayout>
 			<Helmet>
-		        <title>Manage Quiz | KUETx</title>
-    		</Helmet>
-			<div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-lg shadow-lg p-10">
+				<title>Manage Quiz | KUETx</title>
+			</Helmet>
+			<div className="bg-white rounded-lg shadow-lg p-10">
 				<h2 className="text-3xl font-bold text-center text-black mb-6">
 					Manage Quizzes
 				</h2>
@@ -127,7 +129,7 @@ const ManageQuiz = () => {
 					{categories.map((category, index) => (
 						<div
 							key={category.id}
-							className="bg-white rounded-lg shadow-md p-4 flex justify-between items-center hover:shadow-lg transition duration-300"
+							className="bg-white rounded-lg border border-gray-400 p-4 flex justify-between items-center"
 						>
 							<div className="flex items-center">
 								{selectMode && (

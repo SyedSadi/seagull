@@ -80,10 +80,6 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 					is_correct: false,
 				})),
 			});
-
-			toast.success(
-				"Question added successfully! You can add another question or click Finish."
-			);
 		} catch (error) {
 			console.error("Error adding question:", error.response?.data || error);
 			toast.error(
@@ -97,14 +93,7 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 
 	return (
 		<div className="space-y-6">
-			<div className="flex justify-between items-center mb-4">
-				<h3 className="text-lg font-semibold">
-					Add Question #{questionCount + 1}
-				</h3>
-				<span className="text-sm text-gray-600">
-					Total questions added: {questionCount}
-				</span>
-			</div>
+			<div className="flex justify-between items-center mb-4"></div>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
@@ -119,7 +108,7 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 							onChange={(e) =>
 								setQuestion({ ...question, text: e.target.value })
 							}
-							className="mt-1 block w-full border rounded-md shadow-sm p-2"
+							className="textarea textarea-bordered mt-1 block w-full border rounded-md shadow-sm p-2"
 							required
 						/>
 					</label>
@@ -140,11 +129,11 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 									onChange={(e) =>
 										handleOptionChange(option.id, "text", e.target.value)
 									}
-									className="flex-1 border rounded-md shadow-sm p-2"
+									className="textarea textarea-bordered flex-1 border rounded-md shadow-sm p-2 mb-1"
 									placeholder={`Option ${question.options.indexOf(option) + 1}`}
 									required
 								/>
-								<label htmlFor="correct option" className="flex items-center">
+								<label className="flex items-center space-x-2 cursor-pointer">
 									<input
 										id="correct option"
 										type="radio"
@@ -153,9 +142,9 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 										onChange={() =>
 											handleOptionChange(option.id, "is_correct", true)
 										}
-										className="mr-2"
+										className="radio radio-primary"
 									/>{" "}
-									Correct
+									<span className="text-sm text-gray-600">Correct</span>
 								</label>
 							</div>
 						))}

@@ -45,10 +45,6 @@ const UpdateQuestionsPage = () => {
 	};
 
 	const handleQuestionChange = (questionId, field, value) => {
-		// if (value.trim() && !field === "text") {
-		// 	toast.warning("Question text cannot be empty");
-		// 	return;
-
 		const questionIndex = questions.findIndex((q) => q.id === questionId);
 		if (questionIndex !== -1) {
 			const updatedQuestions = [...questions];
@@ -112,9 +108,6 @@ const UpdateQuestionsPage = () => {
 					is_correct: opt.is_correct,
 				})),
 			};
-
-			console.log("About to update question:", questionId);
-			console.log("With data:", questionData);
 
 			const result = await updateQuestion(questionId, questionData);
 			if (result) {
@@ -191,7 +184,7 @@ const UpdateQuestionsPage = () => {
 	return (
 		<AdminLayout>
 			<div className="max-w-2xl mx-auto p-6">
-				<div className="bg-blue-100 p-6 rounded-lg shadow-lg">
+				<div className="bg-white p-6 rounded-lg shadow-lg">
 					<div className="flex justify-between items-center mb-6">
 						<div>
 							<h2 className="text-xl font-bold text-gray-800">
@@ -206,7 +199,7 @@ const UpdateQuestionsPage = () => {
 								onClick={() => setShowAddForm(!showAddForm)}
 								className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
 							>
-								{showAddForm ? "Cancel Add" : "Add Question"}
+								{showAddForm ? "Cancel Add" : "Add Questions"}
 							</button>
 							<button
 								onClick={() => navigate("/manage-quiz")}
@@ -238,10 +231,10 @@ const UpdateQuestionsPage = () => {
 							questions.map((question, qIndex) => (
 								<div
 									key={question.id}
-									className="bg-white rounded-lg p-4 shadow"
+									className="bg-white rounded-lg p-4 shadow border border-gray-400"
 								>
 									<div className="flex justify-between items-start mb-4">
-										<label className="block text-sm font-medium text-gray-700">
+										<label className="block text-lg font-medium text-gray-700">
 											Question {qIndex + 1}
 										</label>
 										<button
@@ -255,7 +248,7 @@ const UpdateQuestionsPage = () => {
 									</div>
 
 									<div className="mb-4">
-										<p>Text:</p>
+										<p className="font-semibold">Question Text:</p>
 										<input
 											type="text"
 											value={question.text}
@@ -266,11 +259,13 @@ const UpdateQuestionsPage = () => {
 													e.target.value
 												)
 											}
-											className="input input-bordered w-full p-2 rounded"
+											className="textarea textarea-bordered w-full p-2 rounded"
 											placeholder="Enter question text"
 										/>
 									</div>
-
+									<p className="font-semibold">
+										Options (Select one correct answer)
+									</p>
 									<div className="space-y-3">
 										{question.options.map((option) => (
 											<div
@@ -288,7 +283,7 @@ const UpdateQuestionsPage = () => {
 															e.target.value
 														)
 													}
-													className="input input-bordered flex-1 p-2 rounded"
+													className="textarea textarea-bordered flex-1 p-2 rounded"
 													placeholder="Enter option text"
 												/>
 												<label className="flex items-center space-x-2 cursor-pointer">

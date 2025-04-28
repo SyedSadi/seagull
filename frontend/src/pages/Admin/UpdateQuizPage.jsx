@@ -4,7 +4,7 @@ import AdminLayout from "../../components/Admin/AdminLayout";
 import { getAllCategories, updateQuiz } from "../../services/quizApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
 const UpdateQuizPage = () => {
 	const { categoryId } = useParams();
@@ -88,11 +88,11 @@ const UpdateQuizPage = () => {
 	return (
 		<AdminLayout>
 			<Helmet>
-		        <title>Update Quiz | KUETx</title>
-    		</Helmet>
+				<title>Update Quiz | KUETx</title>
+			</Helmet>
 			<div className="max-w-2xl mx-auto p-6">
-				<div className="bg-blue-100 p-6 rounded-lg shadow-lg">
-					<h2 className="text-xl font-bold mb-4">
+				<div className="bg-white p-6 rounded-lg shadow-lg">
+					<h2 className="text-xl font-bold mb-4 text-center">
 						Update Quiz Category: {quiz.name}
 					</h2>
 					<form onSubmit={handleSubmit} className="space-y-4">
@@ -103,7 +103,7 @@ const UpdateQuizPage = () => {
 								name="name"
 								value={quiz.name}
 								onChange={handleChange}
-								className="input input-bordered w-full p-2 rounded"
+								className="textarea textarea-bordered w-full p-2 rounded"
 								required
 							/>
 						</label>
