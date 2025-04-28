@@ -131,7 +131,7 @@ class DeleteQuizView(APIView):
     
 
 # ---------------------- ADMIN: DELETE QUESTION ----------------------
-class deleteQuestionView(APIView):
+class DeleteQuestionView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     
     def delete(self, request, question_id):
