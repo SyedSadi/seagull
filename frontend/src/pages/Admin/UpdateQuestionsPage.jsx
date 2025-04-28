@@ -104,10 +104,7 @@ const UpdateQuestionsPage = () => {
 					is_correct: opt.is_correct,
 				})),
 			};
-
-			console.log("About to update question:", questionId);
-			console.log("With data:", questionData);
-
+			
 			const result = await updateQuestion(questionId, questionData);
 			if (result) {
 				toast.success("Question updated successfully!");

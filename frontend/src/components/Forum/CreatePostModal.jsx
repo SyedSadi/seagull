@@ -52,7 +52,6 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submit clicked');
 
     if (selectedTags.length < 1) {
       toast.error('Please select at least one tag.');
@@ -73,7 +72,6 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
       };
 
       await createPost(payload);  // Create the post
-      console.log('Post created successfully!'); // Debugging lo
       toast.success('Post created successfully!', { autoClose: 3000 });  // Success toast
       refreshPosts();
       onClose();

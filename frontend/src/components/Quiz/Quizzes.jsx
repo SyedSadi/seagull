@@ -77,7 +77,6 @@ function Quizzes() {
 			answers: selectedAnswers,
 		})
 			.then((data) => {
-				console.log("Quiz submission response:", data); // Debugging
 				navigate("/result", {
 					state: {
 						results: data,

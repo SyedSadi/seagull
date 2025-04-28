@@ -15,21 +15,13 @@ from decouple import config, Csv
 import os
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 SECRET_KEY = config('SECRET_KEY')
-
-
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = "/static/"
 
 # This is for when you deploy your app. Make sure to set this to your desired directory.
@@ -40,12 +32,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+
 # Application definition
 
 INSTALLED_APPS = [
     'users',
     'corsheaders',
-    # "courses.apps.CoursesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -103,9 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 if os.getenv('GITHUB_WORKFLOW') or os.getenv('CI'):
     # If running inside GitHub Actions
     DATABASES = {
@@ -130,7 +119,7 @@ else:
     #     }
     # }
     DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=1800)
+        'default': dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=1800)
     }
 
 
@@ -164,10 +153,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

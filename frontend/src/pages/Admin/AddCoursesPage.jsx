@@ -38,7 +38,6 @@ const AddCoursesPage = () => {
     };
     fetchInstructors();
   }, []);
-  console.log(instructors)
   const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
   };
@@ -57,7 +56,6 @@ const AddCoursesPage = () => {
     const url = await ImageUploader(selectedImage);
     setUploadedUrl(url);
     toast.success("Image uploaded successfully!");
-    console.log("Uploaded Image URL:", url);
     return url;
   };
 
@@ -71,11 +69,9 @@ const AddCoursesPage = () => {
       return;
     }
     const updatedCourse = { ...course, image: url };   
-    console.log('updated', updatedCourse)
 
     try {
       const res = await addCourse(updatedCourse);
-      console.log(res)
       setTimeout(() => {
         navigate("/courses");
       }, 1500);

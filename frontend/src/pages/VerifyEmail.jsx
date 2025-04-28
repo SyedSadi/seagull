@@ -11,7 +11,6 @@ export default function VerifyEmail() {
     const verifyEmail = async () => {
       try {
         const res = await API.get(`/verify-email/${uid}/${token}/`);
-        console.log(res)
         setMessage("🎉 Email verified successfully");
         setSuccess(true);
       } catch (err) {

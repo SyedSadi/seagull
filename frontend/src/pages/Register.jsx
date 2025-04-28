@@ -27,9 +27,7 @@ const Register = () => {
         setLoading(true);
         try{
             const res = await registerUser(formData);
-            console.log(res)
             setErrorMsgs(res?.response?.data)
-            console.log('eroor', errorMsgs)
             if(res.status === 201){
                 toast.success(res?.data?.message, { autoClose: 7000 });
                 setFormData({
@@ -40,7 +38,6 @@ const Register = () => {
                 })
             }
         }catch(err){
-            console.log(err)
         }finally{
             setLoading(false);
         }

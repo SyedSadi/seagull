@@ -58,7 +58,6 @@ const CourseDetails = () => {
       link.remove();
     } catch (error) {
       toast.error(error.response?.data?.error || "Enrollment failed");
-      console.log(error)
     } finally {
       setLoading(false);
     }
@@ -102,7 +101,7 @@ const CourseDetails = () => {
     
     <div className="bg-gradient-to-b from-blue-50 to-white min-h-screen py-10 px-4">
       <div className="max-w-7xl mx-auto  p-6 md:p-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           {/* Right Image Area (first on mobile) */}
           <div className="order-1 md:order-2 flex justify-center items-start">
             <img
@@ -114,7 +113,7 @@ const CourseDetails = () => {
 
           {/* Left Content Area */}
           <div className="order-2 md:order-1">
-            <h1 className="text-4xl font-semibold text-gray-900 mb-4">{course.title}</h1>
+            <h1 className="text-4xl font-semibold text-blue-600 mb-4">{course.title}</h1>
             <p className="text-lg text-gray-600 mb-6">{course.description}</p>
 
             <div className="space-y-3 text-gray-700 text-sm">
@@ -145,14 +144,14 @@ const CourseDetails = () => {
 
               {/* Instructor Info */}
               <div className="pt-4 border-t mt-4">
-                <p className="text-gray-900 text-lg">
+                <p className="text-gray-900 text-lg mb-2">
                   <span className="font-bold mr-2">Instructor Name:</span> {course.created_by_details?.name.toUpperCase()}
                 </p>
-                <p className="text-gray-900 text-lg">
-                  <span className="font-bold mr-2">Designation:</span> {course.created_by_details?.designation || "not provided"}
+                <p className="text-gray-900 text-lg mb-2">
+                  <span className="font-bold mr-2">Designation:</span> {course.created_by_details?.designation.toUpperCase() || "not provided"}
                 </p>
-                <p className="text-gray-900 text-lg">
-                  <span className="font-bold mr-2">University:</span> {course.created_by_details?.university || "not provided"}
+                <p className="text-gray-900 text-lg mb-2">
+                  <span className="font-bold mr-2">University:</span> {course.created_by_details?.university.toUpperCase() || "not provided"}
                 </p>
               </div>
             </div>

@@ -12,7 +12,6 @@ const ForgotPassword = () => {
     setLoading(true)
     try {
       const res = await API.post('/request-reset-password/', { email });
-      console.log(res)
       setMessage('If the email exists, a password reset link has been sent. Check Spam Folder');
     } catch (error) {
       setMessage('Something went wrong. Please try again.');

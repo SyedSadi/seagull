@@ -25,11 +25,9 @@ API.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		if (error.response?.status === 401) {
-			console.log("401 Unauthorized - Attempting Token Refresh...");
 
 			const refreshToken = localStorage.getItem("refresh_token");
 			if (!refreshToken) {
-				console.log("No refresh token found! Redirecting to login.");
 				window.location.href = "/login";
 				return Promise.reject(error);
 			}
@@ -40,7 +38,6 @@ API.interceptors.response.use(
 				});
 
 				const newAccessToken = res.data.access;
-				console.log("New Access Token:", newAccessToken);
 				localStorage.setItem("access_token", newAccessToken);
 
 				error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;

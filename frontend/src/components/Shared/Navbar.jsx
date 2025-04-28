@@ -41,7 +41,7 @@ import logo from "../../assets/logo.png";
  */
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const { user, logoutUser } = useContext(AuthContext);
+	const { user, logoutUser, loading } = useContext(AuthContext);
 	const [scrolled, setScrolled] = useState(false);
 	const location = useLocation();
 	const insLandingPage = location.pathname === "/";
@@ -234,7 +234,11 @@ const Navbar = () => {
 							className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-3 rounded-full hover:transition-colors duration-500"
 							title="Log out"
 						>
-							Log out
+							{loading ? (
+								<div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+								) : (
+								"Log out"
+							)}
 						</button>
 					</>
 				)}

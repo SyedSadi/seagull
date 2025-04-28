@@ -72,7 +72,7 @@ const CourseCard = ({ course }) => (
 				</span>
 				<span className="flex items-center text-gray-700">
 					<FontAwesomeIcon icon={faStar} className="text-yellow-400 mr-1" />
-					{course.ratings?.toFixed(1) || "N/A"}
+					{course.ratings?.toFixed(1) || "N/A"} ({course?.ratings_count} ratings)
 				</span>
 			</div>
 

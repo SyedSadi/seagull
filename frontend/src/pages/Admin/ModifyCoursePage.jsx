@@ -72,6 +72,7 @@ const ModifyCoursePage = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       await API.put(`/courses/update-delete/${selectedCourseId}/`, course);
       toast.success("Course updated successfully!");
@@ -79,11 +80,14 @@ const ModifyCoursePage = () => {
     } catch (error) {
       console.error("Update error:", error);
       toast.error("Failed to update course. Please try again.");
+    } finally{
+      setLoading(false)
     }
   };
 
   // Delete the selected course
   const handleDelete = async () => {
+    setLoading(true)
     try {
       const res = await ShowConfirmation();
       if(res.isConfirmed){
@@ -94,6 +98,8 @@ const ModifyCoursePage = () => {
     } catch (error) {
       console.error("Delete error:", error);
       toast.error("Failed to delete course. Please try again.");
+    } finally{
+      setLoading(false)
     }
   };
 

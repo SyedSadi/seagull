@@ -37,12 +37,23 @@ const Footer = () => {
 						alt="Learning background"
 					/>
 				</Link>
-				<a
-					href="https://seagull-production.up.railway.app/api/schema/swagger-ui/"
-					className="link link-hover"
-				>
-					Explore API
-				</a>
+				<nav className="grid grid-flow-col gap-4">
+					<a
+						href="https://seagull-production.up.railway.app/api/schema/swagger-ui/"
+						className="link inline"
+						target="_blank"
+					>
+						Explore API
+					</a>
+					{/* <a
+						href="https://seagull-production.up.railway.app/"
+						className="link inline"
+						target="_blank"
+					>
+						Devlog
+					</a> */}
+				</nav>
+				
 				<nav>
 					<div className="grid grid-flow-col gap-4">
 						<a

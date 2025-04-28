@@ -7,7 +7,6 @@ function Result() {
 
 	// Redirect if accessed directly without results
 	if (!results) {
-		console.log("No results found, redirecting...");
 		navigate("/quiz");
 		return null;
 	}

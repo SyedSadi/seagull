@@ -124,7 +124,7 @@ const ModifyCourseForm = ({
 					Update Image
 				</label>
 				{loading ? (
-					<div>Uploading image, please wait...</div>
+					<div>Updating, please wait...</div>
 				) : (
 					<input
 						type="file"
@@ -143,14 +143,22 @@ const ModifyCourseForm = ({
 						type="submit"
 						className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-xl transition duration-200"
 					>
-						Update
+						{loading ? (
+							<div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+							) : (
+							"Update"
+						)}
 					</button>
 					<button
 						type="button"
 						onClick={handleDelete}
 						className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-xl transition duration-200"
 					>
-						Delete
+						{loading ? (
+							<div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+							) : (
+							"Delete"
+						)}
 					</button>
 				</div>
 			)}

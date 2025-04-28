@@ -17,7 +17,6 @@ const ResetPassword = () => {
       const res = await API.post(`/reset-password/${uid}/${token}/`, {
         password: password,
       });
-      console.log(res)
       setMessage('Password reset successful! Redirecting...');
       setTimeout(() => navigate('/login'), 2000);
     } catch (error) {

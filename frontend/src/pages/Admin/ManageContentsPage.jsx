@@ -84,6 +84,7 @@ const ManageContents = () => {
 
   const handleUpdateContents = async (e) => {
     e.preventDefault();
+    setLoading(true)
     try {
       await Promise.all(
         contents.map(content => 
@@ -100,6 +101,8 @@ const ManageContents = () => {
     } catch (error) {
       console.error("Error updating contents:", error);
       toast.error("Failed to update contents. Please try again.");
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -152,7 +155,11 @@ const ManageContents = () => {
                 />
               ))}
               <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-                Save Changes
+                {loading ? (
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                "Save Changes"
+                )}
               </button>
             </form>
           ) : (

@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -22,10 +22,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   const registerUser = async (userData) => {
     try {
       const response = await API.post("/register/", userData);
@@ -36,9 +32,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginUser = async (credentials, navigate, location) => {
+    setLoading(true)
     try {
       const response = await API.post("/login/", credentials);
-      console.log(response)
       if(response?.data?.user){
         localStorage.setItem("access_token", response.data.access);
         localStorage.setItem("refresh_token", response.data.refresh);
@@ -46,9 +42,6 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.user);
         navigate(location.state?.from?.pathname, { replace: true });
       }      
-      console.log('new token after lgoin', response.data.access)
-      console.log('new decoded token after login ', jwtDecode(response.data.access))
-
       return response;
     } catch (error) {
       return error
@@ -58,16 +51,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logoutUser = async () => {
+    setLoading(true)
     try {
       const refreshToken = localStorage.getItem("refresh_token");
   
       if (!refreshToken) {
         throw new Error("No refresh token available.");
       }
-      const res = await API.post("/logout/", { refresh: refreshToken });
-  
-      console.log("Logout successful:", res);
-  
+      const res = await API.post("/logout/", { refresh: refreshToken });  
       localStorage.removeItem("user");
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
@@ -75,11 +66,13 @@ export const AuthProvider = ({ children }) => {
       window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
+    } finally{
+      setLoading(false)
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, registerUser,loginUser, logoutUser }}>
+    <AuthContext.Provider value={{ user, setUser, registerUser,loginUser, logoutUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

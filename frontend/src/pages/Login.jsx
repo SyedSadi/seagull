@@ -22,7 +22,6 @@ const Login = () => {
 		setLoading(true);
 		try {
 			const res = await loginUser(formData, navigate, location);
-			console.log("res", res);
 
 			if (res?.status === 200) {
 				const redirectTo = location.state?.from?.pathname || "/";

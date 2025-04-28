@@ -63,7 +63,7 @@ const CoursePage = () => {
 			</Helmet>
 			<div className="my-4 md:my-8 flex flex-col md:flex-row justify-between items-center px-4 md:px-10 pb-6 md:pb-12 space-y-6 md:space-y-0">
 				<div className="text-center md:text-left w-full md:w-auto">
-					<h1 className="text-2xl md:text-3xl font-bold">KUETx Courses</h1>
+					<h1 className="text-2xl md:text-3xl font-bold">KUETx <span className="text-blue-600">Courses</span></h1>
 					<p className="text-base md:text-lg pt-3 md:pt-6">
 						Choose courses to learn from our world class instructors
 					</p>
@@ -75,20 +75,23 @@ const CoursePage = () => {
 					<div className="flex flex-col gap-2">
 						<div className="flex gap-1">
 							<div className="relative flex-1">
-								<input
-									type="text"
-									placeholder="Search courses..."
-									value={localSearch}
-									onChange={(e) => setLocalSearch(e.target.value)}
-									className={`w-full px-4 py-2 md:py-3 pl-10 rounded-lg border 
-										${
-											searchMessage.includes("Please enter")
-												? "border-red-300 focus:ring-red-500"
-												: "border-gray-300 focus:ring-blue-500"
-										} 
-										focus:outline-none focus:ring-2 text-sm md:text-base`}
-									disabled={isSearching}
+							<input
+								type="text"
+								placeholder="Search courses..."
+								value={localSearch}
+								onChange={(e) => setLocalSearch(e.target.value)}
+								className={`w-full px-4 py-2 md:py-3 pl-10 border-0 border-b-2 bg-transparent border-b-blue-500
+									${
+									searchMessage.includes("Please enter")
+										? "border-b-red-400 focus:border-b-red-500"
+										: "border-b-gray-300 focus:border-b-blue-500"
+									}
+									focus:outline-none focus:ring-0 text-sm md:text-base
+									placeholder-gray-400
+								`}
+								disabled={isSearching}
 								/>
+
 								<FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
 								{localSearch && (
 									<button

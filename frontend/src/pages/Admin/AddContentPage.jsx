@@ -53,7 +53,6 @@ const AddContentPage = () => {
       };
 
       const response = await API.post('/courses/content/add/', newContent);
-      console.log(response)
       toast.success('Content added successfully!');
       setContentData({
         title: '',
@@ -158,7 +157,11 @@ const AddContentPage = () => {
           </div>
         
           <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-            Add Content
+            {loading ? (
+              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Add Content"
+            )}
           </button>
         </form>      
           

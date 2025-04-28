@@ -106,7 +106,7 @@ const CourseList = ({courses, loading}) => {
 												icon={faStar}
 												className="text-yellow-400 mr-1"
 											/>
-											{course.ratings?.toFixed(1) || "N/A"}
+											{course.ratings?.toFixed(1) || "N/A"} ({course?.ratings_count} ratings)
 										</span>
 									</div>
 
