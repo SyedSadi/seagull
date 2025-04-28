@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../components/Admin/AdminLayout";
-import { getQuizQuestions, updateQuestion } from "../../services/quizApi";
+import {
+	getQuizQuestions,
+	updateQuestion,
+	deleteQuestion,
+} from "../../services/quizApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 
 const UpdateQuestionsPage = () => {
 	const { categoryId } = useParams();
@@ -129,6 +133,26 @@ const UpdateQuestionsPage = () => {
 		}
 	};
 
+	const handleDelete = async (questionId) => {
+		if (!window.confirm("Are you sure you want to delete this question?")) {
+			return;
+		}
+
+		try {
+			setSaving((prev) => ({ ...prev, [questionId]: true }));
+			await deleteQuestion(questionId);
+
+			// Remove the question from local state
+			setQuestions(questions.filter((q) => q.id !== questionId));
+			toast.success("Question deleted successfully!");
+		} catch (error) {
+			console.error("Error deleting question:", error);
+			toast.error(error.message || "Failed to delete question");
+		} finally {
+			setSaving((prev) => ({ ...prev, [questionId]: false }));
+		}
+	};
+
 	if (loading) {
 		return (
 			<AdminLayout>
@@ -143,8 +167,8 @@ const UpdateQuestionsPage = () => {
 		return (
 			<AdminLayout>
 				<Helmet>
-		        	<title>Update Questions | KUETx</title>
-    			</Helmet>
+					<title>Update Questions | KUETx</title>
+				</Helmet>
 				<div className="max-w-2xl mx-auto p-6">
 					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-6">
 						<span className="block sm:inline">{error}</span>
@@ -179,10 +203,21 @@ const UpdateQuestionsPage = () => {
 					<div className="space-y-6">
 						{questions.map((question, qIndex) => (
 							<div key={question.id} className="bg-white rounded-lg p-4 shadow">
-								<div className="mb-4">
-									<label className="block text-sm font-medium text-gray-700 mb-2">
+								<div className="flex justify-between items-start mb-4">
+									<label className="block text-sm font-medium text-gray-700">
 										Question {qIndex + 1}
 									</label>
+									<button
+										onClick={() => handleDelete(question.id)}
+										disabled={saving[question.id]}
+										className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 
+												  transition disabled:bg-red-300 disabled:cursor-not-allowed"
+									>
+										{saving[question.id] ? "Deleting..." : "Delete"}
+									</button>
+								</div>
+
+								<div className="mb-4">
 									<p>Text:</p>
 									<input
 										type="text"
