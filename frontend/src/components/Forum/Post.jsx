@@ -118,15 +118,15 @@ const Post = ({ post, onDelete }) => {
   
 
 	return (
-		<div className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200 hover:shadow-lg transition duration-300">
+		<div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100 hover:shadow-md transition-shadow duration-300">
 			{/* Author & Timestamp */}
-			<div className="flex items-center justify-between mb-2">
-				<p className="text-sm text-gray-500">
-					<span className="font-semibold text-gray-700">
+			<div className="flex items-center justify-between mb-3">
+				<p className="text-sm text-gray-500 flex items-center gap-2">
+					<span className="font-semibold text-teal-600 hover:text-teal-700 transition-colors">
 						{updatedPost.author_name}
-					</span>{" "}
-					•{" "}
-					<span>
+					</span>
+					<span className="text-gray-400">•</span>
+					<span className="text-gray-500">
 						{formatDistanceToNow(new Date(updatedPost.created_at), {
 							addSuffix: true,
 						})}
@@ -135,19 +135,19 @@ const Post = ({ post, onDelete }) => {
 			</div>
 
 			{/* Post Title */}
-			<h2 className="text-xl font-semibold text-gray-900 mb-3">
+			<h2 className="text-2xl font-bold text-blue-900 mb-3 hover:text-blue-700 transition-colors cursor-pointer">
 				{updatedPost.title}
 			</h2>
 
 			{/* Post Content */}
-			<div className="mb-4 text-gray-700 leading-relaxed">
+			<div className="mb-4 text-gray-600 leading-relaxed text-base">
 				{isExpanded
 					? updatedPost.content
 					: `${updatedPost.content.slice(0, 250)}...`}
 				{updatedPost.content.length > 250 && (
 					<button
 						onClick={toggleExpand}
-						className="text-blue-600 font-medium text-sm ml-2 hover:underline hover:text-blue-800 transition"
+						className="text-blue-500 font-medium text-sm ml-2 hover:text-blue-600 hover:underline transition-colors"
 					>
 						{isExpanded ? "See Less" : "See More"}
 					</button>
@@ -155,12 +155,12 @@ const Post = ({ post, onDelete }) => {
 			</div>
 
 			{/* Tags */}
-			<div className="flex flex-wrap gap-2 mt-4">
+			<div className="flex flex-wrap gap-2 mb-4">
 				{updatedPost.tags?.map((tag) => (
 					<button
 						type="button"
 						key={tag.id}
-						className="bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-xs font-medium hover:bg-blue-300 transition"
+						className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium hover:bg-blue-200 hover:text-blue-800 transition-colors"
 						onClick={() =>
 							window.dispatchEvent(
 								new CustomEvent("tagClicked", { detail: tag.name })
@@ -173,7 +173,7 @@ const Post = ({ post, onDelete }) => {
 			</div>
 
 			{/* Voting & Comments Section */}
-			<div className="flex items-center justify-between mt-4 border-t pt-3">
+			<div className="flex items-center justify-between pt-4 border-t border-gray-100">
 				<VoteButtons
 					postId={post.id}
 					totalVotes={updatedPost.total_votes}
@@ -183,25 +183,25 @@ const Post = ({ post, onDelete }) => {
 				/>
 
       {/* Edit & Delete Buttons (for Author) and delete button for admin */}
-      <div className="flex gap-4">
+      <div className="flex gap-3">
           {isAuthor && (
             <button 
               type="button"
               onClick={openEditModal} 
-              className="text-blue-600 hover:underline font-medium"
+              className="text-blue-500 hover:text-blue-600 transition-colors"
               title="Edit"
             >
-              <FiEdit2 size={18} className="text-blue-600" />
+              <FiEdit2 size={18}  />
             </button>
           )}
           {(isAuthor || isAdmin) && (
             <button 
               type="button"
               onClick={handleDelete} 
-              className="text-red-600 hover:underline font-medium"
+              className="text-red-500 hover:text-red-600 transition-colors"
               title="Delete"
             >
-             <FiTrash2 size={18} className="text-red-600" />
+             <FiTrash2 size={18} />
             </button>
           )}
        </div>
@@ -211,7 +211,7 @@ const Post = ({ post, onDelete }) => {
 			{/* Comments Section */}
 			{showComments &&
 				(loadingComments ? (
-					<p className="text-gray-500 mt-2">Loading comments...</p>
+					<p className="text-gray-500 mt-4 text-sm">Loading comments...</p>
 				) : (
 					<CommentSection
 						postId={post.id}
