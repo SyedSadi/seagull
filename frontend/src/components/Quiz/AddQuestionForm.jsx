@@ -2,12 +2,14 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { addQuestion } from "../../services/quizApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const OPTION_COUNT = 4;
 
-const AddQuestionForm = ({ categoryId }) => {
+const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 	const navigate = useNavigate();
 	const [questionCount, setQuestionCount] = useState(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [question, setQuestion] = useState({
 		text: "",
 		options: Array.from({ length: OPTION_COUNT }, (_, i) => ({
@@ -51,6 +53,7 @@ const AddQuestionForm = ({ categoryId }) => {
 		if (!validateQuestion()) return;
 
 		try {
+			setIsSubmitting(true);
 			const questionData = {
 				...question,
 				category: categoryId,
@@ -59,10 +62,16 @@ const AddQuestionForm = ({ categoryId }) => {
 					is_correct: opt.is_correct,
 				})),
 			};
-			await addQuestion(questionData);
+			const newQuestion = await addQuestion(questionData);
 
+			if (onQuestionAdded) {
+				onQuestionAdded(newQuestion);
+			}
+
+			// Increment question count
 			setQuestionCount((prev) => prev + 1);
-			// Reset form with new IDs
+
+			// Reset form for next question
 			setQuestion({
 				text: "",
 				options: Array.from({ length: OPTION_COUNT }, (_, i) => ({
@@ -71,27 +80,21 @@ const AddQuestionForm = ({ categoryId }) => {
 					is_correct: false,
 				})),
 			});
-			alert("Question added successfully!");
 		} catch (error) {
 			console.error("Error adding question:", error.response?.data || error);
-			alert(
+			toast.error(
 				error.response?.data?.error ||
 					"Failed to add question. Please try again."
 			);
+		} finally {
+			setIsSubmitting(false);
 		}
-	};
-
-	const handleFinish = () => {
-		if (questionCount === 0) {
-			alert("Please add at least one question before finishing!");
-			return;
-		}
-		alert(`Quiz created successfully with ${questionCount} questions!`);
-		navigate("/quiz"); // Navigate to quiz home page
 	};
 
 	return (
-		<div className="spacae-y-6">
+		<div className="space-y-6">
+			<div className="flex justify-between items-center mb-4"></div>
+
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div>
 					<label
@@ -105,7 +108,7 @@ const AddQuestionForm = ({ categoryId }) => {
 							onChange={(e) =>
 								setQuestion({ ...question, text: e.target.value })
 							}
-							className="mt-1 block w-full border rounded-md shadow-sm p-2"
+							className="textarea textarea-bordered mt-1 block w-full border rounded-md shadow-sm p-2"
 							required
 						/>
 					</label>
@@ -126,11 +129,11 @@ const AddQuestionForm = ({ categoryId }) => {
 									onChange={(e) =>
 										handleOptionChange(option.id, "text", e.target.value)
 									}
-									className="flex-1 border rounded-md shadow-sm p-2"
+									className="textarea textarea-bordered flex-1 border rounded-md shadow-sm p-2 mb-1"
 									placeholder={`Option ${question.options.indexOf(option) + 1}`}
 									required
 								/>
-								<label htmlFor="correct option" className="flex items-center">
+								<label className="flex items-center space-x-2 cursor-pointer">
 									<input
 										id="correct option"
 										type="radio"
@@ -139,37 +142,78 @@ const AddQuestionForm = ({ categoryId }) => {
 										onChange={() =>
 											handleOptionChange(option.id, "is_correct", true)
 										}
-										className="mr-2"
+										className="radio radio-primary"
 									/>{" "}
-									Correct
+									<span className="text-sm text-gray-600">Correct</span>
 								</label>
 							</div>
 						))}
 					</label>
 				</div>
 
-				<button
-					type="submit"
-					className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-				>
-					Add Question
-				</button>
+				<div className="flex space-x-4">
+					<button
+						type="submit"
+						disabled={isSubmitting}
+						className="flex-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 
+                                 disabled:bg-blue-300 disabled:cursor-not-allowed"
+					>
+						{isSubmitting ? (
+							<span className="flex items-center justify-center">
+								<svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+									<circle
+										className="opacity-25"
+										cx="12"
+										cy="12"
+										r="10"
+										stroke="currentColor"
+										strokeWidth="4"
+										fill="none"
+									/>
+									<path
+										className="opacity-75"
+										fill="currentColor"
+										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+									/>
+								</svg>
+								Adding...
+							</span>
+						) : (
+							"Add Question"
+						)}
+					</button>
+					<button
+						type="button"
+						onClick={() => navigate("/manage-quiz")}
+						className="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+					>
+						Cancel
+					</button>
+				</div>
 			</form>
 
-			<div className="flex justify-between items-center pt-4 border-t">
-				<span className="text-gray-600">Questions added: {questionCount}</span>
-				<button
-					onClick={handleFinish}
-					className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600"
-				>
-					Finish
-				</button>
-			</div>
+			{questionCount > 0 && (
+				<div className="mt-6 pt-4 border-t">
+					<div className="flex justify-between items-center">
+						<p className="text-green-600 font-medium">
+							✓ {questionCount} question{questionCount !== 1 ? "s" : ""} added
+							successfully
+						</p>
+						<button
+							onClick={() => navigate("/manage-quiz")}
+							className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600"
+						>
+							Finish
+						</button>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
 AddQuestionForm.propTypes = {
 	categoryId: PropTypes.number.isRequired,
+	onQuestionAdded: PropTypes.func,
 };
 
 export default AddQuestionForm;
