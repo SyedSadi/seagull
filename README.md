@@ -1,4 +1,6 @@
-# KUETx
+<div align ="center">
+<img src="frontend/src/assets/logo.png" alt="KUETx" width="150" />
+</div>
 
 **Transforming Education with Seamless Learning**
 
@@ -6,59 +8,29 @@ KUETx is a full-stack Learning Management System (LMS) designed to empower educa
 
 ---
 
-<div align="center">
-  <a href="https://www.python.org">
-    <img src="https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  </a>
-  <a href="https://www.djangoproject.com">
-    <img src="https://img.shields.io/badge/DJANGO-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django" />
-  </a>
-  <a href="https://www.django-rest-framework.org">
-    <img src="https://img.shields.io/badge/DJANGO%20REST-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django RESFramework" />
-  </a>
-  <a href="https://reactjs.org">
-    <img src="https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  </a>
-  <a href="https://vitejs.dev">
-    <img src="https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-  </a>
-  <a href="https://www.postgresql.org">
-    <img src="https://img.shields.io/badge/POSTGRESQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  </a>
-  <a href="https://git-scm.com">
-    <img src="https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
-  </a>
-  <a href="https://tailwindcss.com">
-  <img src="https://img.shields.io/badge/TAILWIND%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  </a>
-  <a href="https://huggingface.co">
-    <img src="https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face" />
-  </a>
-</div>
+[![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org)
+[![Vite](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/TAILWIND%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Django](https://img.shields.io/badge/DJANGO-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com)
+[![Python](https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
+[![PostgreSQL](https://img.shields.io/badge/POSTGRESQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Git](https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com)
+[![Django REST](https://img.shields.io/badge/DJANGO%20REST-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org)
+[![Hugging Face](https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co)
 
 ---
 
+<div align ="center">
+
 ## Code Quality
 
-<div align="center">
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=alert_status" alt="Quality Gate Status" />
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=sqale_rating" alt="Maintainability Rating" />
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=reliability_rating" alt="Reliability Rating" />
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=security_rating" alt="Security Rating" />
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=code_smells" alt="Code Smells" />
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=coverage" alt="Coverage" />
-  </a>
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+
 </div>
 
 ---
