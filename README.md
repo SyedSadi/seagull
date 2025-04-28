@@ -40,65 +40,77 @@ Meet the passionate developers behind **KUETx**:
 
 ---
 
-### 🧠 Our Guide & Mentor
+### Our Guide & Mentor
 
 A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
 ---
 
-## 📚 Features
+## Features
 
-## 📘 Student Course Interaction
+## 📘 Course Interaction
 
-- 🔍 **Browse Available Courses**  
-  Students can explore and enroll in courses based on topics or tags.
+- **Browse Available Courses**  
+  Students can explore and enroll in courses based on topics, discovering relevant learning paths with ease.
 
-- 📺 **Watch Lessons**  
-  Access embedded YouTube videos or uploaded lecture content within a clean viewer.
+- **Watch Lessons**  
+  Access embedded YouTube videos for engaging, high-quality course content delivered directly in the platform.
 
-- 📄 **Download Materials**  
-  Get access to slides, PDFs, and supplementary resources for offline learning.
+- **Download Materials**  
+  Get access to PDFs and supplementary resources for offline learning, enhancing study flexibility.
 
-- ✅ **Track Progress**  
-  Visual indicators mark completed lessons and materials.
+- **Attempt Quizzes**  
+  Participate in course quizzes with instant feedback and scoring to reinforce learning and track progress.
 
-- 🧪 **Attempt Quizzes**  
-  Participate in course quizzes with instant feedback and scoring.
+- **Instructor Course Management**  
+  Instructors can create, update, and delete their own courses, tailoring content to meet student needs.
+
+- **Course Content Management**  
+  Instructors can manage course materials, including lessons, PDFs, and quizzes, ensuring up-to-date and organized content.
 
 ---
 
 ## 🧠 Interactive Quizzes & Evaluation
 
-- ⏱️ **Timed Quiz Sessions**  
+- **Timed Quiz Sessions**  
   Students take quizzes under time constraints, simulating real test conditions.
 
-- 🧮 **Auto-Graded Scoring**  
+- **Auto-Graded Scoring**  
   Quiz submissions are automatically evaluated with instant feedback.
 
-- 🧾 **Detailed Result Breakdown**  
+- **Detailed Result Breakdown**  
   Students receive question-wise analysis, showing correct answers.
 
-- 📈 **Progress Tracking**  
+- **Progress Tracking**  
   Quiz performance is recorded and reflected in the student's profile
 
-- 🔄 **Re-attempts & Practice**  
+- **Re-attempts & Practice**  
   Instructors can allow multiple attempts for practice and learning reinforcement.
 
 ---
 
 ## 💬 Interactive Discussion Forum
 
-- 🗨️ **Threaded Conversations**  
-  Students can create and reply to posts in a structured, thread-based layout.
+- **Post Creation and Management**  
+  Users can create, edit, and delete their own posts .
 
-- 🧠 **Course-Specific Discussions**  
-  Forums are tied to individual courses, keeping topics relevant and organized.
-
-- 🧹 **Toxicity Detection**  
+- **Toxicity Detection**  
   Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
 
-- 👍 **Voting & Tagging**  
-  Posts can be upvoted and tagged, helping highlight important or useful discussions.
+- **Tagging System**  
+  Categorize posts with tags (e.g., "Python", "Django") for easy discovery and filtering of relevant topics.
+
+- **Nested Comments**  
+  Engage in threaded, hierarchical comment discussions, powered by MPTT for seamless reply chains.
+
+- **Upvote/Downvote System**  
+  Users can upvote or downvote posts to highlight quality content, with a vote score calculated as upvotes minus downvotes.
+
+- **Post Sorting Options**  
+  Filter and sort posts by tags, recent activity, or most voted all-time.
+
+- **User Authentication**  
+  Secure registration and login ensure personalized interactions with posts, comments, and votes.
 
 ---
 
@@ -108,17 +120,51 @@ Insightful data visualization for both learners and instructors to monitor perfo
 
 ---
 
+## 🛠️ Admin Dashboard
+
+- **Course and Quiz Management**  
+  Admins can add, edit, and remove courses and quizzes, ensuring high-quality educational content.
+
+- **Platform Analytics**  
+  View key metrics, including active users in the last 7 days, total users, students, instructors, courses, and content count, with detailed user information (names and emails).
+
+- **Forum Moderation**  
+  Admins have delete access to all forum posts, maintaining a safe and constructive community environment.
+
 ## 🔐 Secure Authentication
 
 Modern JWT-based authentication flow for registration, login, and protected APIs.
 
 ---
 
-## 🧪 Scalable Backend
+## 💻 Tech Stack
 
-Modular Django REST framework structure with clean API architecture and future-ready integration hooks.
+### Frontend
 
-## 🏗️ System Architecture
+- **React** ⚛️  
+  Builds a dynamic, component-based UI for seamless course,quiz and forum interactions.
+- **Tailwind CSS** 🎨  
+  Powers the responsive, modern design with a teal/blue aesthetic for a vibrant user experience.
+
+### Backend
+
+- **Django** 🐍  
+  Drives robust server-side logic for course management,quiz analysis, forum features, and secure authentication.
+- **Django REST Framework** 🌐  
+  Provides scalable RESTful APIs for efficient frontend-backend communication.
+- **Hugging Face `unitary/toxic-bert`** 🤖  
+  Enables AI-powered toxicity detection to maintain a safe and respectful forum environment.
+
+### Infrastructure
+
+- **PostgreSQL** 🗄️  
+  Stores course, user,quiz and forum data with reliable, efficient querying.
+- **ImageBB** 🖼️  
+  Hosts course images for fast, reliable media delivery in learning materials.
+- **CI/CD** 🚀  
+  Automates testing and deployment pipelines for consistent, rapid updates.
+
+## System Architecture
 
 > Diagram shows how users interact through the frontend with DRF APIs for different modules including courses, quizzes, forums, and authentication.
 
@@ -222,7 +268,7 @@ We welcome contributions! Here's how you can help:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Special thanks to our mentor [@maahad767](https://github.com/maahad767)
 - All contributors who have helped shape this project
