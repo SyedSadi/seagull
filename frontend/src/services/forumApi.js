@@ -8,6 +8,10 @@ export const fetchPost = (filter, tag = '') => {
   return API.get(url);
 };
 
+export const fetchPostById = async id => {
+  return await axios.get(`/forum/posts/${id}/`);
+};
+
 export const deletePost = (postId, token) => {
   return API.delete(`/forum/posts/${postId}/`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -25,7 +29,7 @@ export const replyToComment = async (data, config) => {
 };
 
   export const updateComment = async (id, data) => {
-    const res = await API.put(`/forum/comments/${id}/`, data);
+    const res = await API.patch(`/forum/comments/${id}/`, data);
     return res.data;
   };
   
