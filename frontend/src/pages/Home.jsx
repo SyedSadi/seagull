@@ -13,7 +13,7 @@ const Home = () => {
 		    	<title>KUETx</title>
     		</Helmet>
 			<Hero />
-			<section className="px-0 md:px-12">
+			<section className="px-0 md:px-16">
 				<FeaturedCourses />
 				<WhyChooseUs />
 				<ForWhome />

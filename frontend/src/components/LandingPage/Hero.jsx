@@ -49,6 +49,7 @@ const Hero = () => {
 							at <span className="text-blue-500">KUETx</span>
 						</h1>{" "}
 					</div>
+
 					<p className="text-lg md:text-xl mb-6 text-gray-200">
 						Where Learning Connects — Explore expert-led courses, join vibrant
 						communities, and take control of your education.{" "}

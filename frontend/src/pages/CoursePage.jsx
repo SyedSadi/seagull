@@ -55,7 +55,7 @@ const CoursePage = () => {
 	};
 
 	return (
-		<div>
+		<div className="px-12">
 			<Helmet>
 				<title>
 					Courses | KUETx

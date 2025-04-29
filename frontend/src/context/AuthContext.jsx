@@ -9,7 +9,9 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -22,6 +24,12 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen bg-white">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>;
+  }
+
   const registerUser = async (userData) => {
     try {
       const response = await API.post("/register/", userData);
@@ -32,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginUser = async (credentials, navigate, location) => {
-    setLoading(true)
+    setLoginLoading(true)
     try {
       const response = await API.post("/login/", credentials);
       if(response?.data?.user){
@@ -46,12 +54,12 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return error
     }finally{
-      setLoading(false)
+      setLoginLoading(false)
     }
   };
 
   const logoutUser = async () => {
-    setLoading(true)
+    setLogoutLoading(true)
     try {
       const refreshToken = localStorage.getItem("refresh_token");
   
@@ -67,12 +75,12 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout failed:", error.response ? error.response.data : error.message);
     } finally{
-      setLoading(false)
+      setLogoutLoading(false)
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, registerUser,loginUser, logoutUser, loading }}>
+    <AuthContext.Provider value={{ user, setUser, registerUser,loginUser, logoutUser, loading, loginLoading, logoutLoading }}>
       {children}
     </AuthContext.Provider>
   );

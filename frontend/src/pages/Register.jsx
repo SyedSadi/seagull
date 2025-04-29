@@ -4,12 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Helmet } from 'react-helmet-async';
 import coverPic from '../assets/login.png'
+import { FaRegEyeSlash, FaRegEye  } from "react-icons/fa";
 
 const Register = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const { registerUser } = useContext(AuthContext);
     const [errorMsgs, setErrorMsgs] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -94,7 +96,7 @@ const Register = () => {
                             <span className="label-text">Password</span>
                         </label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="password"
                             name="password"
                             placeholder="Enter your password"
@@ -103,6 +105,12 @@ const Register = () => {
                             onChange={handleChange}
                             required
                         />
+                        <div
+							className="absolute right-8 top-[58%] cursor-pointer"
+							onClick={() => setShowPassword(!showPassword)}
+						>
+							{showPassword ? <FaRegEye size={18} /> : <FaRegEyeSlash size={18} />}
+						</div>
                         {errorMsgs?.password && <span className="text-xs text-red-500 mt-1">{errorMsgs?.password}</span>}
                     </div>
                     <div className="form-control mt-2">

@@ -5,13 +5,16 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the Toastify CSS
 import { Helmet } from 'react-helmet-async';
 import coverPic from '../assets/login.png'
+import { FaRegEyeSlash, FaRegEye  } from "react-icons/fa";
+
 
 const Login = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const [loading, setLoading] = useState(false);
-	const { loginUser } = useContext(AuthContext);
+	// const [loading, setLoading] = useState(false);
+	const { loginUser, loginLoading } = useContext(AuthContext);
 	const [formData, setFormData] = useState({ username: "", password: "" });
+	const [showPassword, setShowPassword] = useState(false);
 
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +22,7 @@ const Login = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setLoading(true);
+		// setLoading(true);
 		try {
 			const res = await loginUser(formData, navigate, location);
 
@@ -32,8 +35,6 @@ const Login = () => {
 			}
 		} catch (error) {
 			console.error("Login error:", error);
-		} finally{
-			setLoading(false)
 		}
 	};
 
@@ -64,26 +65,32 @@ const Login = () => {
 							required
 						/>
 					</div>
-					<div className="form-control mt-2">
+					<div className="form-control mt-2 relative">
 						<label htmlFor="password" className="label">
 							<span className="label-text">Password</span>
 						</label>
 						<input
 							id="password"
-							type="password"
+							type={showPassword ? "text" : "password"}
 							name="password"
 							placeholder="Enter your password"
-							className="input input-bordered w-full"
+							className="input input-bordered w-full pr-10"
 							value={formData.password}
 							onChange={handleChange}
 							required
 						/>
+						<div
+							className="absolute right-3 top-[58%] cursor-pointer"
+							onClick={() => setShowPassword(!showPassword)}
+						>
+							{showPassword ? <FaRegEye size={18} /> : <FaRegEyeSlash size={18} />}
+						</div>
 					</div>
-					<button type="submit" className="btn btn-primary w-full mt-4" disabled={loading}>
-					{loading && (
+					<button type="submit" className="btn btn-primary w-full mt-4" disabled={loginLoading}>
+					{loginLoading && (
                         <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     )}
-                        {loading ? 'Loading...' : 'Login'}
+                        {loginLoading ? 'Loading...' : 'Login'}
 					</button>
 				</form>
 				<p className="text-sm text-gray-600 text-center mt-3">
