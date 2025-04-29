@@ -13,6 +13,9 @@ const Comment = ({ comment = {}, postId, setComments }) => {
 	const [replyContent, setReplyContent] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedContent, setEditedContent] = useState(comment.content);
+	const [isEditingLoading, setIsEditingLoading] = useState(false);
+	const [isDeletingLoading, setIsDeletingLoading] = useState(false);
+	const [isReplyingLoading, setIsReplyingLoading] = useState(false);
 
   const userData = localStorage.getItem('user');
   const user = userData ? JSON.parse(userData) : null;
@@ -37,6 +40,7 @@ const Comment = ({ comment = {}, postId, setComments }) => {
 
 	const handleReplySubmit = async (e) => {
 		e.preventDefault();
+		setIsReplyingLoading(true); // Start loading
 
     try {
         const newReply = await replyToComment(
@@ -59,6 +63,9 @@ const Comment = ({ comment = {}, postId, setComments }) => {
       const errorMessage = extractErrorMessage(error);
       toast.error(errorMessage, { autoClose: 5000 });
     }
+	finally {
+		setIsReplyingLoading(false); // Stop loading
+	  }
 };
 const insertReply = (comments, parentId, newReply) => {
   return comments.map(comment => {
@@ -72,6 +79,7 @@ const insertReply = (comments, parentId, newReply) => {
 
 
 const handleEdit = async () => {
+	setIsEditingLoading(true); // Start loading
   try {
       
         await updateComment(comment.id, { content: editedContent }, {
@@ -85,6 +93,9 @@ const handleEdit = async () => {
     const errorMessage = extractErrorMessage(error);
     toast.error(errorMessage, { autoClose: 5000 });
   }
+  finally {
+	setIsEditingLoading(false); // Stop loading
+  }
 };
 const updateCommentInTree = (comments, commentId, newContent) => {
   return comments.map(comment => {
@@ -97,6 +108,7 @@ const updateCommentInTree = (comments, commentId, newContent) => {
 
 
 const handleDelete = async () => {
+	setIsDeletingLoading(true); // Start loading
   try {
       
     await deleteComment(comment.id, {
@@ -114,6 +126,9 @@ const handleDelete = async () => {
 				error.response?.data || error.message
 			);
 		}
+		finally {
+			setIsDeletingLoading(false); // Stop loading
+		  }
 	};
 	const removeCommentFromTree = (comments, commentId) => {
 		return comments
@@ -124,131 +139,146 @@ const handleDelete = async () => {
 			}));
 	};
 
-  return (
-    <div className="ml-4 border-l-2 pl-4 mb-4">
-      <div className="flex items-center text-sm text-gray-600 mb-1">
-        <span className="font-medium">{comment.user || "Unknown User"}</span>
-        <span className="mx-2">•</span>
-        <span>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</span>
-      </div>
-
-			{isEditing ? (
-				<textarea
-					value={editedContent}
-					onChange={(e) => setEditedContent(e.target.value)}
-					className="w-full p-2 border rounded-lg mb-2"
-				/>
-			) : (
-				<p className="text-gray-800">{comment.content}</p>
-			)}
-
-			<div className="flex gap-4 mt-2">
-				{!isEditing && (
-					<>
-						<button
-							onClick={() => setIsReplying(!isReplying)}
-							className="text-blue-600 hover:text-blue-800 text-sm"
-						>
-							Reply
-						</button>
-
-						{isOwner && (
-							<>
-								<button
-									onClick={() => setIsEditing(true)}
-									className="text-gray-600 hover:text-gray-800 text-sm"
-								>
-									Edit
-								</button>
-								<button
-									onClick={handleDelete}
-									className="text-red-600 hover:text-red-800 text-sm"
-								>
-									Delete
-								</button>
-							</>
-						)}
-					</>
+	return (
+		<div className="ml-4 border-l-2 pl-4 mb-4">
+		  <div className="flex items-center text-sm text-gray-600 mb-1">
+			<span className="font-mediumt text-teal-600 hover:text-teal-700 ">{comment.user || "Unknown User"}</span>
+			<span className="mx-2">•</span>
+			<span>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</span>
+		  </div>
+	
+		  {isEditing ? (
+			<textarea
+			  value={editedContent}
+			  onChange={(e) => setEditedContent(e.target.value)}
+			  className="w-full p-2 border rounded-lg mb-2"
+			/>
+		  ) : (
+			<p className="text-gray-800">{comment.content}</p>
+		  )}
+	
+		  <div className="flex gap-4 mt-2">
+			{!isEditing && (
+			  <>
+				<button
+				  onClick={() => setIsReplying(!isReplying)}
+				  className="text-blue-600 hover:text-blue-800 text-sm"
+				>
+				  Reply
+				</button>
+	
+				{isOwner && (
+				  <>
+					<button
+					  onClick={() => setIsEditing(true)}
+					  className="text-gray-600 hover:text-gray-800 text-sm"
+					>
+					  Edit
+					</button>
+					{isDeletingLoading ? (
+					  <div className="spinner w-5 h-5 border-t-2 border-red-600 border-solid rounded-full animate-spin"></div>
+					) : (
+					  <button
+						onClick={handleDelete}
+						className="text-red-600 hover:text-red-800 text-sm"
+					  >
+						Delete
+					  </button>
+					)}
+				  </>
 				)}
-
-				{isEditing && (
-					<>
-						<button
-							onClick={handleEdit}
-							className="text-green-600 hover:text-green-800 text-sm"
-						>
-							Save
-						</button>
-						<button
-							onClick={() => setIsEditing(false)}
-							className="text-gray-600 hover:text-gray-800 text-sm"
-						>
-							Cancel
-						</button>
-					</>
-				)}
-			</div>
-
-			{isReplying && (
-				<form onSubmit={handleReplySubmit} className="mt-4">
-					<textarea
-						value={replyContent}
-						onChange={(e) => setReplyContent(e.target.value)}
-						className="w-full p-2 border rounded-lg mb-2"
-						placeholder="Write a reply..."
-						rows="2"
-					/>
-					<div className="flex gap-2">
-						<button
-							type="submit"
-							className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700"
-						>
-							Post Reply
-						</button>
-						<button
-							type="button"
-							onClick={() => setIsReplying(false)}
-							className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
-						>
-							Cancel
-						</button>
-					</div>
-				</form>
+			  </>
 			)}
-
-			{Array.isArray(comment.children) &&
-				comment.children.map((reply) => (
-					<Comment
-						key={reply.id}
-						comment={reply}
-						postId={postId}
-						setComments={setComments}
-					/>
-				))}
+	
+			{isEditing && (
+			  <>
+				{isEditingLoading ? (
+				  <div className="spinner w-5 h-5 border-t-2 border-green-600 border-solid rounded-full animate-spin"></div>
+				) : (
+				  <button
+					onClick={handleEdit}
+					className="text-green-600 hover:text-green-800 text-sm"
+				  >
+					Save
+				  </button>
+				)}
+				<button
+				  onClick={() => setIsEditing(false)}
+				  className="text-gray-600 hover:text-gray-800 text-sm"
+				  disabled={isEditingLoading} // Disable Cancel button during loading
+				>
+				  Cancel
+				</button>
+			  </>
+			)}
+		  </div>
+	
+		  {isReplying && (
+			<form onSubmit={handleReplySubmit} className="mt-4">
+			  <textarea
+				value={replyContent}
+				onChange={(e) => setReplyContent(e.target.value)}
+				className="w-full p-2 border rounded-lg mb-2"
+				placeholder="Write a reply..."
+				rows="2"
+				disabled={isReplyingLoading} // Disable textarea during loading
+			  />
+			  <div className="flex gap-2">
+				{isReplyingLoading ? (
+				  <div className="spinner w-5 h-5 border-t-2 border-blue-600 border-solid rounded-full animate-spin"></div>
+				) : (
+				  <button
+					type="submit"
+					className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700"
+				  >
+					Post Reply
+				  </button>
+				)}
+				<button
+				  type="button"
+				  onClick={() => setIsReplying(false)}
+				  className="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm hover:bg-gray-300"
+				  disabled={isReplyingLoading} // Disable Cancel button during loading
+				>
+				  Cancel
+				</button>
+			  </div>
+			</form>
+		  )}
+	
+		  {Array.isArray(comment.children) &&
+			comment.children.map((reply) => (
+			  <Comment
+				key={reply.id}
+				comment={reply}
+				postId={postId}
+				setComments={setComments}
+			  />
+			))}
+		  <ToastContainer position="bottom-right" />
 		</div>
-	);
-};
-Comment.propTypes = {
-	comment: PropTypes.shape({
+	  );
+	};
+	
+	Comment.propTypes = {
+	  comment: PropTypes.shape({
 		id: PropTypes.number.isRequired,
 		content: PropTypes.string.isRequired,
 		author: PropTypes.number.isRequired,
 		user: PropTypes.string,
 		created_at: PropTypes.string.isRequired,
 		children: PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.number,
-				content: PropTypes.string,
-				author: PropTypes.number,
-				user: PropTypes.string,
-				created_at: PropTypes.string,
-				// CIRCULAR REFERENCE NOT POSSIBLE IN PROP-TYPES
-				// CHILDREN PROPERTY INTENTIONALLY OMITTED
-			})
+		  PropTypes.shape({
+			id: PropTypes.number,
+			content: PropTypes.string,
+			author: PropTypes.number,
+			user: PropTypes.string,
+			created_at: PropTypes.string,
+		  })
 		),
-	}).isRequired,
-	postId: PropTypes.number.isRequired,
-	setComments: PropTypes.func.isRequired,
-};
-
-export default Comment;
+	  }).isRequired,
+	  postId: PropTypes.number.isRequired,
+	  setComments: PropTypes.func.isRequired,
+	};
+	
+	export default Comment;

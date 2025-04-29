@@ -1,3 +1,4 @@
+// CreatePostModal.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { createTag, fetchTag, createPost } from '../../services/forumApi';
 import { AuthContext } from '../../context/AuthContext';
@@ -6,6 +7,11 @@ import CreatableSelect from 'react-select/creatable';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import MarkdownEditor from 'react-markdown-editor-lite';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import 'react-markdown-editor-lite/lib/index.css';
 
 const CreatePostModal = ({ onClose, refreshPosts }) => {
   const [title, setTitle] = useState('');
@@ -32,9 +38,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
 
   // Custom filter for tag suggestions
   const filterOption = (option, inputValue) => {
-    // Allow the "Create" option to appear by not filtering it out
     if (option.data.__isNew__) return true;
-    // Show existing tags only if input is not empty and matches
     return inputValue && option.label.toLowerCase().startsWith(inputValue.toLowerCase());
   };
 
@@ -113,6 +117,42 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     }
   };
 
+  // Custom render function for Markdown preview to include syntax highlighting
+  const renderMarkdown = (text) => {
+    return (
+      <ReactMarkdown
+        components={{
+          code({ node, inline, className, children, ...props }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return !inline && match ? (
+              <SyntaxHighlighter
+                style={vscDarkPlus}
+                language={match[1]}
+                showLineNumbers
+                wrapLines
+                customStyle={{
+                  borderRadius: '8px',
+                  padding: '12px',
+                  fontSize: '14px',
+                  backgroundColor: '#1e1e1e',
+                }}
+                {...props}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            ) : (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    );
+  };
+
   const customStyles = {
     control: (base, state) => ({
       ...base,
@@ -151,8 +191,8 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
     }),
     loadingIndicator: (base) => ({
       ...base,
-      color: '#3b82f6', // Match blue-500
-      fontSize: '14px', // Small spinner for tag input
+      color: '#3b82f6',
+      fontSize: '14px',
     }),
   };
 
@@ -170,15 +210,17 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
             required
             disabled={isSubmitting}
           />
-          <textarea
-            placeholder="Write your content here..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
-            rows="6"
-            required
-            disabled={isSubmitting}
-          />
+          <div>
+            <label className="block font-medium text-gray-700 mb-2">Content (Use Markdown for formatting):</label>
+            <MarkdownEditor
+              value={content}
+              style={{ height: '300px' }}
+              renderHTML={renderMarkdown}
+              onChange={({ text }) => setContent(text)}
+              placeholder="Write your content here... (Use the toolbar to add code blocks, e.g., ```javascript\ncode\n```)"
+              disabled={isSubmitting}
+            />
+          </div>
 
           {/* React Select Tag Selection */}
           <div>
@@ -213,7 +255,7 @@ const CreatePostModal = ({ onClose, refreshPosts }) => {
           <button
             onClick={onClose}
             type="button"
-            className="w-full text-center text-gray-500 hover:underline pt-2"
+            className="mx-auto block text-center text-gray-500 hover:underline pt-2"
             disabled={isSubmitting}
           >
             Cancel
