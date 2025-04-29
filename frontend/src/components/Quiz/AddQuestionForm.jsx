@@ -35,13 +35,20 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 	const validateQuestion = () => {
 		// Check if question text is empty
 		if (!question.text.trim()) {
-			alert("Question text is required!");
+			toast.error("Question text is required!");
+			return false;
+		}
+
+		// Check if any option is empty
+		const hasEmptyOptions = question.options.some((opt) => !opt.text.trim());
+		if (hasEmptyOptions) {
+			toast.error("All options must have text!");
 			return false;
 		}
 
 		// Check if one option is marked as correct
 		if (!question.options.some((opt) => opt.is_correct)) {
-			alert("Please mark one option as correct!");
+			toast.error("Please mark one option as correct!");
 			return false;
 		}
 
@@ -80,8 +87,11 @@ const AddQuestionForm = ({ categoryId, onQuestionAdded }) => {
 					is_correct: false,
 				})),
 			});
+
+			toast.success(
+				"Question added successfully! You can add another question or click Finish."
+			);
 		} catch (error) {
-			console.error("Error adding question:", error.response?.data || error);
 			toast.error(
 				error.response?.data?.error ||
 					"Failed to add question. Please try again."

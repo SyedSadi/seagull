@@ -11,6 +11,7 @@ const UpdateQuizPage = () => {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [submitting, setSubmitting] = useState(false);
 	const [quiz, setQuiz] = useState({
 		name: "",
 		description: "",
@@ -52,24 +53,36 @@ const UpdateQuizPage = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		// Validate inputs
+		if (!quiz.name.trim() || !quiz.description.trim()) {
+			toast.error("All fields are required");
+			return;
+		}
+
 		try {
-			setLoading(true);
+			setSubmitting(true);
 			await updateQuiz(categoryId, quiz);
-			// Import toast from your notification library
 			toast.success("Quiz category updated successfully!");
 			navigate("/manage-quiz");
 		} catch (err) {
+			console.error("Error updating quiz:", err);
+			toast.error(
+				err.response?.data?.detail ||
+					"Failed to update quiz category. Please try again."
+			);
 			setError(err.response?.data?.detail || "Failed to update quiz category");
 		} finally {
-			setLoading(false);
+			setSubmitting(false);
 		}
 	};
 
 	if (loading) {
 		return (
 			<AdminLayout>
-				<div className="flex justify-center items-center h-64">
-					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+				<div className="flex flex-col justify-center items-center h-64">
+					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+					<p className="text-gray-600">Loading quiz details...</p>
 				</div>
 			</AdminLayout>
 		);
@@ -123,15 +136,24 @@ const UpdateQuizPage = () => {
 						<div className="flex space-x-4">
 							<button
 								type="submit"
-								className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-								disabled={loading}
+								disabled={submitting}
+								className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
+                  transition disabled:bg-blue-300 disabled:cursor-not-allowed"
 							>
-								{loading ? "Updating..." : "Update Quiz"}
+								{submitting ? (
+									<span className="flex items-center justify-center">
+										Updating...
+									</span>
+								) : (
+									"Update Quiz"
+								)}
 							</button>
 							<button
 								type="button"
 								onClick={() => navigate("/manage-quiz")}
-								className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+								disabled={submitting}
+								className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 
+                  transition disabled:bg-gray-300 disabled:cursor-not-allowed"
 							>
 								Cancel
 							</button>
