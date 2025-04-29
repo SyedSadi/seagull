@@ -66,7 +66,6 @@ const UpdateQuizPage = () => {
 			toast.success("Quiz category updated successfully!");
 			navigate("/manage-quiz");
 		} catch (err) {
-			console.error("Error updating quiz:", err);
 			toast.error(
 				err.response?.data?.detail ||
 					"Failed to update quiz category. Please try again."
