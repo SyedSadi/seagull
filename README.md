@@ -29,12 +29,29 @@ KUETx is a full-stack Learning Management System (LMS) designed to empower educa
     <img src="https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
   </a>
   <a href="https://tailwindcss.com">
-  <img src="https://img.shields.io/badge/TAILWIND%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/TAILWIND%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
   </a>
   <a href="https://huggingface.co">
     <img src="https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white" alt="Hugging Face" />
   </a>
 </div>
+
+---
+
+## Table of Contents
+
+- [Code Quality](#code-quality)
+- [Live Demo](#live-demo)
+- [API Documentation](#api-documentation)
+- [Team](#team)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Entity-Relationship Diagram](#entity-relationship-diagram)
+- [Project Directory Structure](#project-directory-structure)
+- [Getting Started](#getting-started)
+- [Contributinnnng](#contributing)
+- [License](#license)
 
 ---
 
@@ -70,6 +87,12 @@ KUETx is a full-stack Learning Management System (LMS) designed to empower educa
     <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Now-blue?style=for-the-badge&logo=netlify" alt="Live Demo Badge"/>
   </a>
 </p>
+
+## 📃API Documentation
+
+Explore our RESTful API with interactive docs powered by drf-spectacular:
+
+[![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
 ## 👨‍💻 Team
 
@@ -135,7 +158,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 ## 💬 Interactive Discussion Forum
 
 - **Post Creation and Management**  
-  Users can create, edit, and delete their own posts .
+  Users can create, edit, and delete their own posts.
 
 - **Toxicity Detection**  
   Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
@@ -185,14 +208,14 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Frontend
 
 - **React** ⚛️  
-  Builds a dynamic, component-based UI for seamless course,quiz and forum interactions.
+  Builds a dynamic, component-based UI for seamless course, quiz and forum interactions.
 - **Tailwind CSS** 🎨  
   Powers the responsive, modern design with a teal/blue aesthetic for a vibrant user experience.
 
 ### Backend
 
 - **Django** 🐍  
-  Drives robust server-side logic for course management,quiz analysis, forum features, and secure authentication.
+  Drives robust server-side logic for course management, quiz analysis, forum features, and secure authentication.
 - **Django REST Framework** 🌐  
   Provides scalable RESTful APIs for efficient frontend-backend communication.
 - **Hugging Face `unitary/toxic-bert`** 🤖  
@@ -201,7 +224,7 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Infrastructure
 
 - **PostgreSQL** 🗄️  
-  Stores course, user,quiz and forum data with reliable, efficient querying.
+  Stores course, user, quiz and forum data with reliable, efficient querying.
 - **ImageBB** 🖼️  
   Hosts course images for fast, reliable media delivery in learning materials.
 - **CI/CD** 🚀  
@@ -214,12 +237,6 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 <img src="assets/system_arch.png" alt="System Architecture" width="400" />
 
 ---
-
-## 📃API Documentation
-
-Explore our RESTful API with interactive docs powered by drf-spectacular:
-
-[![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
 ## 🗂️ Entity-Relationship Diagram
 
@@ -310,11 +327,6 @@ We welcome contributions! Here's how you can help:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Special thanks to our mentor [@maahad767](https://github.com/maahad767)
-- All contributors who have helped shape this project
 
 ---
 
