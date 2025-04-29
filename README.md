@@ -78,7 +78,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
   Participate in course quizzes with instant feedback and scoring to reinforce learning and track progress.
 
 - **Instructor Course Management**  
-  Instructors can create, update, and delete their own courses, tailoring content to meet student needs.
+  Instructors can create, update, and delete their courses, tailoring content to meet student needs.
 
 - **Course Content Management**  
   Instructors can manage course materials, including lessons, PDFs, and quizzes, ensuring up-to-date and organized content.
@@ -107,7 +107,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 ## 💬 Interactive Discussion Forum
 
 - **Post Creation and Management**  
-  Users can create, edit, and delete their own posts .
+  Users can create, edit, and delete their posts.
 
 - **Toxicity Detection**  
   Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
@@ -157,14 +157,14 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Frontend
 
 - **React** ⚛️  
-  Builds a dynamic, component-based UI for seamless course,quiz and forum interactions.
+  Builds a dynamic, component-based UI for seamless course, quiz, and forum interactions.
 - **Tailwind CSS** 🎨  
   Powers the responsive, modern design with a teal/blue aesthetic for a vibrant user experience.
 
 ### Backend
 
 - **Django** 🐍  
-  Drives robust server-side logic for course management,quiz analysis, forum features, and secure authentication.
+  Drives robust server-side logic for course management, quiz analysis, forum features, and secure authentication.
 - **Django REST Framework** 🌐  
   Provides scalable RESTful APIs for efficient frontend-backend communication.
 - **Hugging Face `unitary/toxic-bert`** 🤖  
@@ -173,15 +173,15 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Infrastructure
 
 - **PostgreSQL** 🗄️  
-  Stores course, user,quiz and forum data with reliable, efficient querying.
+  Stores course, user, quiz, and forum data with reliable, efficient querying.
 - **ImageBB** 🖼️  
-  Hosts course images for fast, reliable media delivery in learning materials.
+  Host course images for fast, reliable media delivery in learning materials.
 - **CI/CD** 🚀  
   Automates testing and deployment pipelines for consistent, rapid updates.
 
 ## System Architecture
 
-> Diagram shows how users interact through the frontend with DRF APIs for different modules including courses, quizzes, forums, and authentication.
+> The Diagram shows how users interact through the front end with DRF APIs for different modules, including courses, quizzes, forums, and authentication.
 
 <img src="assets/system_arch.png" alt="System Architecture" width="400" />
 
@@ -282,11 +282,6 @@ We welcome contributions! Here's how you can help:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Special thanks to our mentor [@maahad767](https://github.com/maahad767)
-- All contributors who have helped shape this project
 
 ---
 
