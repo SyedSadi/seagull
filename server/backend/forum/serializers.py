@@ -42,11 +42,12 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(read_only=True)  # store author reference
     total_votes = serializers.SerializerMethodField()   # total upvotes - downvotes
     tags = TagSerializer(many=True, read_only=True)     # nested tag data (read-only)
-    tag_ids = serializers.ListField(write_only=True, child=serializers.IntegerField(), required=True)   # tag IDs input
+    tag_ids = serializers.ListField(write_only=True, child=serializers.IntegerField(), required=True)
+    role = serializers.CharField(source='author.role', read_only=True)   # tag IDs input
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'author_name', 'title', 'content', 'created_at', 'updated_at', 'total_votes', 'tags', 'tag_ids']
+        fields = ['id', 'author', 'author_name','role', 'title', 'content', 'created_at', 'updated_at', 'total_votes', 'tags', 'tag_ids']
 
     def create(self, validated_data):
         # Handles tag assignment while creating a new post
