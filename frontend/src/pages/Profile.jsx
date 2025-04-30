@@ -1,16 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import {
-	getEnrolledCourses,
-} from "../services/coursesApi";
+import { getEnrolledCourses } from "../services/coursesApi";
 import { Link } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import QuizAttempt from "../../src/components/Quiz/QuizAttempt";
 import ProfileSection from "../components/Profile/ProfileSection";
-import { Helmet } from 'react-helmet-async';
-
+import { Helmet } from "react-helmet-async";
 
 const Profile = () => {
 	const { user } = useContext(AuthContext);
@@ -27,9 +24,11 @@ const Profile = () => {
 					response = await getEnrolledCourses();
 					setCourses(response?.data);
 				} else if (user.role === "instructor") {
-					const allCourses = JSON.parse(localStorage.getItem("courses"))
-					const instructorsCourses = allCourses.filter(c => c.created_by_details.id == user?.instructor.id)
-					setCourses(instructorsCourses)
+					const allCourses = JSON.parse(localStorage.getItem("courses"));
+					const instructorsCourses = allCourses.filter(
+						(c) => c.created_by_details.id == user?.instructor.id
+					);
+					setCourses(instructorsCourses);
 				} else {
 					setCourses([]);
 				}
@@ -46,10 +45,9 @@ const Profile = () => {
 
 	if (!user) {
 		return (
-			<div className="flex justify-center items-center h-screen">
-				<div className="animate-pulse text-lg font-medium text-gray-600">
-					Loading...
-				</div>
+			<div className="flex flex-col justify-center items-center h-64">
+				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+				<p className="text-gray-600">Loading...</p>
 			</div>
 		);
 	}
@@ -107,39 +105,39 @@ const Profile = () => {
 
 	return (
 		<>
-		<Helmet>
-		    <title>Profile | KUETx</title>
-    	</Helmet>
-		<div className="md:flex min-h-screen bg-gray-50">
-			{/* Left Sidebar */}
-			<aside className="w-full md:w-1/3 lg:w-1/4 p-4 bg-gradient-to-b from-blue-100 to-indigo-100 shadow-md">
-				<ProfileSection />
-			</aside>
+			<Helmet>
+				<title>Profile | KUETx</title>
+			</Helmet>
+			<div className="md:flex min-h-screen bg-gray-50">
+				{/* Left Sidebar */}
+				<aside className="w-full md:w-1/3 lg:w-1/4 p-4 bg-gradient-to-b from-blue-100 to-indigo-100 shadow-md">
+					<ProfileSection />
+				</aside>
 
-			{/* Main Content */}
-			<main className="flex-1 p-6 space-y-8 bg-gradient-to-b from-blue-50 to-indigo-100">
-				<div>
-	
-					<h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
-						{user.role === "student" ? "My Learning" : "My Courses"}
-					</h2>
-
-					
-					{renderCourses()}
-				</div>
-
-				{user.role === "student" && (
-					<div className="mt-10">
+				{/* Main Content */}
+				<main className="flex-1 p-6 space-y-8 bg-gradient-to-b from-blue-50 to-indigo-100">
+					<div>
 						<h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
-							Quiz History
+							{user.role === "student" ? "My Learning" : "My Courses"}
 						</h2>
-						<div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
-							<QuizAttempt />
-						</div>
+
+						{renderCourses()}
 					</div>
-				)}
-			</main>
-		</div>
+
+					{user.role === "student" && (
+						<>
+						<div className="mt-10">
+							<h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+								Quiz History
+							</h2>
+							<div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+								<QuizAttempt />
+							</div>
+						</div>
+						</>
+					)}
+				</main>
+			</div>
 		</>
 	);
 };

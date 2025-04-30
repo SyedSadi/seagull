@@ -41,7 +41,6 @@ const CourseDetails = () => {
 
     fetchCourseData();
   }, [id]);
-  console.log(course)
 
   const handleEnroll = async () => {
     const otpVerified = await otpRef.current.open();

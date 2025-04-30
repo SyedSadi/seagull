@@ -69,25 +69,6 @@ class AddQuestionView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# ---------------------- ADMIN: DELETE QUIZ ----------------------
-class DeleteQuizView(APIView):
-    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
-
-    def delete(self, request: Request) -> Response:
-         # Get category IDs to delete
-        category_ids = request.data.get('category_ids', [])
-        if not category_ids:
-            return Response({"message": "No categories specified."}, status=status.HTTP_400_BAD_REQUEST)
-            
-        # Delete all related questions and options first
-        questions = Question.objects.filter(category_id__in=category_ids)
-        Option.objects.filter(question__in=questions).delete()
-        questions.delete()
-                
-        # Delete the categories
-        deleted_count = Category.objects.filter(id__in=category_ids).delete()[0]
-        return Response({"message": f"{deleted_count} categories and their associated data deleted."}, status=status.HTTP_200_OK)
-
 # ---------------------- ADMIN: UPDATE QUIZ ----------------------
 # Allows only admin users to update existing categories     
 class UpdateQuizView(APIView):
@@ -128,6 +109,37 @@ class UpdateQuestionView(APIView):
             return Response(serializer.data)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# ---------------------- ADMIN: DELETE QUIZ ----------------------
+class DeleteQuizView(APIView):
+    permission_classes: ClassVar = [IsAuthenticated, IsAdminUser]
+
+    def delete(self, request: Request) -> Response:
+         # Get category IDs to delete
+        category_ids = request.data.get('category_ids', [])
+        if not category_ids:
+            return Response({"message": "No categories specified."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        # Delete all related questions and options first
+        questions = Question.objects.filter(category_id__in=category_ids)
+        Option.objects.filter(question__in=questions).delete()
+        questions.delete()
+                
+        # Delete the categories
+        deleted_count = Category.objects.filter(id__in=category_ids).delete()[0]
+        return Response({"message": f"{deleted_count} categories and their associated data deleted."}, status=status.HTTP_200_OK)
+    
+
+# ---------------------- ADMIN: DELETE QUESTION ----------------------
+class DeleteQuestionView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    
+    def delete(self, request, question_id):
+        #Get question IDs to delete
+        question= get_object_or_404(Question, id=question_id)
+        question.delete()
+        return Response({"message": "Question deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 
 # ---------------------- USER: SUBMIT QUIZ ----------------------    
 class SubmitQuizAPIView(APIView):

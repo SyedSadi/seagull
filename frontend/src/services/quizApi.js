@@ -121,6 +121,16 @@ export const updateQuestion = async (questionId, questionData) => {
 	}
 };
 
+// ----------------------- DELETE Questions -----------------------------------
+export const deleteQuestion = async (questionId) => {
+	try {
+		const response = await API.delete(`/quiz/delete-question/${questionId}/`);
+		return response.data;
+	} catch (error) {
+		throw error.response?.data || error.message;
+	}
+};
+
 // ----------------------- GET Quiz Attempts -----------------------------------
 export const getAllQuizAttempts = async () => {
 	try {

@@ -1,20 +1,35 @@
-# KUETx
+<div align ="center">
+<img src="frontend/src/assets/logo.png" alt="KUETx" width="150" />
+</div>
 
-**Empowering the Future of Online Learning**  
-Seagull is a full-stack Learning Management System (LMS) built for Learnathon. It enables educators to manage courses and learners to access interactive, community-driven education in one seamless platform.
+**Transforming Education with Seamless Learning**
+
+KUETx is a full-stack Learning Management System (LMS) designed to empower educators and learners. It provides a unified platform for interactive learning and collaborative education.
 
 ---
 
-<div align="center">
+[![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org)
+[![Vite](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/TAILWIND%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Django](https://img.shields.io/badge/DJANGO-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com)
+[![Python](https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
+[![PostgreSQL](https://img.shields.io/badge/POSTGRESQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Git](https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com)
+[![Django REST](https://img.shields.io/badge/DJANGO%20REST-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org)
+[![Hugging Face](https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co)
 
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="40" title="React" />](https://reactjs.org)
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vite/vite-original.svg" width="40" title="Vite" />](https://vitejs.dev)
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" width="40" title="Django" />](https://www.djangoproject.com)
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="40" title="Python" />](https://www.python.org)
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" title="PostgreSQL" />](https://www.postgresql.org)
-[<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="40" title="Git" />](https://git-scm.com)
-![Django REST](https://img.shields.io/badge/Django%20REST-API-blue?logo=django)
-[<img src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" width="40" title="HuggingFace" />](https://huggingface.co)
+---
+
+<div align ="center">
+
+## Code Quality
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Learnathon-By-Geeky-Solutions_seagull&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Learnathon-By-Geeky-Solutions_seagull)
 
 </div>
 
@@ -40,65 +55,77 @@ Meet the passionate developers behind **KUETx**:
 
 ---
 
-### 🧠 Our Guide & Mentor
+### Our Guide & Mentor
 
 A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
 ---
 
-## 📚 Features
+## Features
 
-## 📘 Student Course Interaction
+## 📘 Course Interaction
 
-- 🔍 **Browse Available Courses**  
-  Students can explore and enroll in courses based on topics or tags.
+- **Browse Available Courses**  
+  Students can explore and enroll in courses based on topics, discovering relevant learning paths with ease.
 
-- 📺 **Watch Lessons**  
-  Access embedded YouTube videos or uploaded lecture content within a clean viewer.
+- **Watch Lessons**  
+  Access embedded YouTube videos for engaging, high-quality course content delivered directly in the platform.
 
-- 📄 **Download Materials**  
-  Get access to slides, PDFs, and supplementary resources for offline learning.
+- **Download Materials**  
+  Get access to PDFs and supplementary resources for offline learning, enhancing study flexibility.
 
-- ✅ **Track Progress**  
-  Visual indicators mark completed lessons and materials.
+- **Attempt Quizzes**  
+  Participate in course quizzes with instant feedback and scoring to reinforce learning and track progress.
 
-- 🧪 **Attempt Quizzes**  
-  Participate in course quizzes with instant feedback and scoring.
+- **Instructor Course Management**  
+  Instructors can create, update, and delete their courses, tailoring content to meet student needs.
+
+- **Course Content Management**  
+  Instructors can manage course materials, including lessons, PDFs, and quizzes, ensuring up-to-date and organized content.
 
 ---
 
 ## 🧠 Interactive Quizzes & Evaluation
 
-- ⏱️ **Timed Quiz Sessions**  
+- **Timed Quiz Sessions**  
   Students take quizzes under time constraints, simulating real test conditions.
 
-- 🧮 **Auto-Graded Scoring**  
+- **Auto-Graded Scoring**  
   Quiz submissions are automatically evaluated with instant feedback.
 
-- 🧾 **Detailed Result Breakdown**  
+- **Detailed Result Breakdown**  
   Students receive question-wise analysis, showing correct answers.
 
-- 📈 **Progress Tracking**  
+- **Progress Tracking**  
   Quiz performance is recorded and reflected in the student's profile
 
-- 🔄 **Re-attempts & Practice**  
+- **Re-attempts & Practice**  
   Instructors can allow multiple attempts for practice and learning reinforcement.
 
 ---
 
 ## 💬 Interactive Discussion Forum
 
-- 🗨️ **Threaded Conversations**  
-  Students can create and reply to posts in a structured, thread-based layout.
+- **Post Creation and Management**  
+  Users can create, edit, and delete their posts.
 
-- 🧠 **Course-Specific Discussions**  
-  Forums are tied to individual courses, keeping topics relevant and organized.
-
-- 🧹 **Toxicity Detection**  
+- **Toxicity Detection**  
   Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
 
-- 👍 **Voting & Tagging**  
-  Posts can be upvoted and tagged, helping highlight important or useful discussions.
+- **Tagging System**  
+  Categorize posts with tags (e.g., "Python", "Django") for easy discovery and filtering of relevant topics.
+
+- **Nested Comments**  
+  Engage in threaded, hierarchical comment discussions, powered by MPTT for seamless reply chains.
+
+- **Upvote/Downvote System**  
+  Users can upvote or downvote posts to highlight quality content, with a vote score calculated as upvotes minus downvotes.
+
+- **Post Sorting Options**  
+  Filter and sort posts by tags, recent activity, or most voted all-time.
+
+- **User Authentication**  
+  Secure registration and login ensure personalized interactions with posts, comments, and votes.
 
 ---
 
@@ -108,19 +135,53 @@ Insightful data visualization for both learners and instructors to monitor perfo
 
 ---
 
+## 🛠️ Admin Dashboard
+
+- **Course and Quiz Management**  
+  Admins can add, edit, and remove courses and quizzes, ensuring high-quality educational content.
+
+- **Platform Analytics**  
+  View key metrics, including active users in the last 7 days, total users, students, instructors, courses, and content count, with detailed user information (names and emails).
+
+- **Forum Moderation**  
+  Admins have delete access to all forum posts, maintaining a safe and constructive community environment.
+
 ## 🔐 Secure Authentication
 
 Modern JWT-based authentication flow for registration, login, and protected APIs.
 
 ---
 
-## 🧪 Scalable Backend
+## 💻 Tech Stack
 
-Modular Django REST framework structure with clean API architecture and future-ready integration hooks.
+### Frontend
 
-## 🏗️ System Architecture
+- **React** ⚛️  
+  Builds a dynamic, component-based UI for seamless course, quiz, and forum interactions.
+- **Tailwind CSS** 🎨  
+  Powers the responsive, modern design with a teal/blue aesthetic for a vibrant user experience.
 
-> Diagram shows how users interact through the frontend with DRF APIs for different modules including courses, quizzes, forums, and authentication.
+### Backend
+
+- **Django** 🐍  
+  Drives robust server-side logic for course management, quiz analysis, forum features, and secure authentication.
+- **Django REST Framework** 🌐  
+  Provides scalable RESTful APIs for efficient frontend-backend communication.
+- **Hugging Face `unitary/toxic-bert`** 🤖  
+  Enables AI-powered toxicity detection to maintain a safe and respectful forum environment.
+
+### Infrastructure
+
+- **PostgreSQL** 🗄️  
+  Stores course, user, quiz, and forum data with reliable, efficient querying.
+- **ImageBB** 🖼️  
+  Host course images for fast, reliable media delivery in learning materials.
+- **CI/CD** 🚀  
+  Automates testing and deployment pipelines for consistent, rapid updates.
+
+## System Architecture
+
+> The Diagram shows how users interact through the front end with DRF APIs for different modules, including courses, quizzes, forums, and authentication.
 
 <img src="assets/system_arch.png" alt="System Architecture" width="400" />
 
@@ -221,11 +282,6 @@ We welcome contributions! Here's how you can help:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Special thanks to our mentor [@maahad767](https://github.com/maahad767)
-- All contributors who have helped shape this project
 
 ---
 
