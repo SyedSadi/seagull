@@ -1,29 +1,22 @@
-import { useState } from "react";
 import HeroImage from "../../assets/herobg.jpg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Hero = () => {
 	const navigate = useNavigate();
-	const [searchQuery, setSearchQuery] = useState("");
-	const [searchMessage, setSearchMessage] = useState("");
+	const { user } = useContext(AuthContext);
 
-	const handleSearch = (e) => {
-		e.preventDefault();
-
-		if (!searchQuery.trim()) {
-			setSearchMessage("Please enter a search term");
-			return;
+	const handleGetStarted = () => {
+		if (user) {
+			navigate("/courses");
+		} else {
+			navigate("/login");
 		}
-
-		// Clear any previous message and navigate to courses
-		setSearchMessage("");
-		navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
 	};
 
 	return (
-		<section className="relative w-full h-[100vh] -mt-16">
+		<section className="relative w-full min-h-screen -mt-16 pt-20">
 			{/* Background image with gradient overlay */}
 			<div className="absolute inset-0 z-0">
 				<img
@@ -31,67 +24,54 @@ const Hero = () => {
 					alt="Learning background"
 					className="w-full h-full object-cover"
 				/>
-				<div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40 z-10" />
-
-				{/* Left side fade */}
-				<div className="absolute inset-y-0 left-0 w-1/5 bg-gradient-to-r from-black/70 to-transparent z-10" />
-
-				{/* Right side fade */}
-				<div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-black/70 to-transparent z-10" />
+				{/* Stronger gradient overlay for better text readability on mobile */}
+				<div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/50 z-10" />
 			</div>
 
 			{/* Content - positioned for navbar overlay */}
-			<div className="relative z-10 w-full h-full flex items-center justify-center">
-				<div className="max-w-3xl mx-auto px-4 text-center text-white">
-					<div className="text-xl md:text-5xl font-bold mb-4 leading-tight">
-						Unlock Your Learning Potential{" "}
-						<h1 className="mt-4">
-							at <span className="text-blue-500">KUETx</span>
-						</h1>{" "}
+			<div className="relative z-10 w-full h-full flex items-center justify-center px-4 sm:px-6 py-20 sm:py-32">
+				<div className="max-w-3xl mx-auto text-center text-white">
+					<div className="space-y-2 sm:space-y-4">
+						<h1 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight">
+							Unlock Your Learning Potential
+							<span className="block mt-2 sm:mt-4">
+								at{" "}
+								<span className="text-blue-400 hover:text-blue-300 transition-colors">
+									KUETx
+								</span>
+							</span>
+						</h1>
+
+						<p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto px-4 sm:px-0">
+							Where Learning Connects — Explore expert-led courses, join vibrant
+							communities, and take control of your education.
+						</p>
 					</div>
 
-					<p className="text-lg md:text-xl mb-6 text-gray-200">
-						Where Learning Connects — Explore expert-led courses, join vibrant
-						communities, and take control of your education.{" "}
-					</p>
-
-					{/* Search form */}
-					{/* <form
-						onSubmit={handleSearch}
-						className="w-full max-w-2xl mx-auto mt-4"
+					<button
+						onClick={handleGetStarted}
+						className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 mt-8 sm:mt-10 
+                                text-base sm:text-lg font-medium text-white 
+                                bg-gradient-to-r from-blue-600 to-blue-500 rounded-full 
+                                hover:from-blue-700 hover:to-blue-600 
+                                transition-all duration-300 transform hover:scale-105"
 					>
-						<div className="flex flex-col gap-2">
-							<div className="flex overflow-hidden rounded shadow-lg">
-								<input
-									type="text"
-									placeholder="Search for courses..."
-									value={searchQuery}
-									onChange={(e) => {
-										setSearchQuery(e.target.value);
-										setSearchMessage(""); // Clear message when typing
-									}}
-									className={`w-full px-6 py-4 text-gray-900 bg-white focus:outline-none
-                                        ${
-																					searchMessage
-																						? "border-red-500"
-																						: "border-transparent"
-																				}`}
-								/>
-								<button
-									type="submit"
-									className="px-6 py-4 bg-blue-600 text-white hover:bg-blue-700 
-                                             transition-colors focus:outline-none"
-								>
-									<FontAwesomeIcon icon={faMagnifyingGlass} />
-								</button>
-							</div>
-							{searchMessage && (
-								<div className="text-sm text-red-400 bg-black/40 py-1 px-2 rounded">
-									{searchMessage}
-								</div>
-							)}
-						</div>
-					</form> */}
+						<span>{user ? "Browse Courses" : "Get Started"}</span>
+						<svg
+							className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-2"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M13 7l5 5m0 0l-5 5m5-5H6"
+							/>
+						</svg>
+					</button>
 				</div>
 			</div>
 		</section>

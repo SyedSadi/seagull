@@ -11,7 +11,7 @@ function Quizzes() {
 	const [selectedAnswers, setSelectedAnswers] = useState({});
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [timeLeft, setTimeLeft] = useState(1200); // 20 minutes in seconds
+	const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
 	const [categoryName, setCategoryName] = useState("");
 	const { user } = useContext(AuthContext);
 
@@ -51,10 +51,19 @@ function Quizzes() {
 	});
 
 	const handleAnswerSelect = (questionId, answerId) => {
-		setSelectedAnswers((prev) => ({
-			...prev,
-			[questionId]: answerId,
-		}));
+		setSelectedAnswers((prev) => {
+			// If clicking the same answer that's already selected, remove it
+			if (prev[questionId] === answerId) {
+				const newAnswers = { ...prev };
+				delete newAnswers[questionId];
+				return newAnswers;
+			}
+			// Otherwise, select the new answer
+			return {
+				...prev,
+				[questionId]: answerId,
+			};
+		});
 	};
 
 	const handleNext = () => {
@@ -127,7 +136,7 @@ function Quizzes() {
 	const seconds = timeLeft % 60;
 
 	return (
-		<div className="bg-white rounded-lg shadow-md overflow-hidden">
+		<div className="bg-white rounded-lg shadow-md overflow-hidden mx-20 my-16">
 			<div className="border-b p-6">
 				<h2 className="text-2xl font-bold mb-4">{categoryName} Quiz</h2>
 				<div className="flex justify-between items-center">
@@ -148,16 +157,19 @@ function Quizzes() {
 					{questions[currentQuestion].options.map((option) => (
 						<button
 							key={option.id}
-							className={`w-full text-left p-4 rounded-lg transition-colors ${
+							className={`w-full text-left p-4 rounded-lg transition-all duration-200 ${
 								selectedAnswers[questions[currentQuestion].id] === option.id
-									? "bg-blue-500 text-white"
+									? "bg-blue-500 text-white hover:bg-blue-600"
 									: "bg-gray-100 hover:bg-gray-200 text-gray-800"
-							}`}
+							} flex justify-between items-center`}
 							onClick={() =>
 								handleAnswerSelect(questions[currentQuestion].id, option.id)
 							}
 						>
-							{option.text}
+							<span>{option.text}</span>
+							{selectedAnswers[questions[currentQuestion].id] === option.id && (
+								<span className="text-white ml-2">✓</span>
+							)}
 						</button>
 					))}
 				</div>
