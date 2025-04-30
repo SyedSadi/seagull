@@ -129,6 +129,7 @@ const AddContentPage = () => {
               value={contentData.url}
               onChange={handleInputChange}
               className="p-2 border rounded w-full"
+              placeholder='Provide a relevent public url'
             />
           </div>
 

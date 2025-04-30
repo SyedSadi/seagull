@@ -204,3 +204,36 @@ def test_landing_page_stats_view():
     assert "total_courses" in response.data["data"]
     assert "total_students" in response.data["data"]
     assert "total_instructors" in response.data["data"]
+
+
+@pytest.mark.django_db
+def test_instructor_detail_view_returns_correct_data():
+    # Create a test instructor user
+    instructor = Instructor.objects.create(
+        user=User.objects.create_user(username="john_doe", password=config("TEST_PASSWORD"), email='john@example.com', bio='Passionate about teaching.'), 
+        designation='Assistant Professor',
+        university='Test University'
+    )
+
+    client = APIClient()
+    url = reverse('instructor-detail', kwargs={'id': instructor.id})  
+    response = client.get(url)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data['id'] == instructor.id
+    assert data['name'] == 'john_doe'
+    assert data['email'] == 'john@example.com'
+    assert data['bio'] == 'Passionate about teaching.'
+    assert data['designation'] == 'Assistant Professor'
+    assert data['university'] == 'Test University'
+
+@pytest.mark.django_db
+def test_instructor_detail_view_invalid_id():
+    client = APIClient()
+    invalid_id = 999
+
+    url = reverse('instructor-detail', kwargs={'id': invalid_id})
+    response = client.get(url)
+
+    assert response.status_code == 404

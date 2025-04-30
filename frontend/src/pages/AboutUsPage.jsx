@@ -9,7 +9,7 @@ const AboutUsPage = () => {
     </Helmet>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white py-10 px-6">
       <div className="max-w-6xl mx-auto text-center">
-        <h1 className="text-4xl font-bold mb-6 text-blue-900">About Our LMS</h1>
+        <h1 className="text-4xl font-bold mb-6 text-blue-900">About KUETx</h1>
         <p className="text-lg text-gray-600 mb-10">
           Empowering learners and educators with the tools to succeed — anytime, anywhere.
         </p>
@@ -53,9 +53,6 @@ const AboutUsPage = () => {
               {/* Team Member 1 */}
               <div className="bg-gradient-to-tr from-indigo-50 via-white to-purple-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 mb-4 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
-                    1
-                  </div>
                   <h3 className="text-2xl font-bold text-indigo-700">Imamul Islam Ifti</h3>
                   <p className="text-sm text-gray-500 mb-2">Team Leader</p>
                   <p className="text-gray-700 mt-3 italic text-base">
@@ -67,9 +64,6 @@ const AboutUsPage = () => {
               {/* Team Member 2 */}
               <div className="bg-gradient-to-tr from-green-50 via-white to-yellow-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 mb-4 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
-                    2
-                  </div>
                   <h3 className="text-2xl font-bold text-green-700">Syed Nazib Sadi</h3>
                   <p className="text-sm text-gray-500 mb-2">Developer</p>
                   <p className="text-gray-700 mt-3 italic text-base">
@@ -81,9 +75,6 @@ const AboutUsPage = () => {
               {/* Team Member 3 */}
               <div className="bg-gradient-to-tr from-blue-50 via-white to-pink-50 shadow-xl rounded-3xl p-8 hover:shadow-2xl transition transform hover:-translate-y-1 duration-300">
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 mb-4 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold shadow-inner">
-                    3
-                  </div>
                   <h3 className="text-2xl font-bold text-blue-700">Saif Alvi</h3>
                   <p className="text-sm text-gray-500 mb-2">Developer</p>
                   <p className="text-gray-700 mt-3 italic text-base">
@@ -94,6 +85,12 @@ const AboutUsPage = () => {
             </div>
           </div>
         </section>
+
+        <p className="link text-xl text-blue-600 text-center">
+          <a href="https://seagull-production.up.railway.app/" target="_blank">
+          Learn More about our KUETx story...
+          </a>
+        </p>
 
 
       </div>

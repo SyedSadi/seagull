@@ -46,6 +46,7 @@ import "./index.css";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import InstructorProfile from "./pages/InstructorProfile.jsx";
 
 const router = createBrowserRouter([
 	{
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
 			{
 				path: "/aboutus",
 				element: <AboutUsPage />,
+			},
+			{
+				path: "/instructors/:id",
+				element: <InstructorProfile />,
 			},
 			{
 				path: "/quiz",

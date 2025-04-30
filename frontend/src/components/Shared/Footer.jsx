@@ -45,13 +45,13 @@ const Footer = () => {
 					>
 						Explore API
 					</a>
-					{/* <a
+					<a
 						href="https://seagull-production.up.railway.app/"
 						className="link inline"
 						target="_blank"
 					>
 						Devlog
-					</a> */}
+					</a>
 				</nav>
 				
 				<nav>

@@ -16,11 +16,13 @@ class InstructorSerializer(serializers.ModelSerializer):
     Serializer for the Instructor model.
     Includes a read-only field 'name' from the related User model.
     """
-    name = serializers.CharField(source='user.username', read_only=True)  # Get name from User model
+    name = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True) 
+    bio = serializers.CharField(source='user.bio', read_only=True)  
 
     class Meta:
         model = Instructor
-        fields = ['id', 'name', 'designation', 'university']
+        fields = ['id', 'name', 'designation', 'university', 'email', 'bio']
 
 class StudentSerializer(serializers.ModelSerializer):
     """

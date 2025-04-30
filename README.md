@@ -1,12 +1,13 @@
 <div align ="center">
-<img src="frontend/src/assets/logo.png" alt="KUETx" width="150" />
+<img src="assets/logo.png" alt="KUETx" width="150" />
 </div>
 
-**Transforming Education with Seamless Learning**
+**KUETx - Empowering Education Through Innovation**
 
-Where Learning Connects — Explore expert-led courses, join vibrant communities, and take control of your education.
+KUETx is a Learning Management System (LMS) designed to revolutionize the way students and instructors interact with educational content. Offering a seamless platform for course browsing, engaging lessons, quizzes, and interactive forums, KUETx brings together the best of technology and education. Whether you're a student eager to learn or an instructor looking to share your knowledge, KUETx provides all the tools to create, manage, and enjoy a rich learning experience.
 
 ---
+
 
 [![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org)
 [![Vite](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
@@ -17,8 +18,6 @@ Where Learning Connects — Explore expert-led courses, join vibrant communities
 [![Git](https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com)
 [![Django REST](https://img.shields.io/badge/DJANGO%20REST-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org)
 [![Hugging Face](https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co)
-
----
 
 ## Table of Contents
 
@@ -32,12 +31,11 @@ Where Learning Connects — Explore expert-led courses, join vibrant communities
 - [Entity-Relationship Diagram](#entity-relationship-diagram)
 - [Project Directory Structure](#project-directory-structure)
 - [Getting Started](#getting-started)
-- [Contributinnnng](#contributing)
+- [Operational Flow](#operational-flow)
+- [Contributing](#contributing)
 - [License](#license)
 
----
-
-<div align ="center">
+<div>
 
 ## Code Quality
 
@@ -50,43 +48,42 @@ Where Learning Connects — Explore expert-led courses, join vibrant communities
 
 </div>
 
----
+## Live Demo
 
-## 🌐 Live Demo
-
-<p align="center">
+<p>
   <a href="https://seagull-lms.netlify.app/" target="_blank">
-    <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Now-blue?style=for-the-badge&logo=netlify" alt="Live Demo Badge"/>
+  <img src="https://img.shields.io/badge/Frontend-Live-blue?style=for-the-badge&logo=react" alt="Frontend Live Demo"/>
   </a>
+  &nbsp;
+  <a href="https://seagull-production.up.railway.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Backend-Live-green?style=for-the-badge&logo=django" alt="Backend Live Demo"/>
+  </a>
+  
 </p>
 
-## 📃API Documentation
+## API Documentation
 
 Explore our RESTful API with interactive docs powered by drf-spectacular:
 
 [![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
-## 👨‍💻 Team
+## Team
 
 Meet the passionate developers behind **KUETx**:
 
 | Role      | Name & GitHub Profile                               |
 | --------- | --------------------------------------------------- |
-| Team Lead | [Imamul Islam Ifti](https://github.com/ImamIfti056) |
-| Developer | [Saif Alvi](https://github.com/yuusaif)             |
-| Developer | [syed Nazib Sadi](https://github.com/SyedSadi)      |
-
----
+| Team Lead | <a href="https://github.com/ImamIfti056" target="_blank">Imamul Islam Ifti</a> |
+| Developer | <a href="https://github.com/yuusaif" target="_blank">Saif Alvi</a> |
+| Developer | <a href="https://github.com/SyedSadi" target="_blank">Syed Nazib Sadi</a> |
 
 ### Our Guide & Mentor
 
 A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
----
-
 ## Features
 
-## 📘 Course Interaction
+### Course Interaction
 
 - **Browse Available Courses**  
   Students can explore and enroll in courses based on topics, discovering relevant learning paths with ease.
@@ -108,7 +105,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
 ---
 
-## 🧠 Interactive Quizzes & Evaluation
+### Interactive Quizzes & Evaluation
 
 - **Timed Quiz Sessions**  
   Students take quizzes under time constraints, simulating real test conditions.
@@ -127,7 +124,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
 ---
 
-## 💬 Interactive Discussion Forum
+### Interactive Discussion Forum
 
 - **Post Creation and Management**  
   Users can create, edit, and delete their own posts.
@@ -152,13 +149,13 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 
 ---
 
-## 📊 Dashboards & Analytics
+### Dashboards & Analytics
 
 Insightful data visualization for both learners and instructors to monitor performance and progress.
 
 ---
 
-## 🛠️ Admin Dashboard
+### Admin Dashboard
 
 - **Course and Quiz Management**  
   Admins can add, edit, and remove courses and quizzes, ensuring high-quality educational content.
@@ -169,13 +166,11 @@ Insightful data visualization for both learners and instructors to monitor perfo
 - **Forum Moderation**  
   Admins have delete access to all forum posts, maintaining a safe and constructive community environment.
 
-## 🔐 Secure Authentication
+### Secure Authentication
 
 Modern JWT-based authentication flow for registration, login, and protected APIs.
 
----
-
-## 💻 Tech Stack
+## Tech Stack
 
 ### Frontend
 
@@ -206,17 +201,15 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 
 > The Diagram shows how users interact through the front end with DRF APIs for different modules, including courses, quizzes, forums, and authentication.
 
-<img src="assets/system_arch.png" alt="System Architecture" width="400" />
+<img src="assets/system_arch.png" alt="System Architecture" width="600" />
 
----
-
-## 🗂️ Entity-Relationship Diagram
+## Entity-Relationship Diagram
 
 Here’s an overview of the system’s data structure:
 
 ![ER Diagram](assets/graphviz.png)
 
-## 📂 Project Directory Structure
+## Project Directory Structure
 
 Here’s the directory structure of the **Seagull LMS** project:
 
@@ -252,7 +245,16 @@ seagull
     └── workflows
 ```
 
-## 🚀 Getting Started
+## Getting Started
+
+### 🛠️ Prerequisites
+
+- **Python 3.8+**: [Download here](https://www.python.org/downloads/)
+- **Node.js 14+**: [Download here](https://nodejs.org/)
+- **Git**: [Download here](https://git-scm.com/)
+- **PostgreSQL**: [Download here](https://www.postgresql.org/download/)
+
+Make sure these are installed before proceeding.
 
 **Clone the repository:**
 
@@ -261,7 +263,7 @@ git clone https://github.com/your-username/seagull.git
 cd seagull
 ```
 
-## 🧩 Frontend Setup
+### 🧩 Frontend Setup
 
 ```bash
 cd frontend
@@ -269,7 +271,7 @@ npm install       # install dependencies
 npm run dev       # run the app at localhost
 ```
 
-## 🐍 Backend Setup
+### 🐍 Backend Setup
 
 ```bash
 cd server
@@ -283,8 +285,61 @@ python manage.py migrate
 python manage.py createsuperuser  # follow prompts
 python manage.py runserver
 ```
+### 🔑 Environment Setup
 
-## 🤝 Contributing
+You will need to configure the `.env` files for both the **backend** and **frontend**.
+
+#### Backend (.env) Setup
+
+1. Go to the `server/backend` folder.
+2. Create a `.env` file if it doesn’t exist.
+3. Add your **Django** and **PostgreSQL** environment variables, like so:
+
+```env
+DEBUG=True
+SECRET_KEY=your-secret-key
+DB_NAME=lms
+DB_USER=your-db-username
+DB_PASSWORD=your-db-password
+DB_HOST=localhost
+DB_PORT=5432
+```
+#### Frontend (.env) Setup
+
+1. Go to the `frontend` folder.
+2. Create a `.env` file if it doesn’t exist.
+
+```env
+VITE_IMGBB_API_KEY=your-api-here
+```
+
+### Operational Flow
+
+1. **User Authentication**  
+   - Users can sign up or log in using JWT-based authentication.
+   - Admins have access to manage users and content.
+
+2. **Browse & Enroll in Courses**  
+   - Students can explore available courses.
+   - They can enroll in courses, view lessons, and participate in quizzes.
+
+3. **Course Management by Instructors**  
+   - Instructors can create, update, and delete their courses.
+   - They can upload lessons, quizzes, and other course materials.
+
+4. **Quiz Participation & Evaluation**  
+   - Students take quizzes, which are automatically graded.
+   - Quiz results are stored in student profiles.
+
+5. **Discussion Forum**  
+   - Students and instructors can create posts, comment, and engage in discussions.
+   - Posts are monitored for toxic content using AI (Hugging Face).
+
+6. **Admin Dashboard**  
+   - Admins can view platform analytics, manage courses, and moderate content.
+
+
+## Contributing
 
 We welcome contributions! Here's how you can help:
 
@@ -296,10 +351,14 @@ We welcome contributions! Here's how you can help:
 
 > 💡 For major changes, please open an issue first to discuss what you'd like to change.
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT
 
----
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-<p align="center">Made with ❤️ by Team Seagull</p>
+## Contributors
+
+[![Contributors](https://img.shields.io/badge/Contributors-3-green)](https://github.com/Learnathon-By-Geeky-Solutions/seagull/graphs/contributors)
+
+<p align="center">Made by Team Seagull</p>

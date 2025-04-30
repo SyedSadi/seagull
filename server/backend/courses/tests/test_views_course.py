@@ -46,12 +46,14 @@ class TestCourseDetailView:
         assert response.data['title'] == course.title
         assert response.data['description'] == course.description
         assert response.data['subject'] == course.subject
-        assert response.data['created_by_details'] == {
-        'id': instructor.id,
-        'name': 'instructor1',
-        'designation': '',
-        'university': ''
-        }
+        print(response.data)
+        created_by = response.data['created_by_details']
+        assert created_by['id'] == instructor.id
+        assert created_by['name'] == 'instructor1'
+        assert created_by['designation'] == ''
+        assert created_by['university'] == ''
+        assert created_by['email'] == ''
+        assert created_by['bio'] is None
 
 
 @pytest.mark.django_db

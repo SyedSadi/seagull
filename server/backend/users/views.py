@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from decouple import config
+from rest_framework.generics import RetrieveAPIView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -277,6 +278,12 @@ class InstructorViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     queryset = Instructor.objects.all()
     serializer_class = InstructorSerializer
+
+class InstructorDetailView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = Instructor.objects.select_related('user')
+    serializer_class = InstructorSerializer
+    lookup_field = 'id'  # or 'pk'
 
 
 class ProfileView(APIView):

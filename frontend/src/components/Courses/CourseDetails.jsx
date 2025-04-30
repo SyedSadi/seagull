@@ -101,6 +101,8 @@ const CourseDetails = () => {
     );
   };
 
+  const courseInstructor = course?.created_by_details;
+
   return (
     <>
     <Helmet>
@@ -156,7 +158,13 @@ const CourseDetails = () => {
               <div className="space-y-4 text-gray-700 mt-4">
                 <p className="flex items-center gap-3 text-lg">
                   
-                  <span className="font-bold">Name:</span> {course.created_by_details?.name?.toUpperCase()}
+                  <span className="font-bold">Name:</span> 
+                  <Link 
+                    to={`/instructors/${course?.created_by_details.id}`}
+                    state={{ courseInstructor }}
+                    className="text-blue-500 hover:underline">
+                      {course.created_by_details?.name?.toUpperCase()}
+                  </Link>
                 </p>
                 <p className="text-lg">
                   <span className="font-bold">Designation:</span> {course.created_by_details?.designation?.toUpperCase() || "Not provided"}
