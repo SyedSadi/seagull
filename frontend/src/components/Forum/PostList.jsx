@@ -146,105 +146,103 @@ const PostList = () => {
 		return `Showing ${filterText}${tagText}`;
 	};
 
-	return (
-		<div className="max-w-4xl mx-auto px-4 py-10">
-			{/* Search & Actions */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-				<div className="relative w-full sm:w-2/3">
-					<input
-						type="text"
-						placeholder="Search by tag..."
-						value={inputValue}
-						onChange={handleSearchChange}
-						onKeyDown={handleKeyDown}
-						className="w-full pl-10 pr-10 py-2.5 bg-white text-sm rounded-2xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-					/>
-					<FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-					{inputValue && (
-						<button
-							onClick={() => {
-								setInputValue("");
-								setSearchTag("");
-								setTagSuggestions([]);
-							}}
-							className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-						>
-							<FaTimes />
-						</button>
-					)}
-					{tagSuggestions.length > 0 && (
-						<ul className="absolute z-10 left-0 right-0 bg-white border border-gray-200 rounded-xl mt-1 max-h-48 overflow-auto shadow-lg">
-							{tagSuggestions.map((tag) => (
-								<li
-									key={tag.id}
-									onClick={() => handleTagSelect(tag.name)}
-									className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-								>
-									{tag.name}
-								</li>
-							))}
-						</ul>
-					)}
-				</div>
-				<div className="flex items-center gap-3">
-					<div className="relative" ref={filterRef}>
-						<button
-							onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-							className="flex items-center gap-2 px-3 py-2 text-sm rounded-2xl border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
-						>
-							<FiFilter className="text-gray-500" />
-							<span>Filter</span>
-						</button>
-						{showFilterDropdown && (
-							<div className="absolute z-10 mt-2 right-0 w-44 bg-white rounded-xl border border-gray-200 shadow-lg">
-								<ul className="py-2 text-sm text-gray-700">
-									{[
-										{ label: "Recent Posts", value: "recent" },
-										{ label: "Top Voted", value: "highest_voted" },
-										{ label: "My Posts", value: "user_posts" },
-									].map((option) => (
-										<li key={option.value}>
-											<button
-												onClick={() => handleFilterChange(option.value)}
-												className={`w-full text-left px-4 py-2 rounded-lg ${
-													filter === option.value
-														? "bg-blue-100 text-blue-600"
-														: "hover:bg-gray-100"
-												}`}
-											>
-												{option.label}
-											</button>
-										</li>
-									))}
-								</ul>
-							</div>
-						)}
-					</div>
-					<button
-						onClick={() => setShowCreateModal(true)}
-						className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md transition"
-					>
-						<AiOutlineEdit className="text-lg" />
-						Create
-					</button>
-				</div>
-			</div>
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      {/* Search & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="relative w-full sm:w-2/3">
+          <input
+            type="text"
+            placeholder="Search by tag..."
+            value={inputValue}
+            onChange={handleSearchChange}
+            onKeyDown={handleKeyDown}
+            className="w-full pl-10 pr-10 py-2.5 bg-white text-sm rounded-2xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+          {inputValue && (
+            <button
+              onClick={() => {
+                setInputValue("");
+                setSearchTag("");
+                setTagSuggestions([]);
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <FaTimes />
+            </button>
+          )}
+          {tagSuggestions.length > 0 && (
+            <ul className="absolute z-10 left-0 right-0 bg-white border border-gray-200 rounded-xl mt-1 max-h-48 overflow-auto shadow-lg">
+              {tagSuggestions.map((tag) => (
+                <li
+                  key={tag.id}
+                  onClick={() => handleTagSelect(tag.name)}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {tag.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="relative" ref={filterRef}>
+            <button
+              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+              className="flex items-center gap-2 px-3 py-2 text-sm rounded-2xl border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
+            >
+              <FiFilter className="text-gray-500" />
+              <span>Filter</span>
+            </button>
+            {showFilterDropdown && (
+              <div className="absolute z-10 mt-2 left-0 sm:right-0 w-40 sm:w-44 min-w-fit bg-white rounded-xl border border-gray-200 shadow-lg">
+                <ul className="py-2 text-sm text-gray-700">
+                  {[
+                    { label: "Recent Posts", value: "recent" },
+                    { label: "Top Voted", value: "highest_voted" },
+                    { label: "My Posts", value: "user_posts" },
+                  ].map((option) => (
+                    <li key={option.value}>
+                      <button
+                        onClick={() => handleFilterChange(option.value)}
+                        className={`w-full text-left px-4 py-2 rounded-lg ${
+                          filter === option.value
+                            ? "bg-blue-100 text-blue-600"
+                            : "hover:bg-gray-100"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-md transition"
+          >
+            <AiOutlineEdit className="text-lg" />
+            Create
+          </button>
+        </div>
+      </div>
 
       {/* Filter/Search Message */}
       {!loading && (
         <div className="mb-6 px-3 py-1.5 text-sm text-blue-600 font-medium">
-        {getFilterMessage()}
-      </div>
+          {getFilterMessage()}
+        </div>
       )}
 
       {/* Post List */}
       <div className="mt-8">
         {loading ? (
           <div className="flex justify-center items-center h-40 flex-col">
-             <p className="mt-4 text-gray-500 text-sm">Loading posts...</p>
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500">
-           
-            </div>
+            <p className="mt-4 text-gray-500 text-sm">Loading posts...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center text-gray-500 text-sm mt-10">
@@ -271,5 +269,6 @@ const PostList = () => {
 		</div>
 	);
 };
+
 
 export default PostList;
