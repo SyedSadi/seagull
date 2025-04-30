@@ -188,7 +188,7 @@ const PostList = () => {
               <span>Filter</span>
             </button>
             {showFilterDropdown && (
-              <div className="absolute z-10 mt-2 right-0 w-44 bg-white rounded-xl border border-gray-200 shadow-lg">
+              <div className="absolute z-10 mt-2 left-0 sm:right-0 w-40 sm:w-44 min-w-fit bg-white rounded-xl border border-gray-200 shadow-lg">
                 <ul className="py-2 text-sm text-gray-700">
                   {[
                     { label: "Recent Posts", value: "recent" },
@@ -225,18 +225,16 @@ const PostList = () => {
       {/* Filter/Search Message */}
       {!loading && (
         <div className="mb-6 px-3 py-1.5 text-sm text-blue-600 font-medium">
-        {getFilterMessage()}
-      </div>
+          {getFilterMessage()}
+        </div>
       )}
 
       {/* Post List */}
       <div className="mt-8">
         {loading ? (
           <div className="flex justify-center items-center h-40 flex-col">
-             <p className="mt-4 text-gray-500 text-sm">Loading posts...</p>
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500">
-           
-            </div>
+            <p className="mt-4 text-gray-500 text-sm">Loading posts...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center text-gray-500 text-sm mt-10">
@@ -263,5 +261,6 @@ const PostList = () => {
     </div>
   );
 };
+
 
 export default PostList;
