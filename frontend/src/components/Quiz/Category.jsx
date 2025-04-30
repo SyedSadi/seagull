@@ -44,25 +44,44 @@ function Category() {
 		);
 
 	return (
-		<div className="text-center mb-10 ml-8 mr-8">
-			<h2 className="text-2xl font-semibold mb-8">Select a Quiz Category</h2>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		<div className="container mx-auto px-4 py-12">
+			<h2 className="text-2xl font-bold text-gray-900 text-center mb-12">
+				Select a <span className="text-blue-600">Quiz</span> Category
+			</h2>
+
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
 				{categories.map((category) => (
 					<div
 						key={category.id}
-						className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-default"
+						className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 
+								 h-[320px] flex flex-col justify-between overflow-hidden
+								 border border-gray-100 group"
 					>
-						<div className="p-6">
-							<h3 className="text-xl font-semibold text-blue-600 mb-2">
+						<div className="p-6 flex-1">
+							<h3
+								className="text-2xl font-semibold text-gray-800 group-hover:text-blue-600 
+									   transition-colors duration-300 mb-4"
+							>
 								{category.name}
 							</h3>
-							<p className="text-gray-600 mb-4">{category.description}</p>
-							<p className="text-gray-600 mb-4">
-								No. of questions: {category.question_count}
+							<p className="text-gray-600 mb-4 line-clamp-3">
+								{category.description}
 							</p>
+							<div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-600">
+								<span className="text-sm font-medium">
+									{category.question_count} Questions
+								</span>
+							</div>
+						</div>
+
+						<div className="p-6 pt-0">
 							<button
 								onClick={() => handleCategorySelect(category.id)}
-								className="bg-blue-500 text-white rounded-full px-5 py-2 text-lg font-semibold hover:bg-blue-600"
+								className="w-full bg-gradient-to-r from-blue-600 to-blue-500 
+										 hover:from-blue-700 hover:to-blue-600
+										 text-white rounded-lg px-6 py-3 
+										 text-lg font-semibold
+										 transform transition-colors duration-500"
 								tabIndex={0}
 								onKeyDown={(e) => {
 									if (e.key === "Enter" || e.key === " ") {
