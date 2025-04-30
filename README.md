@@ -2,7 +2,7 @@
 <img src="assets/logo.png" alt="KUETx" width="150" />
 </div>
 
-**KUETx - Empowering Education Through Innovation**
+**KUETx - Shaping Tomorrow's Mind with Today's Tech**
 
 KUETx is a Learning Management System (LMS) designed to revolutionize the way students and instructors interact with educational content. Offering a seamless platform for course browsing, engaging lessons, quizzes, and interactive forums, KUETx brings together the best of technology and education. Whether you're a student eager to learn or an instructor looking to share your knowledge, KUETx provides all the tools to create, manage, and enjoy a rich learning experience.
 
