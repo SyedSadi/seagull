@@ -139,34 +139,57 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Edit Post</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-6">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md sm:max-w-lg md:max-w-xl mx-4 sm:mx-6 my-4 sm:my-6 p-4 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4 text-center">
+          Edit Post
+        </h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }} className="space-y-3 sm:space-y-4">
           <input
             type="text"
             placeholder="Enter your post title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400"
+            className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-400 text-sm sm:text-base"
             required
             disabled={isSubmitting}
           />
           <div>
-            <label className="block font-medium text-gray-700 mb-2">Content (Use Markdown for formatting):</label>
-            <MarkdownEditor
-              value={content}
-              style={{ height: '300px' }}
-              renderHTML={renderMarkdown}
-              onChange={({ text }) => setContent(text)}
-              placeholder="Write your content here... (Use the toolbar to add code blocks, e.g., ```javascript\ncode\n```)"
-              disabled={isSubmitting}
-            />
+            <label className="block font-medium text-gray-700 mb-1 text-sm sm:text-base">
+              Content (Use Markdown for formatting):
+            </label>
+            <div className="relative border border-gray-300 rounded-xl shadow-sm p-2">
+              <style>
+                {`
+                  .rc-md-editor .editor-container .toolbar {
+                    top: 0 !important;
+                    padding: 4px 0 !important;
+                    background: #fff !important;
+                    border-bottom: 1px solid #d1d5db !important;
+                    border-radius: 12px 12px 0 0 !important;
+                  }
+                  .rc-md-editor .editor-container .section-container {
+                    overflow-y: auto !important;
+                  }
+                `}
+              </style>
+              <MarkdownEditor
+                value={content}
+                style={{ height: '250px' }}
+                className="w-full border-none rounded-xl"
+                renderHTML={renderMarkdown}
+                onChange={({ text }) => setContent(text)}
+                placeholder="Write your content here... (Use the toolbar to add code blocks, e.g., ```javascript\ncode\n```)"
+                disabled={isSubmitting}
+              />
+            </div>
           </div>
 
           {/* React Select for Tags */}
           <div>
-            <label className="block font-medium text-gray-700 mb-2">Select Tags (max 3):</label>
+            <label className="block font-medium text-gray-700 mb-1 text-sm sm:text-base">
+              Select Tags (max 3):
+            </label>
             <CreatableSelect
               options={allTags.map((tag) => ({ value: tag.id, label: tag.name }))}
               value={selectedTags.map((tag) => ({ value: tag.id, label: tag.name }))}
@@ -191,7 +214,7 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
                     return updated;
                   });
                 } catch (error) {
-                  toast.error('Failed to create tag');
+                  toast.error('Failed to create tag', { autoClose: 3000 });
                   console.error('Create tag error:', error);
                 }
               }}
@@ -206,11 +229,11 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-lg"
+            className="w-full py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-medium text-base flex items-center justify-center"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
             ) : (
               'Save Changes'
             )}
@@ -218,13 +241,23 @@ const EditPostModal = ({ post, onClose, refreshPost }) => {
           <button
             onClick={onClose}
             type="button"
-            className="w-full text-center text-gray-500 hover:underline pt-2"
+            className="mx-auto block text-center text-gray-500 hover:underline pt-1 text-sm sm:text-base"
             disabled={isSubmitting}
           >
             Cancel
           </button>
         </form>
-        <ToastContainer position="bottom-right" />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </div>
   );
