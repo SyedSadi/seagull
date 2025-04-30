@@ -15,7 +15,10 @@ const UpdateQuestionsPage = () => {
 	const { categoryId } = useParams();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(true);
-	const [saving, setSaving] = useState({});
+	const [saving, setSaving] = useState({
+		save: {},
+		delete: {},
+	});
 	const [error, setError] = useState(null);
 	const [questions, setQuestions] = useState([]);
 	const [categoryName, setCategoryName] = useState("");
@@ -41,7 +44,6 @@ const UpdateQuestionsPage = () => {
 
 	const handleQuestionAdded = (newQuestion) => {
 		setQuestions((prev) => [...prev, newQuestion]);
-		toast.success("Question added successfully!");
 	};
 
 	const handleQuestionChange = (questionId, field, value) => {
@@ -87,8 +89,12 @@ const UpdateQuestionsPage = () => {
 
 	const handleSave = async (questionId) => {
 		try {
-			setSaving((prev) => ({ ...prev, [questionId]: true }));
+			setSaving((prev) => ({
+				...prev,
+				save: { ...prev.save, [questionId]: true },
+			}));
 			const question = questions.find((q) => q.id === questionId);
+
 			//Validate question text
 			if (!question.text.trim()) {
 				throw new Error("Question text cannot be empty");
@@ -112,8 +118,6 @@ const UpdateQuestionsPage = () => {
 			const result = await updateQuestion(questionId, questionData);
 			if (result) {
 				toast.success("Question updated successfully!");
-
-				// Update local state with server response
 				setQuestions((prevQuestions) =>
 					prevQuestions.map((q) =>
 						q.id === questionId ? { ...q, ...result } : q
@@ -126,7 +130,10 @@ const UpdateQuestionsPage = () => {
 				error.message || "Failed to update question. Please try again."
 			);
 		} finally {
-			setSaving((prev) => ({ ...prev, [questionId]: false }));
+			setSaving((prev) => ({
+				...prev,
+				save: { ...prev.save, [questionId]: false },
+			}));
 		}
 	};
 
@@ -136,17 +143,21 @@ const UpdateQuestionsPage = () => {
 		}
 
 		try {
-			setSaving((prev) => ({ ...prev, [questionId]: true }));
+			setSaving((prev) => ({
+				...prev,
+				delete: { ...prev.delete, [questionId]: true },
+			}));
 			await deleteQuestion(questionId);
-
-			// Remove the question from local state
 			setQuestions(questions.filter((q) => q.id !== questionId));
 			toast.success("Question deleted successfully!");
 		} catch (error) {
 			console.error("Error deleting question:", error);
 			toast.error(error.message || "Failed to delete question");
 		} finally {
-			setSaving((prev) => ({ ...prev, [questionId]: false }));
+			setSaving((prev) => ({
+				...prev,
+				delete: { ...prev.delete, [questionId]: false },
+			}));
 		}
 	};
 
@@ -189,7 +200,9 @@ const UpdateQuestionsPage = () => {
 					<div className="flex justify-between items-center mb-6">
 						<div>
 							<h2 className="text-xl font-bold text-gray-800">
-								Update Questions for {categoryName}
+								Update Questions:
+								<br />
+								{categoryName}
 							</h2>
 							<p className="text-sm text-gray-600 mt-1">
 								Total questions: {questions.length}
@@ -240,11 +253,13 @@ const UpdateQuestionsPage = () => {
 										</label>
 										<button
 											onClick={() => handleDelete(question.id)}
-											disabled={saving[question.id]}
+											disabled={
+												saving.delete[question.id] || saving.save[question.id]
+											}
 											className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 
 												  transition disabled:bg-red-300 disabled:cursor-not-allowed"
 										>
-											{saving[question.id] ? "Deleting..." : "Delete"}
+											{saving.delete[question.id] ? "Deleting..." : "Delete"}
 										</button>
 									</div>
 
@@ -311,10 +326,13 @@ const UpdateQuestionsPage = () => {
 									<div className="mt-4 flex justify-end">
 										<button
 											onClick={() => handleSave(question.id)}
-											disabled={saving[question.id]}
-											className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition disabled:bg-blue-300 disabled:cursor-not-allowed"
+											disabled={
+												saving.save[question.id] || saving.delete[question.id]
+											}
+											className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
+												  transition disabled:bg-blue-300 disabled:cursor-not-allowed"
 										>
-											{saving[question.id] ? "Saving..." : "Save Changes"}
+											{saving.save[question.id] ? "Saving..." : "Save Changes"}
 										</button>
 									</div>
 								</div>

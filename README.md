@@ -4,7 +4,7 @@
 
 **Transforming Education with Seamless Learning**
 
-KUETx is a full-stack Learning Management System (LMS) designed to empower educators and learners. It provides a unified platform for interactive learning and collaborative education.
+Where Learning Connects — Explore expert-led courses, join vibrant communities, and take control of your education.
 
 ---
 
@@ -17,6 +17,23 @@ KUETx is a full-stack Learning Management System (LMS) designed to empower educa
 [![Git](https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com)
 [![Django REST](https://img.shields.io/badge/DJANGO%20REST-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org)
 [![Hugging Face](https://img.shields.io/badge/HUGGING%20FACE-FF6B00?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co)
+
+---
+
+## Table of Contents
+
+- [Code Quality](#code-quality)
+- [Live Demo](#live-demo)
+- [API Documentation](#api-documentation)
+- [Team](#team)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [System Architecture](#system-architecture)
+- [Entity-Relationship Diagram](#entity-relationship-diagram)
+- [Project Directory Structure](#project-directory-structure)
+- [Getting Started](#getting-started)
+- [Contributinnnng](#contributing)
+- [License](#license)
 
 ---
 
@@ -42,6 +59,12 @@ KUETx is a full-stack Learning Management System (LMS) designed to empower educa
     <img src="https://img.shields.io/badge/Live%20Demo-Visit%20Now-blue?style=for-the-badge&logo=netlify" alt="Live Demo Badge"/>
   </a>
 </p>
+
+## 📃API Documentation
+
+Explore our RESTful API with interactive docs powered by drf-spectacular:
+
+[![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
 ## 👨‍💻 Team
 
@@ -107,7 +130,7 @@ A heartfelt appreciation to **[Maahad Mahmud](https://github.com/maahad767)**
 ## 💬 Interactive Discussion Forum
 
 - **Post Creation and Management**  
-  Users can create, edit, and delete their posts.
+  Users can create, edit, and delete their own posts.
 
 - **Toxicity Detection**  
   Posts are scanned in real-time using Hugging Face’s `unitary/toxic-bert` to prevent harmful or offensive content.
@@ -157,7 +180,7 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Frontend
 
 - **React** ⚛️  
-  Builds a dynamic, component-based UI for seamless course, quiz, and forum interactions.
+  Builds a dynamic, component-based UI for seamless course, quiz and forum interactions.
 - **Tailwind CSS** 🎨  
   Powers the responsive, modern design with a teal/blue aesthetic for a vibrant user experience.
 
@@ -173,7 +196,7 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 ### Infrastructure
 
 - **PostgreSQL** 🗄️  
-  Stores course, user, quiz, and forum data with reliable, efficient querying.
+  Stores course, user, quiz and forum data with reliable, efficient querying.
 - **ImageBB** 🖼️  
   Host course images for fast, reliable media delivery in learning materials.
 - **CI/CD** 🚀  
@@ -186,12 +209,6 @@ Modern JWT-based authentication flow for registration, login, and protected APIs
 <img src="assets/system_arch.png" alt="System Architecture" width="400" />
 
 ---
-
-## 📃API Documentation
-
-Explore our RESTful API with interactive docs powered by drf-spectacular:
-
-[![KUETx](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://seagull-production.up.railway.app/api/schema/swagger-ui/)
 
 ## 🗂️ Entity-Relationship Diagram
 

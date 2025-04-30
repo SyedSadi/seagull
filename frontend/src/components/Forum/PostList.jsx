@@ -230,33 +230,36 @@ const PostList = () => {
 				</div>
 			</div>
 
-			{/* Filter/Search Message */}
-			{!loading && (
-				<div className="mb-6 px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 shadow-sm text-sm text-blue-500 font-medium">
-					{getFilterMessage()}
-				</div>
-			)}
+      {/* Filter/Search Message */}
+      {!loading && (
+        <div className="mb-6 px-3 py-1.5 text-sm text-blue-600 font-medium">
+        {getFilterMessage()}
+      </div>
+      )}
 
-			{/* Post List */}
-			<div className="mt-8">
-				{loading ? (
-					<div className="flex justify-center items-center h-40">
-						<div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
-					</div>
-				) : posts.length === 0 ? (
-					<div className="text-center text-gray-500 text-sm mt-10">
-						No posts found.
-					</div>
-				) : (
-					posts.map((post) => (
-						<Post
-							key={post.id}
-							post={{ ...post, comments: post.comments || [] }}
-							onDelete={handlePostDelete}
-						/>
-					))
-				)}
-			</div>
+      {/* Post List */}
+      <div className="mt-8">
+        {loading ? (
+          <div className="flex justify-center items-center h-40 flex-col">
+             <p className="mt-4 text-gray-500 text-sm">Loading posts...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500">
+           
+            </div>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="text-center text-gray-500 text-sm mt-10">
+            No posts found.
+          </div>
+        ) : (
+          posts.map((post) => (
+            <Post
+              key={post.id}
+              post={{ ...post, comments: post.comments || [] }}
+              onDelete={handlePostDelete}
+            />
+          ))
+        )}
+      </div>
 
 			{/* Modal */}
 			{showCreateModal && (

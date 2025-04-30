@@ -14,6 +14,7 @@ const AddQuizPage = () => {
 	});
 	const [quizCreated, setQuizCreated] = useState(false);
 	const [categoryId, setCategoryId] = useState(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleChange = (e) => {
 		setQuiz({ ...quiz, [e.target.name]: e.target.value });
@@ -31,20 +32,22 @@ const AddQuizPage = () => {
 			toast.error("Quiz description is required");
 			return;
 		}
+
 		try {
+			setIsSubmitting(true);
 			const data = await addQuiz(quiz);
 			setCategoryId(data.id);
 			setQuizCreated(true);
 			toast.success(
-				"Quiz category created successfully! You can now add questions.",
-				{
-					position: "bottom-right",
-					autoClose: 5000,
-				}
+				"Quiz category created successfully! You can now add questions."
 			);
 		} catch (error) {
-			console.error("Error creating quiz:", error);
-			toast.error("Failed to create quiz. Please try again.");
+			toast.error(
+				error.response?.data?.message ||
+					"Failed to create quiz. Please try again."
+			);
+		} finally {
+			setIsSubmitting(false);
 		}
 	};
 
@@ -70,34 +73,62 @@ const AddQuizPage = () => {
 						</h2>
 						<form onSubmit={handleSubmit} className="space-y-4">
 							<label className="form-control w-full">
-								<span className="label-text">Title</span>
+								<span className="label-text font-medium text-gray-700">
+									Title
+								</span>
 								<input
 									type="text"
 									name="name"
 									value={quiz.name}
 									onChange={handleChange}
 									className="input input-bordered w-full"
+									placeholder="Enter quiz title"
+									disabled={isSubmitting}
 									required
 								/>
 							</label>
 
 							<label className="form-control w-full">
-								<span className="label-text">Description</span>
+								<span className="label-text font-medium text-gray-700">
+									Description
+								</span>
 								<textarea
 									name="description"
 									value={quiz.description}
 									onChange={handleChange}
 									className="textarea textarea-bordered w-full"
+									placeholder="Enter quiz description"
+									disabled={isSubmitting}
 									required
+									rows={4}
 								/>
 							</label>
 
-							<button
-								type="submit"
-								className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-full"
-							>
-								Add Quiz
-							</button>
+							<div className="flex space-x-4">
+								<button
+									type="submit"
+									disabled={isSubmitting}
+									className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
+                    transition disabled:bg-blue-300 disabled:cursor-not-allowed"
+								>
+									{isSubmitting ? (
+										<span className="flex items-center justify-center">
+											Creating Quiz...
+										</span>
+									) : (
+										"Create Quiz"
+									)}
+								</button>
+								<button
+									type="button"
+									onClick={handleBack}
+									disabled={isSubmitting}
+									className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 
+                    transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+								>
+									Cancel
+								</button>
+							</div>
 						</form>
 					</div>
 				) : (
