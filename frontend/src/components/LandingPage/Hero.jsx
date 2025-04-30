@@ -54,8 +54,7 @@ const Hero = () => {
                                 text-base sm:text-lg font-medium text-white 
                                 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full 
                                 hover:from-blue-700 hover:to-blue-600 
-                                transition-all duration-300 transform hover:scale-105
-                                shadow-lg hover:shadow-blue-500/25"
+                                transition-all duration-300 transform hover:scale-105"
 					>
 						<span>{user ? "Browse Courses" : "Get Started"}</span>
 						<svg
